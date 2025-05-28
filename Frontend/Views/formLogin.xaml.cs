@@ -106,5 +106,10 @@ namespace Frontend.Views
             // Закрываем приложение при закрытии окна авторизации
             //Application.Current.Shutdown();
         }
+
+        private void cmbUserType_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
     }
 }

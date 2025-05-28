@@ -1,6 +1,244 @@
 ﻿<Window x:Class="Frontend.Views.formProducts"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Товары"
+        Height="625" Width="1380"
+        WindowStartupLocation="CenterScreen"
+        Background="#23272F"
+        Loaded="Window_Loaded">
+    <Window.Resources>
+        <!-- Основные цвета и кисти -->
+        <Color x:Key="AccentColor">#20E3B2</Color>
+        <SolidColorBrush x:Key="AccentBrush" Color="{StaticResource AccentColor}"/>
+        <SolidColorBrush x:Key="LightBgBrush" Color="#2D323B"/>
+        <SolidColorBrush x:Key="HintBrush" Color="#B0B8C1"/>
+        <DropShadowEffect x:Key="MainShadow" BlurRadius="18" ShadowDepth="0" Color="#77000000" Opacity="0.23"/>
+
+        <!-- Акцентный TextBox -->
+        <Style x:Key="AccentTextBox" TargetType="TextBox">
+            <Setter Property="Background" Value="#374151"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="10,6"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="CaretBrush" Value="{StaticResource AccentBrush}"/>
+        </Style>
+        <!-- Акцентный ComboBox -->
+        <Style x:Key="AccentComboBox" TargetType="ComboBox">
+            <Setter Property="Background" Value="{StaticResource LightBgBrush}" />
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Height" Value="38"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="10,0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+        </Style>
+        <!-- Кнопки -->
+        <Style x:Key="AccentButton" TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource AccentBrush}"/>
+            <Setter Property="Foreground" Value="#23272F"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Height" Value="44"/>
+            <Setter Property="Width" Value="115"/>
+            <Setter Property="Margin" Value="8,0,0,0"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="9">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              RecognizesAccessKey="True"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#13cfa2"/>
+                                <Setter Property="Effect">
+                                    <Setter.Value>
+                                        <DropShadowEffect Color="#20E3B2" BlurRadius="9" ShadowDepth="0" Opacity="0.19"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="OrangeButton" TargetType="Button" BasedOn="{StaticResource AccentButton}">
+            <Setter Property="Background" Value="#ff9800"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+        <Style x:Key="RedButton" TargetType="Button" BasedOn="{StaticResource AccentButton}">
+            <Setter Property="Background" Value="#F44336"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+        <Style x:Key="PurpleButton" TargetType="Button" BasedOn="{StaticResource AccentButton}">
+            <Setter Property="Background" Value="#9C27B0"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+        <!-- DataGrid стиль -->
+        <Style TargetType="DataGrid" x:Key="DarkDataGrid">
+            <Setter Property="Background" Value="{StaticResource LightBgBrush}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="RowBackground" Value="#23272F"/>
+            <Setter Property="AlternatingRowBackground" Value="#28313D"/>
+            <Setter Property="GridLinesVisibility" Value="Horizontal"/>
+            <Setter Property="HorizontalGridLinesBrush" Value="#333"/>
+            <Setter Property="VerticalGridLinesBrush" Value="#23272F"/>
+            <Setter Property="AutoGenerateColumns" Value="True"/>
+            <Setter Property="CanUserAddRows" Value="False"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="RowDetailsVisibilityMode" Value="VisibleWhenSelected"/>
+            <Setter Property="RowHeight" Value="36"/>
+            <Setter Property="ColumnHeaderStyle">
+                <Setter.Value>
+                    <Style TargetType="DataGridColumnHeader">
+                        <Setter Property="Background" Value="#252931"/>
+                        <Setter Property="Foreground" Value="{StaticResource AccentBrush}"/>
+                        <Setter Property="FontSize" Value="16"/>
+                        <Setter Property="FontWeight" Value="Bold"/>
+                        <Setter Property="Padding" Value="8,5"/>
+                        <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                        <Setter Property="BorderBrush" Value="#20E3B2"/>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="CellStyle">
+                <Setter.Value>
+                    <Style TargetType="DataGridCell">
+                        <Setter Property="BorderThickness" Value="0"/>
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="FontWeight" Value="SemiBold"/>
+                        <Setter Property="Padding" Value="4,0"/>
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="#2e4455"/>
+                                <Setter Property="Foreground" Value="{StaticResource AccentBrush}"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <!-- Лейблы -->
+        <Style x:Key="AccentLabel" TargetType="Label">
+            <Setter Property="Foreground" Value="#B0B8C1"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Margin" Value="0,0,8,0"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="578"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Левая панель -->
+        <Border Grid.Column="0"
+                CornerRadius="22"
+                Background="{StaticResource LightBgBrush}"
+                Margin="18,18,8,18"
+                Padding="0"
+                Effect="{StaticResource MainShadow}">
+            <StackPanel Margin="27,18">
+                <!-- ID товара -->
+                <StackPanel Orientation="Horizontal" Margin="0,12">
+                    <Label Content="ID товара:" Style="{StaticResource AccentLabel}" Width="150"/>
+                    <TextBox x:Name="txtID" Style="{StaticResource AccentTextBox}" Width="300" IsReadOnly="True"/>
+                </StackPanel>
+                <!-- Название -->
+                <StackPanel Orientation="Horizontal" Margin="0,12">
+                    <Label Content="Название:" Style="{StaticResource AccentLabel}" Width="150"/>
+                    <TextBox x:Name="txtName" Style="{StaticResource AccentTextBox}" Width="300"/>
+                </StackPanel>
+                <!-- Категория -->
+                <StackPanel Orientation="Horizontal" Margin="0,12">
+                    <Label Content="Категория:" Style="{StaticResource AccentLabel}" Width="150"/>
+                    <ComboBox x:Name="cmbCategory" Style="{StaticResource AccentComboBox}" Width="300"/>
+                </StackPanel>
+                <!-- Спец. номер -->
+                <StackPanel Orientation="Horizontal" Margin="0,12">
+                    <Label Content="Спец. номер:" Style="{StaticResource AccentLabel}" Width="150"/>
+                    <TextBox x:Name="txtSpecialNumber" Style="{StaticResource AccentTextBox}" Width="300"/>
+                </StackPanel>
+                <!-- Описание -->
+                <StackPanel Margin="0,12">
+                    <Label Content="Описание:" Style="{StaticResource AccentLabel}"/>
+                    <TextBox x:Name="txtDescription"
+                             Style="{StaticResource AccentTextBox}"
+                             Height="100"
+                             AcceptsReturn="True"
+                             TextWrapping="Wrap"/>
+                </StackPanel>
+                <!-- Цена -->
+                <StackPanel Orientation="Horizontal" Margin="0,12">
+                    <Label Content="Цена:" Style="{StaticResource AccentLabel}" Width="150"/>
+                    <TextBox x:Name="txtRate" Style="{StaticResource AccentTextBox}" Width="300"/>
+                </StackPanel>
+                <!-- Кнопки -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,22">
+                    <Button x:Name="btnAdd" Content="Добавить" Style="{StaticResource AccentButton}" Click="btnAdd_Click"/>
+                    <Button x:Name="btnUpdate" Content="Изменить" Style="{StaticResource OrangeButton}" Click="btnUpdate_Click"/>
+                    <Button x:Name="btnDelete" Content="Удалить" Style="{StaticResource RedButton}" Click="btnDelete_Click"/>
+                    <Button x:Name="btnClear" Content="Очистить" Style="{StaticResource PurpleButton}" Click="btnClear_Click"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <!-- Правая панель -->
+        <Border Grid.Column="1"
+                CornerRadius="22"
+                Background="{StaticResource LightBgBrush}"
+                Margin="8,18,18,18"
+                Effect="{StaticResource MainShadow}">
+            <StackPanel Margin="27,18">
+                <!-- Поиск -->
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                    <Label Content="Поиск:" Style="{StaticResource AccentLabel}" Width="85" VerticalAlignment="Center"/>
+                    <TextBox x:Name="txtSearch" Style="{StaticResource AccentTextBox}" Width="340" Margin="8,0,0,0" TextChanged="txtSearch_TextChanged"/>
+                </StackPanel>
+                <!-- DataGrid -->
+                <DataGrid x:Name="dgvProducts"
+                          Margin="0,0,0,0"
+                          Style="{StaticResource DarkDataGrid}"
+                          AutoGenerateColumns="True"
+                          CanUserAddRows="False"
+                          SelectionMode="Single"
+                          SelectionUnit="FullRow"
+                          IsReadOnly="True"
+                          MouseDoubleClick="dgvProducts_MouseDoubleClick"
+                          Height="430"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>
+
+
+
+
+
+
+
+
+
+<!--<Window x:Class="Frontend.Views.formProducts"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Frontend.Views"
@@ -16,9 +254,13 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <!-- Левая панель - данные о товаре -->
+        -->
+<!-- Левая панель - данные о товаре -->
+<!--
         <StackPanel Grid.Column="0" Margin="10" Width="500">
-            <!-- ID товара -->
+            -->
+<!-- ID товара -->
+<!--
             <StackPanel Orientation="Horizontal" Margin="0,10">
                 <Label Content="ID товара:" 
                        FontSize="14" 
@@ -31,7 +273,9 @@
                          IsReadOnly="True"/>
             </StackPanel>
 
-            <!-- Название -->
+            -->
+<!-- Название -->
+<!--
             <StackPanel Orientation="Horizontal" Margin="0,10">
                 <Label Content="Название:" 
                        FontSize="14" 
@@ -43,7 +287,9 @@
                          Width="320"/>
             </StackPanel>
 
-            <!-- Категория -->
+            -->
+<!-- Категория -->
+<!--
             <StackPanel Orientation="Horizontal" Margin="0,10">
                 <Label Content="Категория:" 
                        FontSize="14" 
@@ -55,7 +301,9 @@
                           Width="320"/>
             </StackPanel>
 
-            <!-- Специальный номер -->
+            -->
+<!-- Специальный номер -->
+<!--
             <StackPanel Orientation="Horizontal" Margin="0,10">
                 <Label Content="Спец. номер:" 
                        FontSize="14" 
@@ -67,7 +315,9 @@
                          Width="320"/>
             </StackPanel>
 
-            <!-- Описание -->
+            -->
+<!-- Описание -->
+<!--
             <StackPanel Margin="0,10">
                 <Label Content="Описание:" 
                        FontSize="14" 
@@ -80,7 +330,9 @@
                          AcceptsReturn="True"/>
             </StackPanel>
 
-            <!-- Цена -->
+            -->
+<!-- Цена -->
+<!--
             <StackPanel Orientation="Horizontal" Margin="0,10">
                 <Label Content="Цена:" 
                        FontSize="14" 
@@ -92,7 +344,9 @@
                          Width="320"/>
             </StackPanel>
 
-            <!-- Кнопки действий -->
+            -->
+<!-- Кнопки действий -->
+<!--
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20">
                 <Button x:Name="btnAdd" 
                         Content="Добавить" 
@@ -134,9 +388,13 @@
             </StackPanel>
         </StackPanel>
 
-        <!-- Правая панель - список товаров -->
+        -->
+<!-- Правая панель - список товаров -->
+<!--
         <StackPanel Grid.Column="1" Margin="10">
-            <!-- Поиск -->
+            -->
+<!-- Поиск -->
+<!--
             <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
                 <Label Content="Поиск:" 
                        FontSize="14" 
@@ -150,7 +408,9 @@
                          TextChanged="txtSearch_TextChanged"/>
             </StackPanel>
 
-            <!-- Таблица товаров -->
+            -->
+<!-- Таблица товаров -->
+<!--
             <DataGrid x:Name="dgvProducts" 
                       AutoGenerateColumns="True"
                       CanUserAddRows="False"
@@ -161,4 +421,4 @@
                       Height="500"/>
         </StackPanel>
     </Grid>
-</Window>
+</Window>-->
