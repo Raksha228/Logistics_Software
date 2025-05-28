@@ -43,8 +43,7 @@
                     <!-- Пароль -->
                     <Label Content="Пароль:" FontWeight="SemiBold" Margin="0,5"/>
                     <PasswordBox x:Name="txtPassword" FontWeight="SemiBold" Margin="0,0,0,5"/>
-                    <CheckBox x:Name="checkPass" Content="Показать пароль" Margin="0,0,0,10"
-                              Checked="CheckPass_Checked" Unchecked="CheckPass_Unchecked"/>
+
 
                     <!-- Контактные данные -->
                     <Label Content="Телефон:" FontWeight="SemiBold" Margin="0,5"/>

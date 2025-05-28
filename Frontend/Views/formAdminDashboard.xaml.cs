@@ -22,10 +22,10 @@ namespace Frontend.Views
     {
         private Login _loggedUser;
 
-        public formAdminDashboard(Login user)
+        public formAdminDashboard(Login loggedInUser)
         {
             InitializeComponent();
-            _loggedUser = user;
+            _loggedUser = loggedInUser;
             Loaded += FormAdminDashboard_Loaded;
         }
 
@@ -42,25 +42,29 @@ namespace Frontend.Views
 
         private void UsersMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            var usersWindow = new formUsers();
+            Login _UloggedUser = _loggedUser;
+            var usersWindow = new formUsers(_UloggedUser.Username);
             usersWindow.Show();
         }
 
         private void CategoryMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            var categoriesWindow = new formCategories();
+            Login _UloggedUser = _loggedUser;
+            var categoriesWindow = new formCategories(_UloggedUser.Username);
             categoriesWindow.Show();
         }
 
         private void ProductsMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            var productsWindow = new formProducts(1,"admin");
+            Login _UloggedUser = _loggedUser;
+            var productsWindow = new formProducts(_UloggedUser.Username);
             productsWindow.Show();
         }
 
         private void DealerAndCustomerMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            var dealerCustomerWindow = new formDealerCustomer();
+            Login _UloggedUser = _loggedUser;
+            var dealerCustomerWindow = new formDealerCustomer(_UloggedUser.Username);
             dealerCustomerWindow.Show();
         }
 
@@ -72,13 +76,15 @@ namespace Frontend.Views
 
         private void TransactionsMenuItem_Click(object sender, RoutedEventArgs e)
         {
+            Login _UloggedUser = _loggedUser;
             var transactionsWindow = new formTransactions();
             transactionsWindow.Show();
         }
 
         private void LogisticMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            var logisticWindow = new formLogistic();
+            Login _UloggedUser = _loggedUser;
+            var logisticWindow = new formLogistic(_UloggedUser.Username);
             logisticWindow.Show();
         }
 

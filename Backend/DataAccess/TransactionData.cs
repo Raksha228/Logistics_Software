@@ -7,23 +7,21 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+//using System.Windows.Forms;
 using Backend.Interfaces;
-using Backend.Utils;
-
 
 namespace Backend.DataAccess
 {
-    public class TransactionData:Transaction,ITransaction
+    public class TransactionData :Transaction,ITransaction
     {
-        //static string myconnstrng = ConfigurationManager.ConnectionStrings["connstrng"].ConnectionString;
-        static string myconnstrng = AppConfiguration.ConnectionString;
+        static string myconnstrng = ConfigurationManager.ConnectionStrings["connstrng"].ConnectionString;
 
-        //Добавить транзакцию
+        //Добавяне на транзакция
         public bool InsertTransaction(Transaction transaction, out int transactionID)
         {
             bool isSuccess = false;
 
-            //Изначально установите идентификатор транзакции в -1
+            //Задаване на id на транзакцията първоначално на -1
             transactionID = -1;
 
             SqlConnection conn = new SqlConnection(myconnstrng);
@@ -48,12 +46,12 @@ namespace Backend.DataAccess
 
                 conn.Open();
 
-                //Возвращает значение первой строки и столбца после выполнения
+                //Връщасе стойността на първия ред и колона след изпълнението
                 object executeQuery = cmd.ExecuteScalar();
 
                 if (executeQuery != null)
                 {
-                    //Получение идентификатора транзакции, если она была проведена правильно
+                    //Вземане на id на транзакцията ако се е усществила правилно
                     transactionID = int.Parse(executeQuery.ToString());
                     isSuccess = true;
                 }
@@ -74,7 +72,7 @@ namespace Backend.DataAccess
             return isSuccess;
         }
 
-        //Визуализация всех операций
+        //Визуализация на всички транзакции
         public DataTable DisplayAllTransactions()
         {
             SqlConnection conn = new SqlConnection(myconnstrng);
@@ -106,7 +104,7 @@ namespace Backend.DataAccess
             return dt;
         }
 
-        //Визуализация транзакций по типам
+        //Визуализация на транзакции според типа
         public DataTable DisplayTransactionByType(string type)
         {
             SqlConnection conn = new SqlConnection(myconnstrng);
@@ -137,7 +135,7 @@ namespace Backend.DataAccess
             return dt;
         }
 
-        //Удалить все транзакции и детали
+        //Изтриване на всички транзакции и детайли
         public DataTable DeleteAllTransactions()
         {
             SqlConnection conn = new SqlConnection(myconnstrng);

@@ -15,8 +15,7 @@ using System;
 using Backend.Interfaces;
 using Backend.BusinessLogic;
 using Backend.DataAccess;
-using Backend.Utils;
-using Microsoft.Extensions.Configuration;
+
 
 namespace Frontend.Views
 {
@@ -27,17 +26,32 @@ namespace Frontend.Views
             InitializeComponent();
         }
 
+        Login login = new Login();
+        LoginData loginData = new LoginData();
+        public static string loggedIn;
+
+        private void BtnClose_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            this.DragMove();
+        }
+
         private void BtnLogin_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                // Создаем объект Login с данными из формы
-                Login login = new Login()
-                {
-                    Username = txtUsername.Text.Trim(),
-                    Password = txtPassword.Password,
-                    UserType = (cmbUserType.SelectedItem as ComboBoxItem)?.Content.ToString()
-                };
+                login.Username = txtUsername.Text.Trim();
+                login.Password = txtPassword.Password.Trim();
+                login.UserType = cmbUserType.Text.Trim();
+
+                //Проверка, есть ли такой пользователь с такими правами
+                bool sucess = loginData.loginCheck(login);
+
+                
 
                 // Проверяем введенные данные
                 if (string.IsNullOrEmpty(login.Username))
@@ -58,21 +72,18 @@ namespace Frontend.Views
                     return;
                 }
 
-                // Проверяем учетные данные через DataAccess
-                LoginData loginData = new LoginData();
-                bool isSuccess = loginData.loginCheck(login);
 
-                if (isSuccess)
+                if (sucess == true)
                 {
                     // Определяем какое окно открывать в зависимости от типа пользователя
-                    if (login.UserType == "Администратор")
+                    if (login.UserType == "Admin")
                     {
                         formAdminDashboard adminDashboard = new formAdminDashboard(login);
                         adminDashboard.Show();
                     }
                     else
                     {
-                        formUserDashboard userDashboard = new formUserDashboard();
+                        formUserDashboard userDashboard = new formUserDashboard(login);
                         userDashboard.Show();
                     }
 
@@ -90,42 +101,10 @@ namespace Frontend.Views
                               MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-
-        private void CheckPass_Checked(object sender, RoutedEventArgs e)
-        {
-            // Показываем пароль
-            txtPassword.Visibility = Visibility.Collapsed;
-            var visiblePasswordBox = new TextBox
-            {
-                Text = txtPassword.Password,
-                FontSize = 14,
-                FontWeight = FontWeights.SemiBold,
-                Margin = new Thickness(20, 0, 20, 5),
-                Height = 30
-            };
-            Grid.SetRow(visiblePasswordBox, 4);
-            ((Grid)this.Content).Children.Add(visiblePasswordBox);
-        }
-
-        private void CheckPass_Unchecked(object sender, RoutedEventArgs e)
-        {
-            // Скрываем пароль
-            foreach (UIElement element in ((Grid)this.Content).Children)
-            {
-                if (element is TextBox && Grid.GetRow(element) == 4)
-                {
-                    txtPassword.Password = ((TextBox)element).Text;
-                    ((Grid)this.Content).Children.Remove(element);
-                    break;
-                }
-            }
-            txtPassword.Visibility = Visibility.Visible;
-        }
-
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             // Закрываем приложение при закрытии окна авторизации
-            Application.Current.Shutdown();
+            //Application.Current.Shutdown();
         }
     }
 }

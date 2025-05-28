@@ -1,214 +1,516 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+﻿using Backend.BusinesLogic;
 using Backend.BusinessLogic;
 using Backend.DataAccess;
 using System;
 using System.Data;
-using Backend.BusinesLogic;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace Frontend.Views
 {
     public partial class formUsers : Window
     {
-        private UserData userData = new UserData();
-        private bool isPasswordVisible = false;
+        private User _user = new User();
+        private UserData _userData = new UserData();
+        private string _loggedInUser;
 
-        public formUsers()
+        public formUsers(string loggedInUser)
         {
             InitializeComponent();
-            Loaded += Window_Loaded;
+            _loggedInUser = loggedInUser;
+            LoadData();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            LoadUsers();
-            ClearFields();
+            LoadData();
         }
 
-        private void LoadUsers()
+        private void LoadData()
         {
             try
             {
-                DataTable dt = userData.Select();
+                DataTable dt = _userData.Select();
                 dgvUsers.ItemsSource = dt.DefaultView;
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка загрузки пользователей: {ex.Message}", "Ошибка",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Ошибка загрузки данных: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-        }
-
-        private void ClearFields()
-        {
-            txtUserID.Clear();
-            txtFirstName.Clear();
-            txtLastName.Clear();
-            txtEmail.Clear();
-            txtUsername.Clear();
-            txtPassword.Clear();
-            txtContact.Clear();
-            txtAddress.Clear();
-            cmbGender.SelectedIndex = -1;
-            cmbUserType.SelectedIndex = -1;
-        }
-
-        private User GetUserFromFields()
-        {
-            return new User
-            {
-                Id = string.IsNullOrEmpty(txtUserID.Text) ? 0 : int.Parse(txtUserID.Text),
-                FirstName = txtFirstName.Text,
-                LastName = txtLastName.Text,
-                Email = txtEmail.Text,
-                Username = txtUsername.Text,
-                Password = txtPassword.Password,
-                Contact = txtContact.Text,
-                Address = txtAddress.Text,
-                Gender = ((ComboBoxItem)cmbGender.SelectedItem)?.Content.ToString(),
-                UserType = ((ComboBoxItem)cmbUserType.SelectedItem)?.Content.ToString()
-            };
         }
 
         private void BtnAdd_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                User newUser = GetUserFromFields();
-                if (userData.Insert(newUser))
+                // Валидация данных
+                try { _user.FirstName = txtFirstName.Text; }
+                catch { MessageBox.Show("Имя должно содержать минимум 3 символа!"); return; }
+
+                try { _user.LastName = txtLastName.Text; }
+                catch { MessageBox.Show("Фамилия должна содержать минимум 3 символа!"); return; }
+
+                try { _user.Email = txtEmail.Text; }
+                catch { MessageBox.Show("Неверный формат email!"); return; }
+
+                try { _user.Username = txtUsername.Text; }
+                catch { MessageBox.Show("Логин должен содержать минимум 3 символа!"); return; }
+
+                try { _user.Password = txtPassword.Password; }
+                catch { MessageBox.Show("Пароль должен содержать минимум 5 символов!"); return; }
+
+                _user.Contact = txtContact.Text;
+                _user.Address = txtAddress.Text;
+                _user.Gender = (cmbGender.SelectedItem as ComboBoxItem)?.Content.ToString();
+                _user.UserType = (cmbUserType.SelectedItem as ComboBoxItem)?.Content.ToString();
+                _user.AddedDate = DateTime.Now;
+
+                // Получаем ID текущего пользователя
+                User currentUser = _userData.GetIDFromUsername(_loggedInUser);
+                _user.AddedBy = currentUser.Id;
+                _user.AddedByName = _loggedInUser;
+
+                bool success = _userData.Insert(_user);
+                if (success)
                 {
-                    MessageBox.Show("Пользователь успешно добавлен", "Успех",
-                        MessageBoxButton.OK, MessageBoxImage.Information);
-                    LoadUsers();
-                    ClearFields();
+                    MessageBox.Show("Пользователь успешно добавлен!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                    Clear();
+                    LoadData();
+                }
+                else
+                {
+                    MessageBox.Show("Ошибка при добавлении пользователя!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка добавления: {ex.Message}", "Ошибка",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
         private void BtnUpdate_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrEmpty(txtUserID.Text)) return;
-
             try
             {
-                User user = GetUserFromFields();
-                if (userData.Update(user))
+                if (string.IsNullOrEmpty(txtUserID.Text))
                 {
-                    MessageBox.Show("Данные обновлены", "Успех",
-                        MessageBoxButton.OK, MessageBoxImage.Information);
-                    LoadUsers();
+                    MessageBox.Show("Выберите пользователя для редактирования!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                _user.Id = int.Parse(txtUserID.Text);
+
+                // Валидация данных
+                try { _user.FirstName = txtFirstName.Text; }
+                catch { MessageBox.Show("Имя должно содержать минимум 3 символа!"); return; }
+
+                try { _user.LastName = txtLastName.Text; }
+                catch { MessageBox.Show("Фамилия должна содержать минимум 3 символа!"); return; }
+
+                try { _user.Email = txtEmail.Text; }
+                catch { MessageBox.Show("Неверный формат email!"); return; }
+
+                try { _user.Username = txtUsername.Text; }
+                catch { MessageBox.Show("Логин должен содержать минимум 3 символа!"); return; }
+
+                try { _user.Password = txtPassword.Password; }
+                catch { MessageBox.Show("Пароль должен содержать минимум 5 символов!"); return; }
+
+                _user.Contact = txtContact.Text;
+                _user.Address = txtAddress.Text;
+                _user.Gender = (cmbGender.SelectedItem as ComboBoxItem)?.Content.ToString();
+                _user.UserType = (cmbUserType.SelectedItem as ComboBoxItem)?.Content.ToString();
+                _user.AddedDate = DateTime.Now;
+
+                // Обновляем информацию о том, кто изменил запись
+                User currentUser = _userData.GetIDFromUsername(_loggedInUser);
+                _user.AddedBy = currentUser.Id;
+                _user.AddedByName = _loggedInUser;
+
+                bool success = _userData.Update(_user);
+                if (success)
+                {
+                    MessageBox.Show("Данные пользователя обновлены!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                    Clear();
+                    LoadData();
+                }
+                else
+                {
+                    MessageBox.Show("Ошибка при обновлении данных!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка обновления: {ex.Message}", "Ошибка",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
         private void BtnDelete_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrEmpty(txtUserID.Text)) return;
-
             try
             {
-                User user = GetUserFromFields();
-                if (userData.Delete(user))
+                if (string.IsNullOrEmpty(txtUserID.Text))
                 {
-                    MessageBox.Show("Пользователь удален", "Успех",
-                        MessageBoxButton.OK, MessageBoxImage.Information);
-                    LoadUsers();
-                    ClearFields();
+                    MessageBox.Show("Выберите пользователя для удаления!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                MessageBoxResult result = MessageBox.Show(
+                    "Вы уверены, что хотите удалить этого пользователя?",
+                    "Подтверждение",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Question);
+
+                if (result == MessageBoxResult.Yes)
+                {
+                    _user.Id = int.Parse(txtUserID.Text);
+                    bool success = _userData.Delete(_user);
+                    if (success)
+                    {
+                        MessageBox.Show("Пользователь удалён!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                        Clear();
+                        LoadData();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Ошибка при удалении!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка удаления: {ex.Message}", "Ошибка",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
         private void BtnClear_Click(object sender, RoutedEventArgs e)
         {
-            ClearFields();
+            Clear();
         }
 
-        private void DgvUsers_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void Clear()
         {
-            if (dgvUsers.SelectedItem == null) return;
-
-            DataRowView row = (DataRowView)dgvUsers.SelectedItem;
-            txtUserID.Text = row["id"].ToString();
-            txtFirstName.Text = row["first_name"].ToString();
-            txtLastName.Text = row["last_name"].ToString();
-            txtEmail.Text = row["email"].ToString();
-            txtUsername.Text = row["username"].ToString();
-            txtContact.Text = row["contact"].ToString();
-            txtAddress.Text = row["address"].ToString();
-
-            // Для пароля требуется отдельная логика получения
-        }
-
-        private void CheckPass_Checked(object sender, RoutedEventArgs e)
-        {
-            txtPassword.Visibility = Visibility.Collapsed;
-            var visiblePasswordBox = new TextBox
-            {
-                Text = txtPassword.Password,
-                FontWeight = FontWeights.SemiBold,
-                Margin = txtPassword.Margin
-            };
-            Grid.SetRow(visiblePasswordBox, Grid.GetRow(txtPassword));
-            ((Panel)txtPassword.Parent).Children.Add(visiblePasswordBox);
-        }
-
-        private void CheckPass_Unchecked(object sender, RoutedEventArgs e)
-        {
-            foreach (UIElement element in ((Panel)txtPassword.Parent).Children)
-            {
-                if (element is TextBox textBox && element != txtPassword)
-                {
-                    txtPassword.Password = textBox.Text;
-                    ((Panel)txtPassword.Parent).Children.Remove(element);
-                    break;
-                }
-            }
-            txtPassword.Visibility = Visibility.Visible;
+            txtUserID.Text = "";
+            txtFirstName.Text = "";
+            txtLastName.Text = "";
+            txtEmail.Text = "";
+            txtUsername.Text = "";
+            txtPassword.Password = "";
+            txtContact.Text = "";
+            txtAddress.Text = "";
+            cmbGender.SelectedIndex = -1;
+            cmbUserType.SelectedIndex = -1;
         }
 
         private void TxtSearch_TextChanged(object sender, TextChangedEventArgs e)
         {
             try
             {
-                DataTable dt = userData.Search(txtSearch.Text);
+                string keyword = txtSearch.Text;
+                DataTable dt = _userData.Search(keyword);
                 dgvUsers.ItemsSource = dt.DefaultView;
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка поиска: {ex.Message}", "Ошибка",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Ошибка поиска: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
+        private void DgvUsers_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (dgvUsers.SelectedItem != null)
+            {
+                DataRowView row = (DataRowView)dgvUsers.SelectedItem;
+                txtUserID.Text = row["id"].ToString();
+                txtFirstName.Text = row["first_name"].ToString();
+                txtLastName.Text = row["last_name"].ToString();
+                txtEmail.Text = row["email"].ToString();
+                txtUsername.Text = row["username"].ToString();
+                txtPassword.Password = row["password"].ToString();
+                txtContact.Text = row["contact"].ToString();
+                txtAddress.Text = row["address"].ToString();
+
+                // Установка пола
+                foreach (ComboBoxItem item in cmbGender.Items)
+                {
+                    if (item.Content.ToString() == row["gender"].ToString())
+                    {
+                        cmbGender.SelectedItem = item;
+                        break;
+                    }
+                }
+
+                // Установка типа пользователя
+                foreach (ComboBoxItem item in cmbUserType.Items)
+                {
+                    if (item.Content.ToString() == row["user_type"].ToString())
+                    {
+                        cmbUserType.SelectedItem = item;
+                        break;
+                    }
+                }
+            }
+        }
         private void Window_Closed(object sender, EventArgs e)
         {
             // Логика при закрытии окна
         }
     }
 }
+
+
+
+
+
+
+
+
+
+//using System;
+//using System.Collections.Generic;
+//using System.Linq;
+//using System.Text;
+//using System.Threading.Tasks;
+//using System.Windows;
+//using System.Windows.Controls;
+//using System.Windows.Data;
+//using System.Windows.Documents;
+//using System.Windows.Input;
+//using System.Windows.Media;
+//using System.Windows.Media.Imaging;
+//using System.Windows.Shapes;
+//using Backend.BusinessLogic;
+//using Backend.DataAccess;
+//using System;
+//using System.Data;
+//using Backend.BusinesLogic;
+//using System.Runtime.ConstrainedExecution;
+
+//namespace Frontend.Views
+//{
+//    public partial class formUsers : Window
+//    {
+//        private UserData userData = new UserData();
+//        private bool isPasswordVisible = false;
+
+//        User user = new User();
+//        //UserData userData = new UserData();
+
+//        public formUsers()
+//        {
+//            InitializeComponent();
+//            Loaded += Window_Loaded;
+//        }
+
+//        private void Window_Loaded(object sender, RoutedEventArgs e)
+//        {
+//            LoadUsers();
+//            ClearFields();
+//        }
+
+//        private void LoadUsers()
+//        {
+//            try
+//            {
+//                DataTable dt = userData.Select();
+//                dgvUsers.ItemsSource = dt.DefaultView;
+//            }
+//            catch (Exception ex)
+//            {
+//                MessageBox.Show($"Ошибка загрузки пользователей: {ex.Message}", "Ошибка",
+//                    MessageBoxButton.OK, MessageBoxImage.Error);
+//            }
+//        }
+
+//        private void ClearFields()
+//        {
+//            txtUserID.Clear();
+//            txtFirstName.Clear();
+//            txtLastName.Clear();
+//            txtEmail.Clear();
+//            txtUsername.Clear();
+//            txtPassword.Clear();
+//            txtContact.Clear();
+//            txtAddress.Clear();
+//            cmbGender.SelectedIndex = -1;
+//            cmbUserType.SelectedIndex = -1;
+//        }
+
+
+
+
+
+//        private User GetUserFromFields()
+//        {
+
+
+//                user.Id = string.IsNullOrEmpty(txtUserID.Text) ? 0 : int.Parse(txtUserID.Text);
+//                user.FirstName = txtFirstName.Text;
+//                user.LastName = txtLastName.Text;
+//                user.Email = txtEmail.Text;
+//                user.Username = txtUsername.Text;
+//                user.Password = txtPassword.Password;
+//                user.Contact = txtContact.Text;
+//                user.Address = txtAddress.Text;
+//                user.Gender = ((ComboBoxItem)cmbGender.SelectedItem)?.Content.ToString();
+//                user.UserType = ((ComboBoxItem)cmbUserType.SelectedItem)?.Content.ToString();
+//                user.AddedDate = DateTime.Now;
+
+
+
+//            //return new User
+//            //{
+//            //    Id = string.IsNullOrEmpty(txtUserID.Text) ? 0 : int.Parse(txtUserID.Text),
+//            //    FirstName = txtFirstName.Text,
+//            //    LastName = txtLastName.Text,
+//            //    Email = txtEmail.Text,
+//            //    Username = txtUsername.Text,
+//            //    Password = txtPassword.Password,
+//            //    Contact = txtContact.Text,
+//            //    Address = txtAddress.Text,
+//            //    Gender = ((ComboBoxItem)cmbGender.SelectedItem)?.Content.ToString(),
+//            //    UserType = ((ComboBoxItem)cmbUserType.SelectedItem)?.Content.ToString(),
+//            //    AddedDate = DateTime.Now,
+
+//            //};
+
+//            string loggedUser = formLogin.loggedIn;
+//            User usr = userData.GetIDFromUsername(loggedUser);
+
+//            user.AddedBy = usr.Id;
+//            user.AddedByName = loggedUser;
+
+//            return user;
+//        }
+
+//        private void BtnAdd_Click(object sender, RoutedEventArgs e)
+//        {
+//            try
+//            {
+//                User newUser = GetUserFromFields();
+//                if (userData.Insert(newUser))
+//                {
+//                    MessageBox.Show("Пользователь успешно добавлен", "Успех",
+//                        MessageBoxButton.OK, MessageBoxImage.Information);
+//                    LoadUsers();
+//                    ClearFields();
+//                }
+//            }
+//            catch (Exception ex)
+//            {
+//                MessageBox.Show($"Ошибка добавления: {ex.Message}", "Ошибка",
+//                    MessageBoxButton.OK, MessageBoxImage.Error);
+//            }
+//        }
+
+//        private void BtnUpdate_Click(object sender, RoutedEventArgs e)
+//        {
+//            if (string.IsNullOrEmpty(txtUserID.Text)) return;
+
+//            try
+//            {
+//                User user = GetUserFromFields();
+//                if (userData.Update(user))
+//                {
+//                    MessageBox.Show("Данные обновлены", "Успех",
+//                        MessageBoxButton.OK, MessageBoxImage.Information);
+//                    LoadUsers();
+//                }
+//            }
+//            catch (Exception ex)
+//            {
+//                MessageBox.Show($"Ошибка обновления: {ex.Message}", "Ошибка",
+//                    MessageBoxButton.OK, MessageBoxImage.Error);
+//            }
+//        }
+
+//        private void BtnDelete_Click(object sender, RoutedEventArgs e)
+//        {
+//            if (string.IsNullOrEmpty(txtUserID.Text)) return;
+
+//            try
+//            {
+//                User user = GetUserFromFields();
+//                if (userData.Delete(user))
+//                {
+//                    MessageBox.Show("Пользователь удален", "Успех",
+//                        MessageBoxButton.OK, MessageBoxImage.Information);
+//                    LoadUsers();
+//                    ClearFields();
+//                }
+//            }
+//            catch (Exception ex)
+//            {
+//                MessageBox.Show($"Ошибка удаления: {ex.Message}", "Ошибка",
+//                    MessageBoxButton.OK, MessageBoxImage.Error);
+//            }
+//        }
+
+//        private void BtnClear_Click(object sender, RoutedEventArgs e)
+//        {
+//            ClearFields();
+//        }
+
+//        private void DgvUsers_SelectionChanged(object sender, SelectionChangedEventArgs e)
+//        {
+//            if (dgvUsers.SelectedItem == null) return;
+
+//            DataRowView row = (DataRowView)dgvUsers.SelectedItem;
+//            txtUserID.Text = row["id"].ToString();
+//            txtFirstName.Text = row["first_name"].ToString();
+//            txtLastName.Text = row["last_name"].ToString();
+//            txtEmail.Text = row["email"].ToString();
+//            txtUsername.Text = row["username"].ToString();
+//            txtContact.Text = row["contact"].ToString();
+//            txtAddress.Text = row["address"].ToString();
+
+//            // Для пароля требуется отдельная логика получения
+//        }
+
+//        private void CheckPass_Checked(object sender, RoutedEventArgs e)
+//        {
+//            txtPassword.Visibility = Visibility.Collapsed;
+//            var visiblePasswordBox = new TextBox
+//            {
+//                Text = txtPassword.Password,
+//                FontWeight = FontWeights.SemiBold,
+//                Margin = txtPassword.Margin
+//            };
+//            Grid.SetRow(visiblePasswordBox, Grid.GetRow(txtPassword));
+//            ((Panel)txtPassword.Parent).Children.Add(visiblePasswordBox);
+//        }
+
+//        private void CheckPass_Unchecked(object sender, RoutedEventArgs e)
+//        {
+//            foreach (UIElement element in ((Panel)txtPassword.Parent).Children)
+//            {
+//                if (element is TextBox textBox && element != txtPassword)
+//                {
+//                    txtPassword.Password = textBox.Text;
+//                    ((Panel)txtPassword.Parent).Children.Remove(element);
+//                    break;
+//                }
+//            }
+//            txtPassword.Visibility = Visibility.Visible;
+//        }
+
+//        private void TxtSearch_TextChanged(object sender, TextChangedEventArgs e)
+//        {
+//            try
+//            {
+//                DataTable dt = userData.Search(txtSearch.Text);
+//                dgvUsers.ItemsSource = dt.DefaultView;
+//            }
+//            catch (Exception ex)
+//            {
+//                MessageBox.Show($"Ошибка поиска: {ex.Message}", "Ошибка",
+//                    MessageBoxButton.OK, MessageBoxImage.Error);
+//            }
+//        }
+
+//        private void Window_Closed(object sender, EventArgs e)
+//        {
+//            // Логика при закрытии окна
+//        }
+//    }
+//}

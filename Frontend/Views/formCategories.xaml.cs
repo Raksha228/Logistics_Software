@@ -15,6 +15,7 @@ using Backend.BusinessLogic;
 using Backend.DataAccess;
 using System;
 using System.Data;
+using Backend.BusinesLogic;
 
 namespace Frontend.Views
 {
@@ -23,10 +24,14 @@ namespace Frontend.Views
         private CategoryData _categoryData;
         private DataTable _categoriesTable;
 
-        public formCategories()
+        private UserData _userData = new UserData();
+        private string _loggedInUser;
+
+        public formCategories(string loggedInUser)
         {
             InitializeComponent();
             _categoryData = new CategoryData();
+            _loggedInUser = loggedInUser;
             LoadCategories();
         }
 
@@ -46,12 +51,19 @@ namespace Frontend.Views
 
         private Category GetCategoryFromForm()
         {
-            return new Category()
+            Category category = new Category()
             {
                 Id = string.IsNullOrEmpty(txtCategoryID.Text) ? 0 : int.Parse(txtCategoryID.Text),
                 Title = txtTitle.Text.Trim(),
-                Description = txtDescription.Text.Trim()
+                Description = txtDescription.Text.Trim(),
+                AddedDate = DateTime.Now
             };
+
+            User currentUser = _userData.GetIDFromUsername(_loggedInUser);
+            category.AddedBy = currentUser.Id;
+            category.AddedByName = _loggedInUser;
+
+            return category;
         }
 
         private void ClearForm()
@@ -66,6 +78,7 @@ namespace Frontend.Views
             try
             {
                 var category = GetCategoryFromForm();
+
                 if (string.IsNullOrEmpty(category.Title))
                 {
                     MessageBox.Show("Введите название категории", "Ошибка",

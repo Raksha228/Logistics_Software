@@ -22,7 +22,7 @@ namespace Backend.BusinessLogic
 
         public decimal Tax
         {
-            //Проверка налогов
+            //Валидация на таксите
             get => this.tax;
             set
             {
@@ -37,7 +37,7 @@ namespace Backend.BusinessLogic
 
         public decimal Discount
         {
-            //Проверка скидки
+            //Валидация на отсъпка
             get => this.discount;
             set
             {
@@ -52,7 +52,7 @@ namespace Backend.BusinessLogic
 
         public decimal PaidAmount
         {
-            //Проверка оплаченного
+            //Валидация на платеното
             get => this.paidAmount;
             set
             {
