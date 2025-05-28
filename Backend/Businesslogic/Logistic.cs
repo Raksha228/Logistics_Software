@@ -19,7 +19,7 @@ namespace Backend.BusinessLogic
             get => this.contact;
             set
             {
-                //проверка на контакта
+                //Валидация на контакта
                 if (value.Length <= 9)
                 {
                     throw new ArgumentException(@"Invalid contact!");

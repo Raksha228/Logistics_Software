@@ -19,7 +19,7 @@ namespace Backend.BusinessLogic
 
         public decimal Rate
         {
-            //Проверка цены
+            //Валидация на цена
             get => this.rate;
             set
             {
@@ -34,7 +34,7 @@ namespace Backend.BusinessLogic
 
         public decimal Quantity
         {
-            //проверка на количество
+            //Валидация на количество
             get => this.quantity;
             set
             {

@@ -7,57 +7,56 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+//using System.Windows.Forms;
 using Backend.Interfaces;
-using Backend.Utils;
 namespace Backend.DataAccess
 {
     public class UserData:User,ICrudUser
     {
-        //static string myconnstrng = ConfigurationManager.ConnectionStrings["connstrng"].ConnectionString;
-        static string myconnstrng = AppConfiguration.ConnectionString;
+        static string myconnstrng = ConfigurationManager.ConnectionStrings["connstrng"].ConnectionString;
 
-        //Сбор данных
+        //Вземане на данни
         public DataTable Select()
         {
-            //Подключение к базе данных
+            //Връзка с базата данни
             SqlConnection conn = new SqlConnection(myconnstrng);
 
-            //Сохранение данных в таблице
+            //Задържане на данните в таблица
             DataTable dt = new DataTable();
             try
             {
-                //запрос для получения данных из таблицы пользователей
+                //query за вземане на данните от таблицата с потребителите
                 String sql = "SELECT * FROM table_users";
 
-                //Выполните запрос
+                //Изпълнение на query
                 SqlCommand cmd = new SqlCommand(sql, conn);
 
-                //Получение данных в адаптер
+                //Получаване на данните в адаптер
                 SqlDataAdapter adapter = new SqlDataAdapter(cmd);
 
-                //Открытие ссылки
+                //Отваряне на връзката
                 conn.Open();
 
-                //Заполните данные в таблице
+                //Попълване на данните в таблицата
                 adapter.Fill(dt);
             }
             catch (Exception ex)
             {
-                //Ошибка
+                //Грешка
                 //MessageBox.Show(ex.Message);
             }
             finally
             {
-                //Закрытие соединения
+                //Затваряне на връзката
                 conn.Close();
             }
-
+            //Връщане на данните
             return dt;
 
 
         }
 
-        //Добавить данные
+        //Добавяне на данни
         public bool Insert(User user)
         {
             bool isSuccess = false;
@@ -86,8 +85,7 @@ namespace Backend.DataAccess
 
                 int rows = cmd.ExecuteNonQuery();
 
-                //Если запрос будет выполнен, он вернет значение больше 0, если не будет выполнен, вернет значение меньше 0
-
+                //Ако query-то е изпълнено ще върне стойност по-голяма от 0 ако не е изпълнено ще върне стойност по малка от 0
                 if (rows > 0)
                 {
                     isSuccess = true;
@@ -108,7 +106,7 @@ namespace Backend.DataAccess
             return isSuccess;
         }
 
-        //Редактировать данные
+        //Редактиране на данни
         public bool Update(User user)
         {
             bool isSuccess = false;
@@ -158,7 +156,7 @@ namespace Backend.DataAccess
             return isSuccess;
         }
 
-        //Удаление данных
+        //Изтриване на данни
         public bool Delete(User user)
         {
             bool isSuccess = false;
@@ -195,7 +193,7 @@ namespace Backend.DataAccess
             return isSuccess;
         }
 
-        //Данные поиска
+        //Търсене на данни
         public DataTable Search(string keywords)
         {
             SqlConnection conn = new SqlConnection(myconnstrng);
@@ -224,7 +222,7 @@ namespace Backend.DataAccess
             return dt;
         }
 
-        //Получение идентификатора от вошедшего пользователя
+        //Вземане на id от влезналия потребител
         public User GetIDFromUsername(string username)
         {
             User user = new User();
@@ -255,7 +253,7 @@ namespace Backend.DataAccess
             return user;
         }
 
-        //Поиск пользователей по логистике
+        //Търсене на потребител за логистиката
         public User SearchUserForLogistic(string keyword)
         {
             User user = new User();
@@ -274,8 +272,7 @@ namespace Backend.DataAccess
 
                 adapter.Fill(dt);
 
-                //Если я успешно нашел данные, мы сохраняем их в объекте из бизнес-логики 
-
+                //Ако успешно имам намерени данни ние ги запазваме в обекта от business logic 
                 if (dt.Rows.Count > 0)
                 {
                     user.FirstName = dt.Rows[0]["first_name"].ToString();

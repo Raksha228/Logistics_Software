@@ -6,17 +6,16 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+//using System.Windows.Forms;
 using Backend.Interfaces;
-using Backend.Utils;
 
 namespace Backend.DataAccess
 {
-    public class TransactionDetailsData:TransactionDetails,ITransactionDetail
+    public class TransactionDetailsData :TransactionDetails,ITransactionDetail
     {
-        //static string myconnstrng = ConfigurationManager.ConnectionStrings["connstrng"].ConnectionString;
-        static string myconnstrng = AppConfiguration.ConnectionString;
+        static string myconnstrng = ConfigurationManager.ConnectionStrings["connstrng"].ConnectionString;
 
-        //Добавьте детали транзакции
+        //Добавяне на детайли по транзакцията
         public bool InsertTransactionDetail(TransactionDetails transactionDetail)
         {
             bool isSuccess = false;
@@ -40,7 +39,7 @@ namespace Backend.DataAccess
 
                 conn.Open();
 
-                //Есть ли затронутая или измененная строка при успешном добавлении данных
+                //Дали има засегнат или променен ред ако има е успешно добавянето на данни
                 int rows = cmd.ExecuteNonQuery();
 
                 if (rows > 0)

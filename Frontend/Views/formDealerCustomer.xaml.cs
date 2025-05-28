@@ -15,6 +15,7 @@ using Backend.BusinessLogic;
 using Backend.DataAccess;
 using System;
 using System.Data;
+using Backend.BusinesLogic;
 
 namespace Frontend.Views
 {
@@ -23,10 +24,13 @@ namespace Frontend.Views
         private DealerCustomerData _dealerCustomerData;
         private DataTable _dealerCustomerTable;
 
-        public formDealerCustomer()
+        private UserData _userData = new UserData();
+        private string _loggedInUser;
+        public formDealerCustomer(string loggedInUser)
         {
             InitializeComponent();
             _dealerCustomerData = new DealerCustomerData();
+            _loggedInUser = loggedInUser;
             LoadDealerCustomers();
         }
 
@@ -46,15 +50,22 @@ namespace Frontend.Views
 
         private DealerCustomer GetDealerCustomerFromForm()
         {
-            return new DealerCustomer()
+            DealerCustomer dealerCustomer = new DealerCustomer()
             {
                 Id = string.IsNullOrEmpty(txtDeaCustID.Text) ? 0 : int.Parse(txtDeaCustID.Text),
                 Type = (cmbDeaCust.SelectedItem as ComboBoxItem)?.Content.ToString(),
                 Name = txtName.Text.Trim(),
                 Email = txtEmail.Text.Trim(),
                 Contact = txtContact.Text.Trim(),
-                Address = txtAddress.Text.Trim()
+                Address = txtAddress.Text.Trim(),
+                AddedDate = DateTime.Now
             };
+
+            User currentUser = _userData.GetIDFromUsername(_loggedInUser);
+            dealerCustomer.AddedBy = currentUser.Id;
+            dealerCustomer.AddedByName = _loggedInUser;
+
+            return dealerCustomer;
         }
 
         private void ClearForm()

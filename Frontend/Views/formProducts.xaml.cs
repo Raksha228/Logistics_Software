@@ -18,6 +18,7 @@ using Backend.DataAccess;
 using Backend.Interfaces;
 using Microsoft.Win32;
 using System;
+using Backend.BusinesLogic;
 
 namespace Frontend.Views
 {
@@ -28,11 +29,12 @@ namespace Frontend.Views
         private readonly int _currentUserId;
         private readonly string _currentUsername;
 
-        public formProducts(int userId, string username)
+        private UserData _userData = new UserData();
+        private string _loggedInUser;
+        public formProducts(string loggedInUser)
         {
             InitializeComponent();
-            _currentUserId = userId;
-            _currentUsername = username;
+            _loggedInUser = loggedInUser;
             LoadCategories();
             LoadProducts();
         }
@@ -115,6 +117,12 @@ namespace Frontend.Views
                     AddedBy = _currentUserId,
                     AddedByName = _currentUsername
                 };
+
+                User currentUser = _userData.GetIDFromUsername(_loggedInUser);
+                product.AddedBy = currentUser.Id;
+                product.AddedByName = _loggedInUser;
+
+
 
                 if (_productService.Insert(product))
                 {

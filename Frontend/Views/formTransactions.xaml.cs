@@ -50,7 +50,8 @@ namespace Frontend.Views
 
         private void cmbTransactionType_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (cmbTransactionType.SelectedIndex == -1) return;
+            if (cmbTransactionType.SelectedIndex == -1 || transactionData == null)
+                return;
 
             try
             {

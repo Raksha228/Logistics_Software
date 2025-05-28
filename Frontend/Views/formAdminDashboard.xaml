@@ -1,15 +1,61 @@
 ﻿<Window x:Class="Frontend.Views.formAdminDashboard"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Frontend.Views"
-        mc:Ignorable="d"
-        Title="Административная панель" 
+        Title="Административная панель"
         WindowState="Maximized"
         WindowStartupLocation="CenterScreen"
-        Height="656" Width="1519"
+        Background="#23272F"
         Closing="Window_Closing" Loaded="FormAdminDashboard_Loaded">
+
+    <Window.Resources>
+        <!-- Цвета -->
+        <Color x:Key="AccentColor">#20E3B2</Color>
+        <SolidColorBrush x:Key="AccentBrush" Color="{StaticResource AccentColor}"/>
+        <SolidColorBrush x:Key="DarkBgBrush" Color="#23272F"/>
+        <SolidColorBrush x:Key="LightBgBrush" Color="#2D323B"/>
+        <SolidColorBrush x:Key="HoverMenuBrush" Color="#1F2229"/>
+        <Style x:Key="MenuButtonStyle" TargetType="MenuItem">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="17"/>
+            <Setter Property="Padding" Value="20,8"/>
+            <Setter Property="Background" Value="{x:Null}"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="MenuItem">
+                        <Border x:Name="Bd" 
+                                Background="{TemplateBinding Background}" 
+                                CornerRadius="8"
+                                Margin="2,2,2,2">
+                            <ContentPresenter ContentSource="Header" 
+                                              VerticalAlignment="Center" 
+                                              HorizontalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background"  TargetName="Bd" Value="{StaticResource AccentBrush}"/>
+                                <Setter Property="Foreground" Value="#23272F"/>
+                                <Setter Property="FontWeight" Value="Bold"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <DropShadowEffect x:Key="MainShadow" Color="#66000000" BlurRadius="32" ShadowDepth="0" Opacity="0.4"/>
+        <Style x:Key="LabelTitle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="36"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+        <Style x:Key="SecondaryText" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Foreground" Value="#B0B8C1"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+    </Window.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -18,60 +64,81 @@
         </Grid.RowDefinitions>
 
         <!-- Верхнее меню -->
-        <Menu Grid.Row="0" Background="White">
-            <MenuItem Header="Пользователи" Click="UsersMenuItem_Click"/>
-            <MenuItem Header="Категории" Click="CategoryMenuItem_Click"/>
-            <MenuItem Header="Товары" Click="ProductsMenuItem_Click"/>
-            <MenuItem Header="Поставщики и клиенты" Click="DealerAndCustomerMenuItem_Click"/>
-            <MenuItem Header="Инвентарь" Click="InventoryMenuItem_Click"/>
-            <MenuItem Header="Транзакции" Click="TransactionsMenuItem_Click"/>
-            <MenuItem Header="Логистика" Click="LogisticMenuItem_Click"/>
-            <MenuItem Header="Доставки" Click="DeliveriesMenuItem_Click"/>
-            <MenuItem Header="Выход" Click="LogOutMenuItem_Click"/>
-        </Menu>
+        <Border Grid.Row="0" Background="{StaticResource LightBgBrush}" CornerRadius="0,0,18,18" Height="56">
+            <DockPanel LastChildFill="False" VerticalAlignment="Center">
+                <Menu DockPanel.Dock="Left" Background="{x:Null}" Height="40" VerticalAlignment="Center" HorizontalAlignment="Left">
+                    <MenuItem Header="Пользователи" Style="{StaticResource MenuButtonStyle}" Click="UsersMenuItem_Click"/>
+                    <MenuItem Header="Категории" Style="{StaticResource MenuButtonStyle}" Click="CategoryMenuItem_Click"/>
+                    <MenuItem Header="Товары" Style="{StaticResource MenuButtonStyle}" Click="ProductsMenuItem_Click"/>
+                    <MenuItem Header="Поставщики и клиенты" Style="{StaticResource MenuButtonStyle}" Click="DealerAndCustomerMenuItem_Click"/>
+                    <MenuItem Header="Инвентарь" Style="{StaticResource MenuButtonStyle}" Click="InventoryMenuItem_Click"/>
+                    <MenuItem Header="Транзакции" Style="{StaticResource MenuButtonStyle}" Click="TransactionsMenuItem_Click"/>
+                    <MenuItem Header="Логистика" Style="{StaticResource MenuButtonStyle}" Click="LogisticMenuItem_Click"/>
+                    <MenuItem Header="Доставки" Style="{StaticResource MenuButtonStyle}" Click="DeliveriesMenuItem_Click"/>
+                    <MenuItem Header="Выход" Style="{StaticResource MenuButtonStyle}" Click="LogOutMenuItem_Click"/>
+                </Menu>
+            </DockPanel>
+        </Border>
 
         <!-- Основное содержимое -->
-        <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <TextBlock Text="Пользователь:" 
-                           FontSize="14" 
-                           FontWeight="SemiBold" 
-                           Margin="0,0,5,0"/>
-                <TextBlock x:Name="LoggedUserLabel" 
-                           Text="Георгий" 
-                           FontSize="14" 
-                           FontWeight="Bold" 
-                           Foreground="Green"/>
-            </StackPanel>
+        <Grid Grid.Row="1">
+            <Border Background="{StaticResource LightBgBrush}" CornerRadius="22" 
+                    Padding="48,32" 
+                    HorizontalAlignment="Center" VerticalAlignment="Center" 
+                    Effect="{StaticResource MainShadow}">
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" >
 
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0">
-                <TextBlock x:Name="AppFNameLabel" 
-                           Text="Магазин" 
-                           FontSize="36" 
-                           FontWeight="SemiBold"/>
-                <TextBlock x:Name="AppLNameLabel" 
-                           Text="Система" 
-                           FontSize="36" 
-                           FontWeight="Bold" 
-                           Margin="5,0,0,0"/>
-            </StackPanel>
+                    <!-- User with avatar row -->
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,24">
+                        <!-- Аватар пользователя (стабильно и стильно, Circle) -->
+                        <Ellipse Width="48" Height="48" Fill="{StaticResource AccentBrush}">
+                            <Ellipse.Effect>
+                                <DropShadowEffect Color="#33000000" BlurRadius="8"/>
+                            </Ellipse.Effect>
+                            <Ellipse.StrokeThickness>3</Ellipse.StrokeThickness>
+                            <!-- Можно тут разместить Инициал пользователя или иконку -->
+                            <Ellipse.OpacityMask>
+                                <VisualBrush Stretch="Uniform">
+                                    <VisualBrush.Visual>
+                                        <TextBlock Text="卐☭"
+                                                   VerticalAlignment="Center" HorizontalAlignment="Center"
+                                                   FontSize="32" FontWeight="Bold" Foreground="#23272F"/>
+                                    </VisualBrush.Visual>
+                                </VisualBrush>
+                            </Ellipse.OpacityMask>
+                        </Ellipse>
+                        <StackPanel Margin="12,0,0,0" VerticalAlignment="Center">
+                            <TextBlock Text="Пользователь:" FontSize="15" Foreground="#B0B8C1"/>
+                            <TextBlock x:Name="LoggedUserLabel" Text="Пользователь" FontSize="20" 
+                                       FontWeight="Bold" Foreground="{StaticResource AccentBrush}"/>
+                        </StackPanel>
+                    </StackPanel>
 
-            <TextBlock x:Name="DescriptionLabel" 
-                       Text="Управление продажами и инвентаризацией" 
-                       FontSize="14" 
-                       FontWeight="SemiBold" 
-                       HorizontalAlignment="Center" 
-                       Margin="0,10,0,0"/>
-        </StackPanel>
+                    <!-- Main App Title -->
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,12">
+                        <TextBlock x:Name="AppFNameLabel" Text="Магазин"
+                                   Foreground="White" FontWeight="SemiBold" FontSize="38"/>
+                        <TextBlock x:Name="AppLNameLabel" Text="Система"
+                                   Foreground="{StaticResource AccentBrush}" FontWeight="Bold" FontSize="38" Margin="8,0,0,0"/>
+                    </StackPanel>
+
+                    <!-- Description -->
+                    <TextBlock x:Name="DescriptionLabel"
+                               Text="Управление продажами и инвентаризацией"
+                               Style="{StaticResource SecondaryText}"
+                               HorizontalAlignment="Center" Margin="0,0,0,0"/>
+                </StackPanel>
+            </Border>
+        </Grid>
 
         <!-- Подвал -->
-        <Border Grid.Row="2" Background="Teal" Height="48">
-            <TextBlock Text="Разработано: Группа 12" 
-                       FontSize="14" 
-                       FontWeight="SemiBold" 
-                       Foreground="White" 
-                       VerticalAlignment="Center" 
-                       HorizontalAlignment="Right" 
+        <Border Grid.Row="2" Background="#23272F" Height="42">
+            <TextBlock Text="Разработано: Тимофеев Д.Ю" 
+                       FontSize="13"
+                       FontWeight="SemiBold"
+                       Foreground="#B0B8C1"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Right"
                        Margin="0,0,20,0"/>
         </Border>
     </Grid>
