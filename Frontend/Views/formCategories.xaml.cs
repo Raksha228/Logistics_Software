@@ -185,9 +185,9 @@ namespace Frontend.Views
         {
             try
             {
-                DataView dv = _categoriesTable.DefaultView;
-                dv.RowFilter = $"id LIKE '%{txtSearch.Text}%' OR title LIKE '%{txtSearch.Text}%' OR description LIKE '%{txtSearch.Text}%'";
-                dgvCategories.ItemsSource = dv;
+                string keyword = txtSearch.Text;
+                DataTable dt = _userData.Search(keyword);
+                dgvCategories.ItemsSource = dt.DefaultView;
             }
             catch (Exception ex)
             {

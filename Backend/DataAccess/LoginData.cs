@@ -7,31 +7,31 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-//using System.Windows.Forms;
+using System.Windows;
 using Backend.Interfaces;
 namespace Backend.DataAccess
 {
     public class LoginData
     {
-        //Връзка с базата данни
+        //Подключение к базе данных
         static string myconnstrng = ConfigurationManager.ConnectionStrings["connstrng"].ConnectionString;
 
-        //Метод за влизане в системата
+        //Метод входа в систему
         public bool loginCheck(Login login)
         {
             bool isSuccess = false;
 
-            //Свързванне с базата данни
+            //Подключение к базе данных
             SqlConnection conn = new SqlConnection(myconnstrng);
 
             try
             {
-                //Създаване на query за взимане на данни от базата данни
+                //Создайте запрос для получения данных из базы данных
                 string sql = "SELECT * FROM table_users WHERE username=@username AND password=@password AND user_type=@user_type";
 
-               
 
-                //Вземане на стойностите с изпълнението на query-то
+
+                //Получение значений с помощью выполнения запроса
                 SqlCommand cmd = new SqlCommand(sql, conn);
 
                 cmd.Parameters.AddWithValue("@username", login.Username ?? (object)DBNull.Value);
@@ -44,7 +44,7 @@ namespace Backend.DataAccess
 
                 adapter.Fill(dt);
 
-                //Проверка дали имаме редове в таблицата
+                //Проверьте, есть ли у нас строки в таблице
                 if (dt.Rows.Count > 0)
                 {
                     isSuccess = true;
@@ -56,7 +56,7 @@ namespace Backend.DataAccess
             }
             catch (Exception ex)
             {
-                //MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message);
             }
             finally
             {

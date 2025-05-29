@@ -7,7 +7,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-////using System.Windows.Forms;
+using System.Windows;
 using Backend.Interfaces;
 
 namespace Backend.DataAccess
@@ -16,7 +16,7 @@ namespace Backend.DataAccess
     {
         static string myconnstrng = ConfigurationManager.ConnectionStrings["connstrng"].ConnectionString;
 
-        //Визуализация на всички логистични операции
+        //Визуализация всех логистических операций
         public DataTable DisplayAllLogistics()
         {
             SqlConnection conn = new SqlConnection(myconnstrng);
@@ -37,7 +37,7 @@ namespace Backend.DataAccess
             }
             catch (Exception ex)
             {
-                ////MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message);
             }
             finally
             {
@@ -47,7 +47,7 @@ namespace Backend.DataAccess
             return dt;
         }
 
-        //Добавяне
+        //Добавить
         public bool Insert(Logistic logistic)
         {
             bool isSuccess = false;
@@ -87,7 +87,7 @@ namespace Backend.DataAccess
             }
             catch (Exception ex)
             {
-                ////MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message);
             }
             finally
             {
@@ -97,7 +97,7 @@ namespace Backend.DataAccess
             return isSuccess;
         }
 
-        //Визуализация на логистични операции по дата
+        //Визуализация логистических операций по датам
         public DataTable DisplayLogisticnByDate(string date)
         {
             SqlConnection conn = new SqlConnection(myconnstrng);
@@ -118,7 +118,7 @@ namespace Backend.DataAccess
             }
             catch (Exception ex)
             {
-                ////MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message);
             }
             finally
             {

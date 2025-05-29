@@ -8,7 +8,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-////using System.Windows.Forms;
+using System.Windows;
 
 namespace Backend.DataAccess
 {
@@ -16,17 +16,17 @@ namespace Backend.DataAccess
     {
         public string myconnstrng = ConfigurationManager.ConnectionStrings["connstrng"].ConnectionString;
 
-        //Вземане на данните
+        //Получение данных
         public DataTable Select()
         {
-            //Създаване на връзка
+            //Установите связь
             SqlConnection conn = new SqlConnection(myconnstrng);
 
             DataTable dt = new DataTable();
 
             try
             {
-                //Създаване на query за вземане на всички данни от базата данни
+                //Создайте запрос, чтобы получить все данные из базы данных
                 string sql = "SELECT * FROM table_categories";
 
                 SqlCommand cmd = new SqlCommand(sql, conn);
@@ -39,7 +39,7 @@ namespace Backend.DataAccess
             }
             catch (Exception ex)
             {
-                ////MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message);
             }
             finally
             {
@@ -49,7 +49,7 @@ namespace Backend.DataAccess
             return dt;
         }
 
-        //Създаване на нова категория
+        //Создайте новую категорию
         public bool Insert(Category category)
         {
             bool isSucces = false;
@@ -58,12 +58,12 @@ namespace Backend.DataAccess
 
             try
             {
-                //Създаване на query
+                //Создайте запрос
                 string sql = "INSERT INTO table_categories (title, description, added_date, added_by, added_by_name) VALUES (@title, @description, @added_date, @added_by, @added_by_name)";
 
-                //Creating SQL Command to pass values in our query
+                //Создание SQL-команды для передачи значений в наш запрос
                 SqlCommand cmd = new SqlCommand(sql, conn);
-                //Passing Values through parameter
+                //Передача значений через параметр
                 cmd.Parameters.AddWithValue("@title", category.Title);
                 cmd.Parameters.AddWithValue("@description", category.Description);
                 cmd.Parameters.AddWithValue("@added_date", category.AddedDate);
@@ -72,7 +72,7 @@ namespace Backend.DataAccess
 
                 conn.Open();
 
-                //Вземане на колко редове са запълнени
+                //Получение количества заполненных строк
                 int rows = cmd.ExecuteNonQuery();
 
                 if (rows > 0)
@@ -86,7 +86,7 @@ namespace Backend.DataAccess
             }
             catch (Exception ex)
             {
-                ////MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message);
             }
             finally
             {
@@ -96,7 +96,7 @@ namespace Backend.DataAccess
             return isSucces;
         }
 
-        //Редактиране на данните
+        //Редактирование данных
         public bool Update(Category category)
         {
             bool isSuccess = false;
@@ -107,7 +107,7 @@ namespace Backend.DataAccess
             {
                 string sql = "UPDATE table_categories SET title=@title, description=@description, added_date=@added_date, added_by=@added_by, added_by_name=@added_by_name WHERE id=@id";
 
-                //SQL команда за изпълнение на query-то
+                //Команда SQL для выполнения запроса
                 SqlCommand cmd = new SqlCommand(sql, conn);
 
                 cmd.Parameters.AddWithValue("@title", category.Title);
@@ -132,7 +132,7 @@ namespace Backend.DataAccess
             }
             catch (Exception ex)
             {
-                ////MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message);
             }
             finally
             {
@@ -142,7 +142,7 @@ namespace Backend.DataAccess
             return isSuccess;
         }
 
-        //Изтриване на данни
+        //Удаление данных
         public bool Delete(Category category)
         {
             bool isSuccess = false;
@@ -173,7 +173,7 @@ namespace Backend.DataAccess
             }
             catch (Exception ex)
             {
-                ////MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message);
             }
             finally
             {
@@ -183,7 +183,7 @@ namespace Backend.DataAccess
             return isSuccess;
         }
 
-        //Търсене на данни
+        //Данные поиска
         public DataTable Search(string keywords)
         {
             SqlConnection conn = new SqlConnection(myconnstrng);
@@ -204,7 +204,7 @@ namespace Backend.DataAccess
             }
             catch (Exception ex)
             {
-                ////MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message);
             }
             finally
             {

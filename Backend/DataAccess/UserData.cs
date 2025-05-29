@@ -7,7 +7,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-//using System.Windows.Forms;
+using System.Windows;
 using Backend.Interfaces;
 namespace Backend.DataAccess
 {
@@ -15,48 +15,48 @@ namespace Backend.DataAccess
     {
         static string myconnstrng = ConfigurationManager.ConnectionStrings["connstrng"].ConnectionString;
 
-        //Вземане на данни
+        //Сбор данных
         public DataTable Select()
         {
-            //Връзка с базата данни
+            //Подключение к базе данных
             SqlConnection conn = new SqlConnection(myconnstrng);
 
-            //Задържане на данните в таблица
+            //Сохранение данных в таблице
             DataTable dt = new DataTable();
             try
             {
-                //query за вземане на данните от таблицата с потребителите
+                //Запрос для получения данных из таблицы пользователей
                 String sql = "SELECT * FROM table_users";
 
-                //Изпълнение на query
+                //Выполните запрос
                 SqlCommand cmd = new SqlCommand(sql, conn);
 
-                //Получаване на данните в адаптер
+                //Получение данных в адаптер
                 SqlDataAdapter adapter = new SqlDataAdapter(cmd);
 
-                //Отваряне на връзката
+                //Открытие ссылки
                 conn.Open();
 
-                //Попълване на данните в таблицата
+                //Заполните данные в таблице
                 adapter.Fill(dt);
             }
             catch (Exception ex)
             {
-                //Грешка
-                //MessageBox.Show(ex.Message);
+                //Ошибка
+                MessageBox.Show(ex.Message);
             }
             finally
             {
-                //Затваряне на връзката
+                //Закрытие соединения
                 conn.Close();
             }
-            //Връщане на данните
+            //Верните данные
             return dt;
 
 
         }
 
-        //Добавяне на данни
+        //Добавить данные
         public bool Insert(User user)
         {
             bool isSuccess = false;
@@ -85,7 +85,8 @@ namespace Backend.DataAccess
 
                 int rows = cmd.ExecuteNonQuery();
 
-                //Ако query-то е изпълнено ще върне стойност по-голяма от 0 ако не е изпълнено ще върне стойност по малка от 0
+                //Если запрос будет выполнен, он вернет значение больше 0, если не будет выполнен, вернет значение меньше 0
+
                 if (rows > 0)
                 {
                     isSuccess = true;
@@ -97,7 +98,7 @@ namespace Backend.DataAccess
             }
             catch (Exception ex)
             {
-                //MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message);
             }
             finally
             {
@@ -106,7 +107,7 @@ namespace Backend.DataAccess
             return isSuccess;
         }
 
-        //Редактиране на данни
+        //Редактировать данные
         public bool Update(User user)
         {
             bool isSuccess = false;
@@ -147,7 +148,7 @@ namespace Backend.DataAccess
             }
             catch (Exception ex)
             {
-                //MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message);
             }
             finally
             {
@@ -156,7 +157,7 @@ namespace Backend.DataAccess
             return isSuccess;
         }
 
-        //Изтриване на данни
+        //Удаление данных
         public bool Delete(User user)
         {
             bool isSuccess = false;
@@ -184,7 +185,7 @@ namespace Backend.DataAccess
             }
             catch (Exception ex)
             {
-                //MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message);
             }
             finally
             {
@@ -193,7 +194,7 @@ namespace Backend.DataAccess
             return isSuccess;
         }
 
-        //Търсене на данни
+        //Данные поиска
         public DataTable Search(string keywords)
         {
             SqlConnection conn = new SqlConnection(myconnstrng);
@@ -213,7 +214,7 @@ namespace Backend.DataAccess
             }
             catch (Exception ex)
             {
-                //MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message);
             }
             finally
             {
@@ -222,7 +223,7 @@ namespace Backend.DataAccess
             return dt;
         }
 
-        //Вземане на id от влезналия потребител
+        //Получение идентификатора от вошедшего пользователя
         public User GetIDFromUsername(string username)
         {
             User user = new User();
@@ -244,7 +245,7 @@ namespace Backend.DataAccess
             }
             catch (Exception ex)
             {
-                //MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message);
             }
             finally
             {
@@ -253,7 +254,7 @@ namespace Backend.DataAccess
             return user;
         }
 
-        //Търсене на потребител за логистиката
+        //Поиск пользователей по логистике
         public User SearchUserForLogistic(string keyword)
         {
             User user = new User();
@@ -272,7 +273,7 @@ namespace Backend.DataAccess
 
                 adapter.Fill(dt);
 
-                //Ако успешно имам намерени данни ние ги запазваме в обекта от business logic 
+                //Если я успешно нашел данные, мы сохраняем их в объекте из бизнес-логики
                 if (dt.Rows.Count > 0)
                 {
                     user.FirstName = dt.Rows[0]["first_name"].ToString();
@@ -282,7 +283,7 @@ namespace Backend.DataAccess
             }
             catch (Exception ex)
             {
-                //MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message);
             }
             finally
             {

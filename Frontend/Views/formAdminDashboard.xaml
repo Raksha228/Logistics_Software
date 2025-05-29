@@ -75,6 +75,7 @@
                     <MenuItem Header="Транзакции" Style="{StaticResource MenuButtonStyle}" Click="TransactionsMenuItem_Click"/>
                     <MenuItem Header="Логистика" Style="{StaticResource MenuButtonStyle}" Click="LogisticMenuItem_Click"/>
                     <MenuItem Header="Доставки" Style="{StaticResource MenuButtonStyle}" Click="DeliveriesMenuItem_Click"/>
+                    <MenuItem Header="Архив доставок" Style="{StaticResource MenuButtonStyle}" Click="ArchiveDeliveriesMenuItem_Click"/>
                     <MenuItem Header="Выход" Style="{StaticResource MenuButtonStyle}" Click="LogOutMenuItem_Click"/>
                 </Menu>
             </DockPanel>

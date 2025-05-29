@@ -56,18 +56,111 @@
             </Setter>
         </Style>
 
-        <!-- Стиль ComboBox (минимализм, округлость, акцент) -->
+        <!-- ToggleButton стрелочка для ComboBox -->
+        <ControlTemplate x:Key="AccentComboBoxToggleButtonTemplate" TargetType="ToggleButton">
+            <Border Background="Transparent"
+                CornerRadius="0"
+                Padding="0"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Stretch">
+                <Path Data="M 0 0 L 8 0 L 4 7 Z"
+                  Fill="{StaticResource AccentBrush}"
+                  HorizontalAlignment="Center"
+                  VerticalAlignment="Center"
+                  Width="14" Height="8"/>
+            </Border>
+        </ControlTemplate>
+        <Style x:Key="ComboBoxToggleButtonStyle" TargetType="ToggleButton">
+            <Setter Property="OverridesDefaultStyle" Value="true"/>
+            <Setter Property="IsTabStop" Value="false"/>
+            <Setter Property="Focusable" Value="false"/>
+            <Setter Property="Template" Value="{StaticResource AccentComboBoxToggleButtonTemplate}"/>
+        </Style>
+        
+        <!-- Основной стиль ComboBox -->
         <Style x:Key="AccentComboBox" TargetType="ComboBox">
-            <Setter Property="Background" Value="{StaticResource LightBgBrush}"/>
+            <Setter Property="Background" Value="{StaticResource LightBgBrush}" />
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="FontSize" Value="16"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Height" Value="38"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
-            <Setter Property="Padding" Value="10,0"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="Padding" Value="12,0,36,0"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Grid>
+                            <Border x:Name="Border"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="8"
+                                SnapsToDevicePixels="True"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                                <Grid>
+                                    <ContentPresenter Name="ContentSite"
+                                                  IsHitTestVisible="False"
+                                                  Content="{TemplateBinding SelectionBoxItem}"
+                                                  ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                                  ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
+                                                  VerticalAlignment="Center"
+                                                  HorizontalAlignment="Left"
+                                                  Margin="12,0,38,0" />
+                                    <ToggleButton
+                                        Name="DropDownToggle"
+                                        Style="{StaticResource ComboBoxToggleButtonStyle}"
+                                        Width="38"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Stretch"
+                                        IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                        Focusable="False"
+                                        ClickMode="Press"
+                                    />
+                                </Grid>
+                            </Border>
+                            <Popup Name="Popup"
+                               Placement="Bottom"
+                               IsOpen="{TemplateBinding IsDropDownOpen}"
+                               AllowsTransparency="True"
+                               Focusable="False"
+                               PopupAnimation="Fade">
+                                <Grid Name="DropDown"
+                                  MinWidth="{TemplateBinding ActualWidth}"
+                                  MaxHeight="200"
+                                  SnapsToDevicePixels="True">
+                                    <Border Background="#242933" CornerRadius="7" SnapsToDevicePixels="True"
+                                        BorderBrush="{StaticResource AccentBrush}" BorderThickness="1">
+                                        <ScrollViewer Margin="2,2,2,2">
+                                            <StackPanel IsItemsHost="True"
+                                                    KeyboardNavigation.DirectionalNavigation="Contained"/>
+                                        </ScrollViewer>
+                                    </Border>
+                                </Grid>
+                            </Popup>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="#28313D"/>
+                                <Setter TargetName="Border" Property="Effect">
+                                    <Setter.Value>
+                                        <DropShadowEffect Color="#20E3B2" BlurRadius="7" ShadowDepth="0" Opacity="0.12"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused" Value="True">
+                                <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource AccentBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsDropDownOpen" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="#28313D"/>
+                                <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource AccentBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Foreground" Value="#777"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
 
         <!-- DataGrid стиль (тёмный, фирменный акцент для строки) -->
@@ -132,7 +225,7 @@
                 Margin="20,18,20,12"
                 Effect="{StaticResource MainShadow}">
             <DockPanel HorizontalAlignment="Left" VerticalAlignment="Center">
-                <Label Content="Дата:" 
+                <Label Content="Тип:" 
                        VerticalAlignment="Center"
                        Foreground="{StaticResource HintBrush}"
                        FontSize="15" 

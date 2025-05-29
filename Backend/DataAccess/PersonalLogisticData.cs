@@ -7,7 +7,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-//using System.Windows.Forms;
+using System.Windows;
 using Backend.Interfaces;
 
 namespace Backend.DataAccess
@@ -17,7 +17,7 @@ namespace Backend.DataAccess
 
         static string myconnstrng = ConfigurationManager.ConnectionStrings["connstrng"].ConnectionString;
 
-        //Показване на данните според влезналия потребител
+        //Отображение данных в соответствии с вошедшим в систему пользователем
         public DataTable DisplayLogisticByUsername(string username)
         {
             SqlConnection conn = new SqlConnection(myconnstrng);
@@ -38,7 +38,7 @@ namespace Backend.DataAccess
             }
             catch (Exception ex)
             {
-                //MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message);
             }
             finally
             {
@@ -48,7 +48,7 @@ namespace Backend.DataAccess
             return dt;
         }
 
-        //Показване на данните според датата 
+        //Отображение данных по дате
         public DataTable DisplayLogisticnByDate(string date, string username)
         {
             SqlConnection conn = new SqlConnection(myconnstrng);
@@ -69,7 +69,7 @@ namespace Backend.DataAccess
             }
             catch (Exception ex)
             {
-                //MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message);
             }
             finally
             {

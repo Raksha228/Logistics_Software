@@ -94,6 +94,12 @@ namespace Frontend.Views
             deliveriesWindow.Show();
         }
 
+        private void ArchiveDeliveriesMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            var achivedeliveriesWindow = new formArchiveDeliveries();
+            achivedeliveriesWindow.Show();
+        }
+
         private void LogOutMenuItem_Click(object sender, RoutedEventArgs e)
         {
             var loginWindow = new formLogin();

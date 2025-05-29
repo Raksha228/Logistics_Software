@@ -169,7 +169,7 @@
 
                 <!-- Описание -->
                 <StackPanel Orientation="Vertical" Margin="0,8">
-                    <Label Content="Описание:" Style="{StaticResource AccentLabel}"/>
+                    <Label Content="Описание:" Style="{StaticResource AccentLabel}" Height="29"/>
                     <TextBox x:Name="txtDescription"
                              Style="{StaticResource AccentTextBox}"
                              Height="120"
@@ -236,6 +236,3 @@
         </StackPanel>
     </Grid>
 </Window>
-    
-    
-    

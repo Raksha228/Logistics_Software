@@ -20,7 +20,7 @@ namespace Backend.BusinessLogic
             get => this.name;
             set
             {
-                //Валидация на името
+                //Проверка имени
                 if (value.Length <= 2)
                 {
                     throw new ArgumentException(@"Invalid name!");
@@ -34,7 +34,7 @@ namespace Backend.BusinessLogic
             get => this.email;
             set
             {
-                //Валидация на emailа
+                //Проверка электронной почты
                 Regex regex = new Regex(@"^([\w-.]+)@(([[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.)|(([\w-]+.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(]?)$");
                 Match match = regex.Match(value);
                 if (match.Success)
@@ -49,7 +49,7 @@ namespace Backend.BusinessLogic
         }
         public string Contact
         {
-            //Валидация на контакта
+            //Проверка контакта
             get => this.contact;
             set
             {

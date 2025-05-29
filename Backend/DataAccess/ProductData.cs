@@ -7,7 +7,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-//using System.Windows.Forms;
+using System.Windows;
 using Backend.Interfaces;
 
 namespace Backend.DataAccess
@@ -16,24 +16,24 @@ namespace Backend.DataAccess
     {
         static string myconnstrng = ConfigurationManager.ConnectionStrings["connstrng"].ConnectionString;
 
-        //Взимане на данни
+        //Сбор данных
         public DataTable Select()
         {
-            //Създаване на връзка с базата данни
+            //Установка соединения с базой данных
             SqlConnection conn = new SqlConnection(myconnstrng);
 
-            //Създаване на времена таблица за задържане на данните
+            //Создайте временную таблицу для хранения данных
             DataTable dt = new DataTable();
 
             try
             {
-                //Създаване на query което да вземе всички данни от таблицата
+                //Создайте запрос, который берет все данные из таблицы
                 String sql = "SELECT * FROM table_products";
 
-                //Създаване на команда която да изпълне query-то
+                //Создайте команду для выполнения запроса
                 SqlCommand cmd = new SqlCommand(sql, conn);
 
-                //създаване на адаптер за задържане на информацията и запълване в таблицата
+                //создайте адаптер для хранения информации и заполните таблицу
                 SqlDataAdapter adapter = new SqlDataAdapter(cmd);
 
                 conn.Open();
@@ -42,7 +42,7 @@ namespace Backend.DataAccess
             }
             catch (Exception ex)
             {
-                //MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message);
             }
             finally
             {
@@ -52,7 +52,7 @@ namespace Backend.DataAccess
             return dt;
         }
 
-        //Вкарване на данни в базата
+        //Ввод данных в базу данных
         public bool Insert(Product product)
         {
             bool isSuccess = false;
@@ -90,7 +90,7 @@ namespace Backend.DataAccess
             }
             catch (Exception ex)
             {
-                //MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message);
             }
             finally
             {
@@ -100,7 +100,7 @@ namespace Backend.DataAccess
             return isSuccess;
         }
 
-        //Редактиране на данни
+        //Редактировать данные
         public bool Update(Product product)
         {
             bool isSuccess = false;
@@ -139,7 +139,7 @@ namespace Backend.DataAccess
             }
             catch (Exception ex)
             {
-                //MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message);
             }
             finally
             {
@@ -149,7 +149,7 @@ namespace Backend.DataAccess
             return isSuccess;
         }
 
-        //Изтриване на данни
+        //Удаление данных
         public bool Delete(Product product)
         {
             bool isSuccess = false;
@@ -179,7 +179,7 @@ namespace Backend.DataAccess
             }
             catch (Exception ex)
             {
-                //MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message);
             }
             finally
             {
@@ -189,7 +189,7 @@ namespace Backend.DataAccess
             return isSuccess;
         }
 
-        //Търсене на данни
+        //Данные поиска
         public DataTable Search(string keywords)
         {
             SqlConnection conn = new SqlConnection(myconnstrng);
@@ -210,7 +210,7 @@ namespace Backend.DataAccess
             }
             catch (Exception ex)
             {
-                //MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message);
             }
             finally
             {
@@ -220,7 +220,7 @@ namespace Backend.DataAccess
             return dt;
         }
 
-        //Търсене на продукт за транзакциите
+        //Поиск продуктов для сделок
         public Product GetProductsForTransaction(string keyword)
         {
             Product product = new Product();
@@ -249,7 +249,7 @@ namespace Backend.DataAccess
             }
             catch (Exception ex)
             {
-                //MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message);
             }
             finally
             {
@@ -259,7 +259,7 @@ namespace Backend.DataAccess
             return product;
         }
 
-        //Вземане на id 
+        // Получение идентификатора
         public Product GetProductIDFromName(string productName)
         {
             Product product = new Product();
@@ -285,7 +285,7 @@ namespace Backend.DataAccess
             }
             catch (Exception ex)
             {
-                //MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message);
             }
             finally
             {
@@ -295,7 +295,7 @@ namespace Backend.DataAccess
             return product;
         }
 
-        //Вземане на моментното количество продукти
+        //Взяв мгновенное количество продуктов
         public decimal GetProductQty(int productID)
         {
             SqlConnection conn = new SqlConnection(myconnstrng);
@@ -323,7 +323,7 @@ namespace Backend.DataAccess
             }
             catch (Exception ex)
             {
-                //MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message);
             }
             finally
             {
@@ -333,7 +333,7 @@ namespace Backend.DataAccess
             return qty;
         }
 
-        //Промяна на количеството
+        //Изменение количества
         public bool UpdateQuantity(int productID, decimal quantity)
         {
             bool success = false;
@@ -363,7 +363,7 @@ namespace Backend.DataAccess
             }
             catch (Exception ex)
             {
-                //MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message);
             }
             finally
             {
@@ -373,7 +373,7 @@ namespace Backend.DataAccess
             return success;
         }
 
-        //Увеличаване на количеството
+        //Увеличение количества
         public bool IncreaseProduct(int productID, decimal increaseQuantity)
         {
             bool success = false;
@@ -382,18 +382,18 @@ namespace Backend.DataAccess
 
             try
             {
-                //Вземане на текущото количество
+                //Принимая текущее количество
                 decimal currentQuantity = GetProductQty(productID);
 
-                //Увеличаване на текущото количество с това което сме купили
+                //Увеличить текущее количество за счет того, что мы уже купили
                 decimal newQuantity = currentQuantity + increaseQuantity;
 
-                //Промяна на количеството
+                //Изменение количества
                 success = UpdateQuantity(productID, newQuantity);
             }
             catch (Exception ex)
             {
-                //MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message);
             }
             finally
             {
@@ -402,7 +402,7 @@ namespace Backend.DataAccess
             return success;
         }
 
-        //Намаляне на количеството
+        //Уменьшение количества
         public bool DecreaseProduct(int productID, decimal decreaseQuantity)
         {
             bool success = false;
@@ -419,7 +419,7 @@ namespace Backend.DataAccess
             }
             catch (Exception ex)
             {
-                //MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message);
             }
             finally
             {
@@ -428,7 +428,7 @@ namespace Backend.DataAccess
             return success;
         }
 
-        //Визуализация на продукти според категорията
+        //Визуализация продуктов по категориям
         public DataTable DisplayProductsByCategory(string category)
         {
             SqlConnection conn = new SqlConnection(myconnstrng);
@@ -449,7 +449,7 @@ namespace Backend.DataAccess
             }
             catch (Exception ex)
             {
-                //MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message);
             }
             finally
             {

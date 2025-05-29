@@ -7,7 +7,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-////using System.Windows.Forms;
+using System.Windows;
 using Backend.Interfaces;
 
 namespace Backend.DataAccess
@@ -16,7 +16,7 @@ namespace Backend.DataAccess
     {
         static string myconnstrng = ConfigurationManager.ConnectionStrings["connstrng"].ConnectionString;
 
-        //Вземане на данни
+        //Сбор данных
         public DataTable Select()
         {
             SqlConnection conn = new SqlConnection(myconnstrng);
@@ -37,7 +37,7 @@ namespace Backend.DataAccess
             }
             catch (Exception ex)
             {
-                ////MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message);
             }
             finally
             {
@@ -47,7 +47,7 @@ namespace Backend.DataAccess
             return dt;
         }
 
-        //Вкарване на данни
+        //Ввод данных
         public bool Insert(DealerCustomer dealerAndCustomer)
         {
             SqlConnection conn = new SqlConnection(myconnstrng);
@@ -84,7 +84,7 @@ namespace Backend.DataAccess
             }
             catch (Exception ex)
             {
-                ////MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message);
             }
             finally
             {
@@ -94,7 +94,7 @@ namespace Backend.DataAccess
             return isSuccess;
         }
 
-        //Редактиране на данни
+        //Редактировать данные
         public bool Update(DealerCustomer dealerAndCustomer)
         {
             SqlConnection conn = new SqlConnection(myconnstrng);
@@ -131,7 +131,7 @@ namespace Backend.DataAccess
             }
             catch (Exception ex)
             {
-                ////MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message);
             }
             finally
             {
@@ -141,7 +141,7 @@ namespace Backend.DataAccess
             return isSuccess;
         }
 
-        //Изтриване на данни
+        //Удаление данных
         public bool Delete(DealerCustomer dealerAndCustomer)
         {
             SqlConnection conn = new SqlConnection(myconnstrng);
@@ -171,7 +171,7 @@ namespace Backend.DataAccess
             }
             catch (Exception ex)
             {
-                ////MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message);
             }
             finally
             {
@@ -181,7 +181,7 @@ namespace Backend.DataAccess
             return isSuccess;
         }
 
-        //Търсене на данни
+        //Данные поиска
         public DataTable Search(string keyword)
         {
             SqlConnection conn = new SqlConnection(myconnstrng);
@@ -203,7 +203,7 @@ namespace Backend.DataAccess
             }
             catch (Exception ex)
             {
-                ////MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message);
             }
             finally
             {
@@ -213,7 +213,7 @@ namespace Backend.DataAccess
             return dt;
         }
 
-        //Търсене в данните
+        //Поиск в данных
         public DealerCustomer SearchDealerCustomerForTransaction(string keyword)
         {
             DealerCustomer dealerCustomer = new DealerCustomer();
@@ -232,7 +232,7 @@ namespace Backend.DataAccess
 
                 adapter.Fill(dt);
 
-                //Ако успешно имам намерени данни ние ги запазваме в обекта от business logic 
+                //Если я успешно нашел данные, мы сохраняем их в объекте из бизнес-логики 
                 if (dt.Rows.Count > 0)
                 {
                     dealerCustomer.Type = dt.Rows[0]["type"].ToString();
@@ -245,7 +245,7 @@ namespace Backend.DataAccess
             }
             catch (Exception ex)
             {
-                ////MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message);
             }
             finally
             {
@@ -255,7 +255,7 @@ namespace Backend.DataAccess
             return dealerCustomer;
         }
 
-        //Вземане на id-то от името 
+        //Получение идентификатора из имени 
         public DealerCustomer GetDeaCustIDFromName(string Name)
         {
             DealerCustomer dealerCustomer = new DealerCustomer();
@@ -281,7 +281,7 @@ namespace Backend.DataAccess
             }
             catch (Exception ex)
             {
-                //MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message);
             }
             finally
             {

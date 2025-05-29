@@ -7,7 +7,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-//using System.Windows.Forms;
+using System.Windows;
 using Backend.Interfaces;
 
 namespace Backend.DataAccess
@@ -16,24 +16,24 @@ namespace Backend.DataAccess
     {
         static string myconnstrng = ConfigurationManager.ConnectionStrings["connstrng"].ConnectionString;
 
-        //Вземане на данните
+        //Получение данных
         public DataTable Select()
         {
-            //Създаване на връзка с базата данни
+            //Установка соединения с базой данных
             SqlConnection conn = new SqlConnection(myconnstrng);
 
-            //Създаване на времена таблица за задържане на данните
+            //Создайте временную таблицу для хранения данных
             DataTable dt = new DataTable();
 
             try
             {
-                //Създаване на query което да вземе всички данни от таблицата
+                //Создайте запрос, который берет все данные из таблицы
                 String sql = "SELECT * FROM table_logistic";
 
-                //Създаване на команда която да изпълне query-то
+                //Создайте команду для выполнения запроса
                 SqlCommand cmd = new SqlCommand(sql, conn);
 
-                //създаване на адаптер за задържане на информацията и запълване в таблицата
+                //создайте адаптер для хранения информации и заполните таблицу
                 SqlDataAdapter adapter = new SqlDataAdapter(cmd);
 
                 conn.Open();
@@ -42,7 +42,7 @@ namespace Backend.DataAccess
             }
             catch (Exception ex)
             {
-                //MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message);
             }
             finally
             {
@@ -52,7 +52,7 @@ namespace Backend.DataAccess
             return dt;
         }
 
-        //Вмъкване на данни
+        //Вставка данных
         public bool Insert(Logistic logistic)
         {
             bool isSuccess = false;
@@ -92,7 +92,7 @@ namespace Backend.DataAccess
             }
             catch (Exception ex)
             {
-                //MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message);
             }
             finally
             {
@@ -101,8 +101,8 @@ namespace Backend.DataAccess
 
             return isSuccess;
         }
-        
-        //Редактиране на данни
+
+        //Редактировать данные
         public bool Update(Logistic logistic)
         {
             bool isSuccess = false;
@@ -143,7 +143,7 @@ namespace Backend.DataAccess
             }
             catch (Exception ex)
             {
-                //MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message);
             }
             finally
             {
@@ -153,7 +153,7 @@ namespace Backend.DataAccess
             return isSuccess;
         }
 
-        //Изтриване на данни
+        //Удаление данных
         public bool Delete(Logistic logistic)
         {
             bool isSuccess = false;
@@ -183,7 +183,7 @@ namespace Backend.DataAccess
             }
             catch (Exception ex)
             {
-                //MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message);
             }
             finally
             {
@@ -193,7 +193,7 @@ namespace Backend.DataAccess
             return isSuccess;
         }
 
-        //Търсене на данни
+        //Данные поиска
         public DataTable Search(string keywords)
         {
             SqlConnection conn = new SqlConnection(myconnstrng);
@@ -214,7 +214,7 @@ namespace Backend.DataAccess
             }
             catch (Exception ex)
             {
-                //MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message);
             }
             finally
             {
@@ -224,7 +224,7 @@ namespace Backend.DataAccess
             return dt;
         }
 
-        //Вземане на продукт за логистика
+        //Получение продукции для логистики
         public Product GetProductsForLogistic(string keyword)
         {
             Product product = new Product();
@@ -254,7 +254,7 @@ namespace Backend.DataAccess
             }
             catch (Exception ex)
             {
-                //MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message);
             }
             finally
             {

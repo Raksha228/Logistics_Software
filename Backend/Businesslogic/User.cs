@@ -21,7 +21,7 @@ namespace Backend.BusinesLogic
             get => this.firstName;
             set
             {
-                //Валидация на първото име
+                //Проверка подлинности первого имени
                 if (value.Length <= 3)
                 {
                     throw new ArgumentException("Invalid first name!");
@@ -35,7 +35,7 @@ namespace Backend.BusinesLogic
             get => this.lastName;
             set
             {
-                //Валидация на фамилията
+                //Проверка фамилии
                 if (value.Length <= 3)
                 {
                     throw new ArgumentException("Invalid last name!");
@@ -49,7 +49,7 @@ namespace Backend.BusinesLogic
             get => this.email;
             set
             {
-                //Валидация на emaila
+                //Проверка электронной почтыа
                 Regex regex = new Regex(@"^([\w-.]+)@(([[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.)|(([\w-]+.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(]?)$");
                 Match match = regex.Match(value);
                 if (match.Success)
@@ -67,7 +67,7 @@ namespace Backend.BusinesLogic
             get => this.username;
             set
             {
-                //Валидация на потребителското име
+                //Проверка имени пользователя
                 if (value.Length < 3)
                 {
                     throw new ArgumentException("Invalid username!");
@@ -81,7 +81,7 @@ namespace Backend.BusinesLogic
             get => this.password;
             set
             {
-                //Валидация на паролата
+                //Проверка пароля
                 if (value.Length < 5)
                 {
                     throw new ArgumentException("Invalid password!");

@@ -200,9 +200,9 @@ namespace Frontend.Views
         {
             try
             {
-                DataView dv = _dealerCustomerTable.DefaultView;
-                dv.RowFilter = $"id LIKE '%{txtSearch.Text}%' OR type LIKE '%{txtSearch.Text}%' OR name LIKE '%{txtSearch.Text}%'";
-                dgvDeaCust.ItemsSource = dv;
+                string keyword = txtSearch.Text;
+                DataTable dt = _userData.Search(keyword);
+                dgvDeaCust.ItemsSource = dt.DefaultView;
             }
             catch (Exception ex)
             {
