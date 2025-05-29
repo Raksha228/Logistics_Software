@@ -118,7 +118,7 @@
 
                     <!-- Main App Title -->
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,12">
-                        <TextBlock x:Name="AppFNameLabel" Text="Магазин"
+                        <TextBlock x:Name="AppFNameLabel" Text="Автоматизация"
                                    Foreground="White" FontWeight="SemiBold" FontSize="38"/>
                         <TextBlock x:Name="AppLNameLabel" Text="Система"
                                    Foreground="{StaticResource AccentBrush}" FontWeight="Bold" FontSize="38" Margin="8,0,0,0"/>

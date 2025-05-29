@@ -130,7 +130,7 @@
                     <!-- Правая часть: инфо о системе-->
                     <StackPanel Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right" Margin="0,0,0,0">
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                            <TextBlock Text="Магазин"
+                            <TextBlock Text="Автоматизация"
                                        Foreground="White" FontWeight="SemiBold" FontSize="30" VerticalAlignment="Center"/>
                             <TextBlock Text="Система"
                                        Foreground="{StaticResource AccentBrush}" FontWeight="Bold" FontSize="30" Margin="10,0,0,0" VerticalAlignment="Center"/>
