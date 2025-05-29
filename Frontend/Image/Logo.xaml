@@ -2,8 +2,8 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <BitmapImage x:Key="Logo" UriSource="/Image/Logo.png"/>
+    <BitmapImage x:Key="Icon" UriSource="/Image/Icon.ico"/>
 
-    <!--<BitmapImage x:Key="Icon" UriSource="/Assets/Images/Icons/Icon.ico"/>-->
 
 
 </ResourceDictionary>

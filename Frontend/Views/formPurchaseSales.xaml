@@ -4,6 +4,7 @@
         Title="Покупки и продажи"
         Height="900" Width="1460"
         WindowStartupLocation="CenterScreen"
+        Icon="{StaticResource Icon}"
         Background="#23272F">
     <Window.Resources>
         <Color x:Key="AccentColor">#20E3B2</Color>

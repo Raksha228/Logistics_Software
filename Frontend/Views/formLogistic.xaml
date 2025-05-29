@@ -4,6 +4,7 @@
         Title="Логистика"
         Height="800" Width="1620"
         WindowStartupLocation="CenterScreen"
+        Icon="{StaticResource Icon}"
         Background="#23272F">
 
     <Window.Resources>

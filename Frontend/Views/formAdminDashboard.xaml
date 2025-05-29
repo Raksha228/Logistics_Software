@@ -5,6 +5,7 @@
         WindowState="Maximized"
         WindowStartupLocation="CenterScreen"
         Background="#23272F"
+        Icon="{StaticResource Icon}"
         Closing="Window_Closing" Loaded="FormAdminDashboard_Loaded">
 
     <Window.Resources>

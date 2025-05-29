@@ -16,6 +16,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Image\Icon.ico" />
+    <None Remove="Image\Logo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="9.0.5" />
     <PackageReference Include="System.Data.SqlClient" Version="4.9.0" />
   </ItemGroup>
@@ -25,6 +30,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Image\Icon.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Image\Logo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>

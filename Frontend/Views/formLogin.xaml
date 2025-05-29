@@ -9,6 +9,7 @@
         ResizeMode="NoResize"
         Background="#23272F"
         Closing="Window_Closing"
+        Icon="{StaticResource Icon}"
         MouseLeftButtonDown="Window_MouseLeftButtonDown">
 
     <Window.Resources>

@@ -5,6 +5,7 @@
         Height="479" Width="1305"
         WindowStartupLocation="CenterScreen"
         Background="#23272F"
+        Icon="{StaticResource Icon}"
         Loaded="Window_Loaded">
 
     <Window.Resources>
