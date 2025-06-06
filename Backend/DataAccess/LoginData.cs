@@ -9,29 +9,46 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using Backend.Interfaces;
+
 namespace Backend.DataAccess
 {
+    /// <summary>
+    /// Класс для работы с аутентификацией пользователей.
+    /// Предоставляет методы для проверки учётных данных пользователя в базе данных.
+    /// </summary>
     public class LoginData
     {
-        //Подключение к базе данных
+        /// <summary>
+        /// Строка подключения к базе данных, получаемая из файла конфигурации приложения.
+        /// </summary>
         static string myconnstrng = ConfigurationManager.ConnectionStrings["connstrng"].ConnectionString;
 
-        //Метод входа в систему
+        /// <summary>
+        /// Проверяет корректность учётных данных пользователя для входа в систему.
+        /// Запрос обращается к таблице пользователей и сверяет данные по имени пользователя, паролю и типу пользователя.
+        /// </summary>
+        /// <param name="login">
+        /// Объект <see cref="Login"/>, содержащий имя пользователя (<c>Username</c>), пароль (<c>Password</c>) и тип пользователя (<c>UserType</c>) для проверки.
+        /// </param>
+        /// <returns>
+        /// <c>true</c> если в таблице найден пользователь с указанными данными, иначе <c>false</c>.
+        /// </returns>
+        /// <remarks>
+        /// Если учётная запись не найдена либо возникает ошибка при обработке запроса, метод возвращает <c>false</c>.
+        /// </remarks>
         public bool loginCheck(Login login)
         {
             bool isSuccess = false;
 
-            //Подключение к базе данных
+            // Подключение к базе данных
             SqlConnection conn = new SqlConnection(myconnstrng);
 
             try
             {
-                //Создайте запрос для получения данных из базы данных
+                // Создать SQL-запрос для проверки существования пользователя
                 string sql = "SELECT * FROM table_users WHERE username=@username AND password=@password AND user_type=@user_type";
 
-
-
-                //Получение значений с помощью выполнения запроса
+                // Подготовить команду с параметрами
                 SqlCommand cmd = new SqlCommand(sql, conn);
 
                 cmd.Parameters.AddWithValue("@username", login.Username ?? (object)DBNull.Value);
@@ -44,7 +61,7 @@ namespace Backend.DataAccess
 
                 adapter.Fill(dt);
 
-                //Проверьте, есть ли у нас строки в таблице
+                // Проверка наличия пользователя с такими учётными данными
                 if (dt.Rows.Count > 0)
                 {
                     isSuccess = true;

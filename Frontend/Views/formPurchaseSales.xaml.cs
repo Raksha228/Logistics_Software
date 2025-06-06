@@ -1,42 +1,33 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using System;
 using System.Data;
 using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
 using Backend.BusinessLogic;
 using Backend.DataAccess;
 using Backend.Interfaces;
-using Microsoft.Win32;
 
 namespace Frontend.Views
 {
+    /// <summary>
+    /// Окно для обработки операций покупки и продажи товаров.
+    /// Позволяет создавать транзакции, управлять списком товаров и рассчитывать итоговые суммы.
+    /// </summary>
     public partial class formPurchaseSales : Window
     {
-        // Изменяем получение ID и имени пользователя
-        private int _loggedUserId = 1; //((MainWindow)Application.Current.MainWindow).LoggedUserId;
-        private string _loggedUserName = "admin"; //((MainWindow)Application.Current.MainWindow).LoggedUserName;
+        private readonly DealerCustomerData _dealerCustomerData = new DealerCustomerData();
+        private readonly ProductData _productData = new ProductData();
+        private readonly TransactionData _transactionData = new TransactionData();
+        private readonly TransactionDetailsData _transactionDetailsData = new TransactionDetailsData();
 
+        private readonly DataTable _addedProducts = new DataTable();
+        private decimal _subTotal = 0;
+        private readonly int _loggedUserId = 1; // Временное значение, должно заменяться реальным ID
+        private readonly string _loggedUserName = "admin"; // Временное значение, должно заменяться реальным именем
 
-
-        private DealerCustomerData dealerCustomerData = new DealerCustomerData();
-        private ProductData productData = new ProductData();
-        private TransactionData transactionData = new TransactionData();
-        private TransactionDetailsData transactionDetailsData = new TransactionDetailsData();
-
-        private DataTable addedProducts = new DataTable();
-        private decimal subTotal = 0;
-
+        /// <summary>
+        /// Инициализирует новый экземпляр окна покупки/продажи.
+        /// </summary>
         public formPurchaseSales()
         {
             InitializeComponent();
@@ -44,16 +35,22 @@ namespace Frontend.Views
             LoadDefaultValues();
         }
 
+        /// <summary>
+        /// Инициализирует таблицы данных для хранения информации о товарах.
+        /// </summary>
         private void InitializeDataTables()
         {
-            addedProducts.Columns.Add("ProductID", typeof(int));
-            addedProducts.Columns.Add("Name", typeof(string));
-            addedProducts.Columns.Add("Rate", typeof(decimal));
-            addedProducts.Columns.Add("Quantity", typeof(decimal));
-            addedProducts.Columns.Add("Total", typeof(decimal));
-            dgvAddedProducts.ItemsSource = addedProducts.DefaultView;
+            _addedProducts.Columns.Add("ProductID", typeof(int));
+            _addedProducts.Columns.Add("Name", typeof(string));
+            _addedProducts.Columns.Add("Rate", typeof(decimal));
+            _addedProducts.Columns.Add("Quantity", typeof(decimal));
+            _addedProducts.Columns.Add("Total", typeof(decimal));
+            dgvAddedProducts.ItemsSource = _addedProducts.DefaultView;
         }
 
+        /// <summary>
+        /// Загружает начальные значения в элементы управления.
+        /// </summary>
         private void LoadDefaultValues()
         {
             dtpBillDate.SelectedDate = DateTime.Now;
@@ -62,11 +59,14 @@ namespace Frontend.Views
             txtReturnAmount.Text = "0";
         }
 
-        private void txtSearch_TextChanged(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Обработчик поиска дилеров/клиентов.
+        /// </summary>
+        private void txtSearch_TextChanged(object sender, TextChangedEventArgs e)
         {
             try
             {
-                var dealerCustomer = dealerCustomerData.SearchDealerCustomerForTransaction(txtSearch.Text);
+                var dealerCustomer = _dealerCustomerData.SearchDealerCustomerForTransaction(txtSearch.Text);
                 txtName.Text = dealerCustomer.Name;
                 txtEmail.Text = dealerCustomer.Email;
                 txtContact.Text = dealerCustomer.Contact;
@@ -74,87 +74,132 @@ namespace Frontend.Views
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                ShowErrorMessage(ex.Message);
             }
         }
 
-        private void txtSearchProduct_TextChanged(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Обработчик поиска товаров.
+        /// </summary>
+        private void txtSearchProduct_TextChanged(object sender, TextChangedEventArgs e)
         {
             try
             {
-                var product = productData.GetProductsForTransaction(txtSearchProduct.Text);
+                var product = _productData.GetProductsForTransaction(txtSearchProduct.Text);
                 txtProductName.Text = product.Name;
                 txtInventory.Text = product.Quantity.ToString();
                 txtRate.Text = product.Rate.ToString();
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                ShowErrorMessage(ex.Message);
             }
         }
 
+        /// <summary>
+        /// Обработчик добавления товара в список.
+        /// </summary>
         private void btnAdd_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                if (decimal.Parse(txtQty.Text) > decimal.Parse(txtInventory.Text))
-                {
-                    MessageBox.Show("Недостаточно товара на складе!", "Ошибка",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
+                if (!ValidateProductAddition())
                     return;
-                }
 
-                var newRow = addedProducts.NewRow();
-                newRow["ProductID"] = productData.GetProductIDFromName(txtProductName.Text).Id;
-                newRow["Name"] = txtProductName.Text;
-                newRow["Rate"] = decimal.Parse(txtRate.Text);
-                newRow["Quantity"] = decimal.Parse(txtQty.Text);
-                newRow["Total"] = decimal.Parse(txtRate.Text) * decimal.Parse(txtQty.Text);
-                addedProducts.Rows.Add(newRow);
-
+                AddProductToTransaction();
                 CalculateSubTotal();
                 ClearProductFields();
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                ShowErrorMessage(ex.Message);
             }
         }
 
+        /// <summary>
+        /// Проверяет возможность добавления товара в транзакцию.
+        /// </summary>
+        private bool ValidateProductAddition()
+        {
+            if (decimal.Parse(txtQty.Text) > decimal.Parse(txtInventory.Text))
+            {
+                ShowErrorMessage("Недостаточно товара на складе!");
+                return false;
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Добавляет товар в текущую транзакцию.
+        /// </summary>
+        private void AddProductToTransaction()
+        {
+            var newRow = _addedProducts.NewRow();
+            newRow["ProductID"] = _productData.GetProductIDFromName(txtProductName.Text).Id;
+            newRow["Name"] = txtProductName.Text;
+            newRow["Rate"] = decimal.Parse(txtRate.Text);
+            newRow["Quantity"] = decimal.Parse(txtQty.Text);
+            newRow["Total"] = decimal.Parse(txtRate.Text) * decimal.Parse(txtQty.Text);
+            _addedProducts.Rows.Add(newRow);
+        }
+
+        /// <summary>
+        /// Рассчитывает промежуточную сумму транзакции.
+        /// </summary>
         private void CalculateSubTotal()
         {
-            subTotal = addedProducts.AsEnumerable()
+            _subTotal = _addedProducts.AsEnumerable()
                 .Sum(row => row.Field<decimal>("Total"));
 
-            txtSubTotal.Text = subTotal.ToString("N2");
+            txtSubTotal.Text = _subTotal.ToString("N2");
             CalculateGrandTotal();
         }
 
+        /// <summary>
+        /// Рассчитывает итоговую сумму с учетом скидки и налогов.
+        /// </summary>
         private void CalculateGrandTotal()
         {
-            decimal discount = string.IsNullOrEmpty(txtDiscount.Text) ? 0 : decimal.Parse(txtDiscount.Text);
-            decimal tax = string.IsNullOrEmpty(txtVat.Text) ? 0 : decimal.Parse(txtVat.Text);
+            decimal discount = GetDecimalValue(txtDiscount.Text);
+            decimal tax = GetDecimalValue(txtVat.Text);
 
-            decimal grandTotal = subTotal;
+            decimal grandTotal = _subTotal;
             grandTotal -= (grandTotal * discount / 100);
             grandTotal += (grandTotal * tax / 100);
 
             txtGrandTotal.Text = grandTotal.ToString("N2");
         }
 
-        private void txtDiscount_TextChanged(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Преобразует текст в decimal значение.
+        /// </summary>
+        private decimal GetDecimalValue(string text)
+        {
+            return string.IsNullOrEmpty(text) ? 0 : decimal.Parse(text);
+        }
+
+        /// <summary>
+        /// Обработчик изменения скидки.
+        /// </summary>
+        private void txtDiscount_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (IsNumericInput(txtDiscount.Text))
                 CalculateGrandTotal();
         }
 
-        private void txtVat_TextChanged(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Обработчик изменения налога.
+        /// </summary>
+        private void txtVat_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (IsNumericInput(txtVat.Text))
                 CalculateGrandTotal();
         }
 
-        private void txtPaidAmount_TextChanged(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Обработчик изменения суммы оплаты.
+        /// </summary>
+        private void txtPaidAmount_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (IsNumericInput(txtPaidAmount.Text) && decimal.TryParse(txtGrandTotal.Text, out decimal grandTotal))
             {
@@ -163,74 +208,123 @@ namespace Frontend.Views
             }
         }
 
+        /// <summary>
+        /// Проверяет, является ли ввод числовым значением.
+        /// </summary>
         private bool IsNumericInput(string input)
         {
             return decimal.TryParse(input, out _);
         }
 
-        private async void btnSave_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Обработчик сохранения транзакции.
+        /// </summary>
+        private void btnSave_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                var transaction = new Transaction
-                {
-                    Type = txtType.Text,
-                    DealerCustomerId = dealerCustomerData.GetDeaCustIDFromName(txtName.Text).Id,
-                    Description = "Транзакция продажи/покупки",
-                    GrandTotal = decimal.Parse(txtGrandTotal.Text),
-                    TransactionDate = dtpBillDate.SelectedDate.Value,
-                    Tax = decimal.Parse(txtVat.Text),
-                    Discount = decimal.Parse(txtDiscount.Text),
-                    PaidAmount = decimal.Parse(txtPaidAmount.Text),
-                    ReturnAmount = decimal.Parse(txtReturnAmount.Text),
-                    AddedBy = _loggedUserId, //((App)Application.Current).LoggedUserId,
-                    AddedByName = _loggedUserName, //((App)Application.Current).LoggedUserName,
-                    TransactionDetails = addedProducts
-                };
+                if (!ValidateTransaction())
+                    return;
 
-                bool success = transactionData.InsertTransaction(transaction, out int transactionId);
+                var transaction = CreateTransaction();
+                bool success = _transactionData.InsertTransaction(transaction, out int transactionId);
 
                 if (success)
                 {
-                    foreach (DataRow row in addedProducts.Rows)
-                    {
-                        var detail = new TransactionDetails
-                        {
-                            ProductId = (int)row["ProductID"],
-                            Rate = (decimal)row["Rate"],
-                            Quantity = (decimal)row["Quantity"],
-                            Total = (decimal)row["Total"],
-                            DealerCustomerId = transaction.DealerCustomerId,
-                            AddedDate = DateTime.Now,
-                            AddedBy = _loggedUserId, //((App)Application.Current).LoggedUserId,
-                            AddedByName = _loggedUserName //((App)Application.Current).LoggedUserName
-                        };
-
-                        transactionDetailsData.InsertTransactionDetail(detail);
-                        productData.DecreaseProduct(detail.ProductId, detail.Quantity);
-                    }
-
-                    MessageBox.Show("Транзакция успешно сохранена!", "Успех",
-                        MessageBoxButton.OK, MessageBoxImage.Information);
+                    SaveTransactionDetails(transaction);
+                    ShowSuccessMessage("Транзакция успешно сохранена!");
                     ResetForm();
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка сохранения: {ex.Message}", "Ошибка",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
+                ShowErrorMessage($"Ошибка сохранения: {ex.Message}");
             }
         }
 
-        private void ResetForm()
+        /// <summary>
+        /// Проверяет валидность данных транзакции.
+        /// </summary>
+        private bool ValidateTransaction()
         {
-            addedProducts.Rows.Clear();
-            subTotal = 0;
-            txtSearch.Text = "";
-            txtName.Text = "";
-            //... очистка всех полей
+            if (_addedProducts.Rows.Count == 0)
+            {
+                ShowErrorMessage("Добавьте хотя бы один товар!");
+                return false;
+            }
+            return true;
         }
 
+        /// <summary>
+        /// Создает объект транзакции на основе введенных данных.
+        /// </summary>
+        private Transaction CreateTransaction()
+        {
+            return new Transaction
+            {
+                Type = txtType.Text,
+                DealerCustomerId = _dealerCustomerData.GetDeaCustIDFromName(txtName.Text).Id,
+                Description = "Транзакция продажи/покупки",
+                GrandTotal = decimal.Parse(txtGrandTotal.Text),
+                TransactionDate = dtpBillDate.SelectedDate.Value,
+                Tax = decimal.Parse(txtVat.Text),
+                Discount = decimal.Parse(txtDiscount.Text),
+                PaidAmount = decimal.Parse(txtPaidAmount.Text),
+                ReturnAmount = decimal.Parse(txtReturnAmount.Text),
+                AddedBy = _loggedUserId,
+                AddedByName = _loggedUserName,
+                TransactionDetails = _addedProducts
+            };
+        }
+
+        /// <summary>
+        /// Сохраняет детали транзакции и обновляет количество товаров.
+        /// </summary>
+        private void SaveTransactionDetails(Transaction transaction)
+        {
+            foreach (DataRow row in _addedProducts.Rows)
+            {
+                var detail = new TransactionDetails
+                {
+                    ProductId = (int)row["ProductID"],
+                    Rate = (decimal)row["Rate"],
+                    Quantity = (decimal)row["Quantity"],
+                    Total = (decimal)row["Total"],
+                    DealerCustomerId = transaction.DealerCustomerId,
+                    AddedDate = DateTime.Now,
+                    AddedBy = _loggedUserId,
+                    AddedByName = _loggedUserName
+                };
+
+                _transactionDetailsData.InsertTransactionDetail(detail);
+                _productData.DecreaseProduct(detail.ProductId, detail.Quantity);
+            }
+        }
+
+        /// <summary>
+        /// Сбрасывает форму к начальному состоянию.
+        /// </summary>
+        private void ResetForm()
+        {
+            _addedProducts.Rows.Clear();
+            _subTotal = 0;
+            txtSearch.Text = "";
+            txtName.Text = "";
+            txtEmail.Text = "";
+            txtContact.Text = "";
+            txtAddress.Text = "";
+            txtSubTotal.Text = "0";
+            txtGrandTotal.Text = "0";
+            txtReturnAmount.Text = "0";
+            txtDiscount.Text = "";
+            txtVat.Text = "";
+            txtPaidAmount.Text = "";
+            ClearProductFields();
+        }
+
+        /// <summary>
+        /// Очищает поля ввода информации о товаре.
+        /// </summary>
         private void ClearProductFields()
         {
             txtSearchProduct.Text = "";
@@ -238,6 +332,22 @@ namespace Frontend.Views
             txtInventory.Text = "";
             txtRate.Text = "";
             txtQty.Text = "";
+        }
+
+        /// <summary>
+        /// Показывает сообщение об ошибке.
+        /// </summary>
+        private void ShowErrorMessage(string message)
+        {
+            MessageBox.Show(message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+        /// <summary>
+        /// Показывает сообщение об успешном выполнении.
+        /// </summary>
+        private void ShowSuccessMessage(string message)
+        {
+            MessageBox.Show(message, "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }
 }

@@ -12,23 +12,49 @@ using Backend.Interfaces;
 
 namespace Backend.DataAccess
 {
-    public class TransactionData :Transaction,ITransaction
+    /// <summary>
+    /// Класс <c>TransactionData</c> реализует доступ к данным о транзакциях, а также методы
+    /// для добавления, удаления и отображения информации о транзакциях в системе.
+    /// </summary>
+    /// <remarks>
+    /// Класс наследуется от <see cref="Transaction"/> и реализует интерфейс <see cref="ITransaction"/>.
+    /// Обеспечивает работу с таблицей <c>table_transactions</c> базы данных.
+    /// </remarks>
+    public class TransactionData : Transaction, ITransaction
     {
-        static string myconnstrng = ConfigurationManager.ConnectionStrings["connstrng"].ConnectionString;
+        /// <summary>
+        /// Строка подключения к базе данных,
+        /// полученная из файла конфигурации приложения.
+        /// </summary>
+        private static string myconnstrng = ConfigurationManager.ConnectionStrings["connstrng"].ConnectionString;
 
-        //Добавить транзакцию
+        /// <summary>
+        /// Добавляет новую транзакцию в базу данных.
+        /// </summary>
+        /// <param name="transaction">Объект <see cref="Transaction"/>, содержащий все необходимые параметры транзакции.</param>
+        /// <param name="transactionID">Выходной параметр, в который помещается идентификатор вставленной транзакции.</param>
+        /// <returns>
+        /// <c>true</c>, если транзакция успешно добавлена и получен идентификатор; <c>false</c> в противном случае.
+        /// </returns>
+        /// <example>
+        /// <code>
+        /// TransactionData td = new TransactionData();
+        /// Transaction tr = new Transaction { /* инициализация */ };
+        /// int trId;
+        /// bool result = td.InsertTransaction(tr, out trId);
+        /// </code>
+        /// </example>
         public bool InsertTransaction(Transaction transaction, out int transactionID)
         {
             bool isSuccess = false;
 
-            //Изначально установите идентификатор транзакции в -1
+            //Изначально устанавливаем идентификатор транзакции в -1
             transactionID = -1;
 
             SqlConnection conn = new SqlConnection(myconnstrng);
             try
             {
                 string sql = "INSERT INTO table_transactions (type, dea_cust_id, description, grandTotal, transaction_date, tax, discount, paid_amount, return_amount, added_by, added_by_name) VALUES (@type, @dea_cust_id, @description, @grandTotal, @transaction_date, @tax, @discount, @paid_amount, @return_amount, @added_by, @added_by_name); SELECT @@IDENTITY;";
-
                 SqlCommand cmd = new SqlCommand(sql, conn);
 
                 cmd.Parameters.AddWithValue("@type", transaction.Type);
@@ -43,15 +69,14 @@ namespace Backend.DataAccess
                 cmd.Parameters.AddWithValue("@added_by", transaction.AddedBy);
                 cmd.Parameters.AddWithValue("@added_by_name", transaction.AddedByName);
 
-
                 conn.Open();
 
-                //Возвращает значение первой строки и столбца после выполнения
+                //Возвращает значение идентификатора вставленной строки
                 object executeQuery = cmd.ExecuteScalar();
 
                 if (executeQuery != null)
                 {
-                    //Получение идентификатора транзакции, если она была проведена правильно
+                    //Получение идентификатора транзакции, если операция проведена удачно
                     transactionID = int.Parse(executeQuery.ToString());
                     isSuccess = true;
                 }
@@ -72,24 +97,28 @@ namespace Backend.DataAccess
             return isSuccess;
         }
 
-        //Визуализация всех операций
+        /// <summary>
+        /// Возвращает таблицу, содержащую все совершённые транзакции.
+        /// </summary>
+        /// <returns>
+        /// Объект <see cref="DataTable"/> со всеми записями из таблицы транзакций.
+        /// </returns>
+        /// <example>
+        /// <code>
+        /// DataTable dt = new TransactionData().DisplayAllTransactions();
+        /// </code>
+        /// </example>
         public DataTable DisplayAllTransactions()
         {
             SqlConnection conn = new SqlConnection(myconnstrng);
-
             DataTable dt = new DataTable();
 
             try
             {
-                //SELECT t1.*, t2.* FROM t1, t2;
                 string sql = "SELECT * FROM table_transactions";
-
                 SqlCommand cmd = new SqlCommand(sql, conn);
-
                 SqlDataAdapter adapter = new SqlDataAdapter(cmd);
-
                 conn.Open();
-
                 adapter.Fill(dt);
             }
             catch (Exception ex)
@@ -100,27 +129,31 @@ namespace Backend.DataAccess
             {
                 conn.Close();
             }
-
             return dt;
         }
 
-        //Визуализация транзакций по типам
+        /// <summary>
+        /// Возвращает таблицу транзакций, фильтрованных по определённому типу (например, "Покупка" или "Продажа").
+        /// </summary>
+        /// <param name="type">Тип транзакции, по которому выполнять фильтрацию.</param>
+        /// <returns>
+        /// Объект <see cref="DataTable"/>, содержащий транзакции только указанного типа.
+        /// </returns>
+        /// <example>
+        /// <code>
+        /// DataTable onlySales = new TransactionData().DisplayTransactionByType("Продажа");
+        /// </code>
+        /// </example>
         public DataTable DisplayTransactionByType(string type)
         {
             SqlConnection conn = new SqlConnection(myconnstrng);
-
             DataTable dt = new DataTable();
-
-            try 
-            { 
+            try
+            {
                 string sql = "SELECT * FROM table_transactions WHERE type='" + type + "'";
-
                 SqlCommand cmd = new SqlCommand(sql, conn);
-
                 SqlDataAdapter adapter = new SqlDataAdapter(cmd);
-
                 conn.Open();
-
                 adapter.Fill(dt);
             }
             catch (Exception ex)
@@ -131,30 +164,28 @@ namespace Backend.DataAccess
             {
                 conn.Close();
             }
-
             return dt;
         }
 
-        //Удалить все операции и детали
+        /// <summary>
+        /// Удаляет все транзакции из таблицы <c>table_transactions</c>.
+        /// </summary>
+        /// <remarks>
+        /// Используйте с осторожностью: действие необратимо и приведёт к потере всех данных о транзакциях.
+        /// </remarks>
+        /// <returns>
+        /// Объект <see cref="DataTable"/> (обычно пустой после удаления).
+        /// </returns>
         public DataTable DeleteAllTransactions()
         {
             SqlConnection conn = new SqlConnection(myconnstrng);
-
             DataTable dt = new DataTable();
-
             try
             {
-                //SELECT t1.*, t2.* FROM t1, t2;
-                //string sql = "SELECT table_transactions.*, table_transactions_detail.* FROM table_transactions, table_transactions_detail";
-
                 string sql = "DELETE FROM table_transactions";
-
                 SqlCommand cmd = new SqlCommand(sql, conn);
-
                 SqlDataAdapter adapter = new SqlDataAdapter(cmd);
-
                 conn.Open();
-
                 adapter.Fill(dt);
             }
             catch (Exception ex)
@@ -165,9 +196,7 @@ namespace Backend.DataAccess
             {
                 conn.Close();
             }
-
             return dt;
         }
-
     }
 }

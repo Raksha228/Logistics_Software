@@ -7,22 +7,53 @@ using System.Threading.Tasks;
 
 namespace Backend.BusinessLogic
 {
+    /// <summary>
+    /// Класс, представляющий финансовую транзакцию в системе.
+    /// Содержит информацию о платежах, налогах, скидках и деталях операции.
+    /// </summary>
     public class Transaction
     {
         private decimal tax;
         private decimal discount;
         private decimal paidAmount;
 
+        /// <summary>
+        /// Уникальный идентификатор транзакции.
+        /// </summary>
         public int Id { get; set; }
+
+        /// <summary>
+        /// Тип транзакции (например: "Продажа", "Возврат", "Пополнение").
+        /// </summary>
         public string Type { get; set; }
+
+        /// <summary>
+        /// ID дилера или клиента, связанного с транзакцией.
+        /// </summary>
         public int DealerCustomerId { get; set; }
+
+        /// <summary>
+        /// Описание транзакции (дополнительные сведения о операции).
+        /// </summary>
         public string Description { get; set; }
+
+        /// <summary>
+        /// Общая сумма транзакции (включая налоги и скидки).
+        /// </summary>
         public decimal GrandTotal { get; set; }
+
+        /// <summary>
+        /// Дата и время совершения транзакции.
+        /// </summary>
         public DateTime TransactionDate { get; set; }
 
+        /// <summary>
+        /// Сумма налога для транзакции.
+        /// Значение должно быть положительным числом.
+        /// </summary>
+        /// <exception cref="ArgumentException">Выбрасывается при попытке установить отрицательное или нулевое значение.</exception>
         public decimal Tax
         {
-            //Утверждение платы за услуги
             get => this.tax;
             set
             {
@@ -35,9 +66,13 @@ namespace Backend.BusinessLogic
             }
         }
 
+        /// <summary>
+        /// Сумма скидки по транзакции.
+        /// Значение должно быть положительным числом.
+        /// </summary>
+        /// <exception cref="ArgumentException">Выбрасывается при попытке установить отрицательное или нулевое значение.</exception>
         public decimal Discount
         {
-            
             get => this.discount;
             set
             {
@@ -50,9 +85,13 @@ namespace Backend.BusinessLogic
             }
         }
 
+        /// <summary>
+        /// Сумма, фактически оплаченная по транзакции.
+        /// Значение должно быть положительным числом.
+        /// </summary>
+        /// <exception cref="ArgumentException">Выбрасывается при попытке установить отрицательное или нулевое значение.</exception>
         public decimal PaidAmount
         {
-            //Проверка оплаты
             get => this.paidAmount;
             set
             {
@@ -65,9 +104,24 @@ namespace Backend.BusinessLogic
             }
         }
 
+        /// <summary>
+        /// Сумма к возврату (если оплата превышает общую сумму).
+        /// </summary>
         public decimal ReturnAmount { get; set; }
+
+        /// <summary>
+        /// ID пользователя, создавшего транзакцию.
+        /// </summary>
         public int AddedBy { get; set; }
+
+        /// <summary>
+        /// Имя пользователя, создавшего транзакцию.
+        /// </summary>
         public string AddedByName { get; set; }
+
+        /// <summary>
+        /// Детализированные данные о транзакции (список товаров/услуг).
+        /// </summary>
         public DataTable TransactionDetails { get; set; }
     }
 }

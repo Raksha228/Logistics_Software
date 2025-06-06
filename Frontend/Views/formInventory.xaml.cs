@@ -1,83 +1,101 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Data;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using Backend.BusinessLogic;
 using Backend.DataAccess;
-using System;
-using System.Data;
 
 namespace Frontend.Views
 {
+    /// <summary>
+    /// Окно управления инвентаризацией товаров.
+    /// Позволяет просматривать товары по категориям и выполнять инвентаризацию.
+    /// </summary>
     public partial class formInventory : Window
     {
-        private readonly ProductData productData;
-        private readonly CategoryData categoryData;
+        private readonly ProductData _productData;
+        private readonly CategoryData _categoryData;
 
+        /// <summary>
+        /// Инициализирует новый экземпляр окна инвентаризации.
+        /// </summary>
         public formInventory()
         {
             InitializeComponent();
-            productData = new ProductData();
-            categoryData = new CategoryData();
+            _productData = new ProductData();
+            _categoryData = new CategoryData();
         }
 
+        /// <summary>
+        /// Обработчик загрузки окна. Загружает список категорий и товаров.
+        /// </summary>
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             try
             {
-                // Загрузка категорий в комбобокс
-                DataTable categories = categoryData.Select();
-                cmbCategories.ItemsSource = categories.DefaultView;
-                cmbCategories.DisplayMemberPath = "title";
-                cmbCategories.SelectedValuePath = "id";
-
-                // Первоначальная загрузка всех продуктов
+                // Инициализация комбобокса категорий
+                InitializeCategoryComboBox();
+                // Загрузка всех товаров
                 LoadAllProducts();
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                ShowErrorMessage(ex.Message);
             }
         }
 
+        /// <summary>
+        /// Загружает и инициализирует комбобокс категорий товаров.
+        /// </summary>
+        private void InitializeCategoryComboBox()
+        {
+            DataTable categories = _categoryData.Select();
+            cmbCategories.ItemsSource = categories.DefaultView;
+            cmbCategories.DisplayMemberPath = "title";
+            cmbCategories.SelectedValuePath = "id";
+        }
+
+        /// <summary>
+        /// Загружает все товары из базы данных.
+        /// </summary>
         private void LoadAllProducts()
         {
             try
             {
-                DataTable products = productData.Select();
+                DataTable products = _productData.Select();
                 dgvProducts.ItemsSource = products.DefaultView;
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                ShowErrorMessage(ex.Message);
             }
         }
 
+        /// <summary>
+        /// Обработчик изменения выбранной категории.
+        /// Фильтрует товары по выбранной категории.
+        /// </summary>
         private void cmbCategories_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             try
             {
-                if (cmbCategories.SelectedValue != null && int.TryParse(cmbCategories.SelectedValue.ToString(), out int categoryId))
+                if (cmbCategories.SelectedValue != null &&
+                    int.TryParse(cmbCategories.SelectedValue.ToString(), out int categoryId))
                 {
-                    DataTable filteredProducts = productData.DisplayProductsByCategory(cmbCategories.Text);
+                    DataTable filteredProducts = _productData.DisplayProductsByCategory(cmbCategories.Text);
                     dgvProducts.ItemsSource = filteredProducts.DefaultView;
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                ShowErrorMessage(ex.Message);
             }
         }
 
+        /// <summary>
+        /// Обработчик нажатия кнопки "Все".
+        /// Сбрасывает фильтр категорий и показывает все товары.
+        /// </summary>
         private void btnAll_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -87,8 +105,18 @@ namespace Frontend.Views
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                ShowErrorMessage(ex.Message);
             }
+        }
+
+        /// <summary>
+        /// Показывает сообщение об ошибке.
+        /// </summary>
+        /// <param name="message">Текст сообщения об ошибке</param>
+        private void ShowErrorMessage(string message)
+        {
+            MessageBox.Show(message, "Ошибка",
+                MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 }

@@ -12,32 +12,37 @@ using Backend.Interfaces;
 
 namespace Backend.DataAccess
 {
+    /// <summary>
+    /// Класс доступа к данным для работы с логистикой.
+    /// Предоставляет функционал для обработки CRUD-операций (создание, чтение, обновление, удаление) над записями логистики,
+    /// а также поиск по таблице логистики и выбор продукции для логистики.
+    /// Наследуется от <see cref="Logistic"/> и реализует интерфейс <see cref="ICrudLogistic"/>.
+    /// </summary>
     public class LogisticData : Logistic, ICrudLogistic
     {
+        /// <summary>
+        /// Строка подключения к базе данных, полученная из файла конфигурации приложения.
+        /// </summary>
         static string myconnstrng = ConfigurationManager.ConnectionStrings["connstrng"].ConnectionString;
 
-        //Получение данных
+        /// <summary>
+        /// Получает все записи по логистике из базы данных.
+        /// </summary>
+        /// <returns>
+        /// <see cref="DataTable"/>, содержащий все строки из таблицы логистики.
+        /// </returns>
         public DataTable Select()
         {
-            //Установка соединения с базой данных
             SqlConnection conn = new SqlConnection(myconnstrng);
 
-            //Создайте временную таблицу для хранения данных
             DataTable dt = new DataTable();
 
             try
             {
-                //Создайте запрос, который берет все данные из таблицы
                 String sql = "SELECT * FROM table_logistic";
-
-                //Создайте команду для выполнения запроса
                 SqlCommand cmd = new SqlCommand(sql, conn);
-
-                //создайте адаптер для хранения информации и заполните таблицу
                 SqlDataAdapter adapter = new SqlDataAdapter(cmd);
-
                 conn.Open();
-
                 adapter.Fill(dt);
             }
             catch (Exception ex)
@@ -52,17 +57,24 @@ namespace Backend.DataAccess
             return dt;
         }
 
-        //Вставка данных
+        /// <summary>
+        /// Добавляет новую запись по логистике в БД.
+        /// </summary>
+        /// <param name="logistic">
+        /// Объект <see cref="Logistic"/>, содержащий информацию для записи.
+        /// </param>
+        /// <returns>
+        /// <c>true</c> — если запись успешно добавлена, иначе <c>false</c>.
+        /// </returns>
         public bool Insert(Logistic logistic)
         {
             bool isSuccess = false;
-
             SqlConnection conn = new SqlConnection(myconnstrng);
 
             try
             {
-                String sql = "INSERT INTO table_logistic (employee, first_name_employee, last_name_employee, address, contact, date, description, price, added_date, added_by, added_by_name) VALUES (@employee, @first_name_employee, @last_name_employee, @address, @contact, @date, @description, @price, @added_date, @added_by, @added_by_name)";
-
+                String sql = "INSERT INTO table_logistic (employee, first_name_employee, last_name_employee, address, contact, date, description, price, added_date, added_by, added_by_name) " +
+                    "VALUES (@employee, @first_name_employee, @last_name_employee, @address, @contact, @date, @description, @price, @added_date, @added_by, @added_by_name)";
                 SqlCommand cmd = new SqlCommand(sql, conn);
 
                 cmd.Parameters.AddWithValue("@employee", logistic.Empleyee);
@@ -78,17 +90,9 @@ namespace Backend.DataAccess
                 cmd.Parameters.AddWithValue("@added_by_name", logistic.AddedByName);
 
                 conn.Open();
-
                 int rows = cmd.ExecuteNonQuery();
 
-                if (rows > 0)
-                {
-                    isSuccess = true;
-                }
-                else
-                {
-                    isSuccess = false;
-                }
+                isSuccess = rows > 0;
             }
             catch (Exception ex)
             {
@@ -102,17 +106,23 @@ namespace Backend.DataAccess
             return isSuccess;
         }
 
-        //Редактировать данные
+        /// <summary>
+        /// Обновляет существующую запись по логистике в базе данных.
+        /// </summary>
+        /// <param name="logistic">
+        /// Объект <see cref="Logistic"/>, содержащий обновлённые данные записи.
+        /// </param>
+        /// <returns>
+        /// <c>true</c>, если обновление прошло успешно; <c>false</c> — в случае сбоя или отсутствия изменений.
+        /// </returns>
         public bool Update(Logistic logistic)
         {
             bool isSuccess = false;
-
             SqlConnection conn = new SqlConnection(myconnstrng);
 
             try
             {
                 String sql = "UPDATE table_logistic SET employee=@employee, first_name_employee=@first_name_employee, last_name_employee=@last_name_employee, address=@address, contact=@contact, date=@date, description=@description, price=@price, added_date=@added_date, added_by=@added_by, added_by_name=@added_by_name WHERE id=@id";
-
                 SqlCommand cmd = new SqlCommand(sql, conn);
 
                 cmd.Parameters.AddWithValue("@employee", logistic.Empleyee);
@@ -129,17 +139,9 @@ namespace Backend.DataAccess
                 cmd.Parameters.AddWithValue("@id", logistic.Id);
 
                 conn.Open();
-
                 int rows = cmd.ExecuteNonQuery();
 
-                if (rows > 0)
-                {
-                    isSuccess = true;
-                }
-                else
-                {
-                    isSuccess = false;
-                }
+                isSuccess = rows > 0;
             }
             catch (Exception ex)
             {
@@ -153,33 +155,31 @@ namespace Backend.DataAccess
             return isSuccess;
         }
 
-        //Удаление данных
+        /// <summary>
+        /// Удаляет запись логистики по идентификатору.
+        /// </summary>
+        /// <param name="logistic">
+        /// Объект <see cref="Logistic"/>, у которого заполнено свойство <c>Id</c> для удаления.
+        /// </param>
+        /// <returns>
+        /// <c>true</c>, если удаление прошло успешно; иначе <c>false</c>.
+        /// </returns>
         public bool Delete(Logistic logistic)
         {
             bool isSuccess = false;
-
             SqlConnection conn = new SqlConnection(myconnstrng);
 
             try
             {
                 String sql = "DELETE FROM table_logistic WHERE id=@id";
-
                 SqlCommand cmd = new SqlCommand(sql, conn);
 
                 cmd.Parameters.AddWithValue("@id", logistic.Id);
 
                 conn.Open();
-
                 int rows = cmd.ExecuteNonQuery();
 
-                if (rows > 0)
-                {
-                    isSuccess = true;
-                }
-                else
-                {
-                    isSuccess = false;
-                }
+                isSuccess = rows > 0;
             }
             catch (Exception ex)
             {
@@ -193,23 +193,28 @@ namespace Backend.DataAccess
             return isSuccess;
         }
 
-        //Данные поиска
+        /// <summary>
+        /// Выполняет поиск записей логистики по заданному ключевому слову.
+        /// Осуществляет поиск в полях <c>id</c>, <c>employee</c> и <c>date</c>.
+        /// </summary>
+        /// <param name="keywords">
+        /// Ключевое слово для поиска среди записей.
+        /// </param>
+        /// <returns>
+        /// <see cref="DataTable"/> с найденными по критерию строками.
+        /// </returns>
         public DataTable Search(string keywords)
         {
             SqlConnection conn = new SqlConnection(myconnstrng);
-
             DataTable dt = new DataTable();
 
             try
             {
                 string sql = "SELECT * FROM table_logistic WHERE id LIKE '%" + keywords + "%' OR employee LIKE '%" + keywords + "%' OR date LIKE '%" + keywords + "%'";
-
                 SqlCommand cmd = new SqlCommand(sql, conn);
-
                 SqlDataAdapter adapter = new SqlDataAdapter(cmd);
 
                 conn.Open();
-
                 adapter.Fill(dt);
             }
             catch (Exception ex)
@@ -224,23 +229,28 @@ namespace Backend.DataAccess
             return dt;
         }
 
-        //Получение продукции для логистики
+        /// <summary>
+        /// Находит продукцию для логистических операций по ключевому слову.
+        /// Используется для получения сведений о продукте для последующей работы в рамках логистики.
+        /// </summary>
+        /// <param name="keyword">
+        /// Ключевое слово для поиска в названиях или специальных номерах продукции.
+        /// </param>
+        /// <returns>
+        /// Объект <see cref="Product"/> с найденной продукцией или с пустыми полями, если ничего не найдено.
+        /// </returns>
         public Product GetProductsForLogistic(string keyword)
         {
             Product product = new Product();
-
             SqlConnection conn = new SqlConnection(myconnstrng);
-
             DataTable dt = new DataTable();
 
             try
             {
                 string sql = "SELECT id, name, special_number, rate, qty FROM table_products WHERE name LIKE '%" + keyword + "%' OR special_number LIKE '%" + keyword + "%'";
-
                 SqlDataAdapter adapter = new SqlDataAdapter(sql, conn);
 
                 conn.Open();
-
                 adapter.Fill(dt);
 
                 if (dt.Rows.Count > 0)
@@ -263,6 +273,5 @@ namespace Backend.DataAccess
 
             return product;
         }
-
     }
 }

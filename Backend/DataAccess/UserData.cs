@@ -9,54 +9,62 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using Backend.Interfaces;
+
 namespace Backend.DataAccess
 {
-    public class UserData:User,ICrudUser
+    /// <summary>
+    /// Класс для работы с данными пользователей.
+    /// </summary>
+    public class UserData : User, ICrudUser
     {
+        /// <summary>
+        /// Строка подключения к базе данных.
+        /// </summary>
         static string myconnstrng = ConfigurationManager.ConnectionStrings["connstrng"].ConnectionString;
 
-        //Сбор данных
+        /// <summary>
+        /// Получает данные всех пользователей из базы данных.
+        /// </summary>
+        /// <returns>Возвращает <see cref="DataTable"/> с данными о пользователях.</returns>
         public DataTable Select()
         {
-            //Подключение к базе данных
+            // Подключение к базе данных
             SqlConnection conn = new SqlConnection(myconnstrng);
-
-            //Сохранение данных в таблице
+            // Сохранение данных в таблице
             DataTable dt = new DataTable();
             try
             {
-                //Запрос для получения данных из таблицы пользователей
-                String sql = "SELECT * FROM table_users";
+                // Запрос для получения данных из таблицы пользователей
+                string sql = "SELECT * FROM table_users";
 
-                //Выполните запрос
+                // Выполняем запрос
                 SqlCommand cmd = new SqlCommand(sql, conn);
-
-                //Получение данных в адаптер
+                // Получаем данные в адаптер
                 SqlDataAdapter adapter = new SqlDataAdapter(cmd);
-
-                //Открытие ссылки
+                // Открываем соединение
                 conn.Open();
-
-                //Заполните данные в таблице
+                // Заполняем данные в таблице
                 adapter.Fill(dt);
             }
             catch (Exception ex)
             {
-                //Ошибка
+                // Ошибка
                 MessageBox.Show(ex.Message);
             }
             finally
             {
-                //Закрытие соединения
+                // Закрытие соединения
                 conn.Close();
             }
-            //Верните данные
+            // Возвращаем данные
             return dt;
-
-
         }
 
-        //Добавить данные
+        /// <summary>
+        /// Добавляет нового пользователя в базу данных.
+        /// </summary>
+        /// <param name="user">Объект типа User, содержащий информацию о пользователе.</param>
+        /// <returns>Возвращает true, если пользователь был успешно добавлен; в противном случае — false.</returns>
         public bool Insert(User user)
         {
             bool isSuccess = false;
@@ -64,7 +72,7 @@ namespace Backend.DataAccess
 
             try
             {
-                String sql = "INSERT INTO table_users (first_name, last_name, email, username, password, contact, address, gender, user_type, added_date, added_by, added_by_name) VALUES (@first_name, @last_name, @email, @username, @password, @contact, @address, @gender, @user_type, @added_date, @added_by, @added_by_name)";
+                string sql = "INSERT INTO table_users (first_name, last_name, email, username, password, contact, address, gender, user_type, added_date, added_by, added_by_name) VALUES (@first_name, @last_name, @email, @username, @password, @contact, @address, @gender, @user_type, @added_date, @added_by, @added_by_name)";
 
                 SqlCommand cmd = new SqlCommand(sql, conn);
 
@@ -85,16 +93,7 @@ namespace Backend.DataAccess
 
                 int rows = cmd.ExecuteNonQuery();
 
-                //Если запрос будет выполнен, он вернет значение больше 0, если не будет выполнен, вернет значение меньше 0
-
-                if (rows > 0)
-                {
-                    isSuccess = true;
-                }
-                else
-                {
-                    isSuccess = false;
-                }
+                isSuccess = rows > 0;
             }
             catch (Exception ex)
             {
@@ -107,7 +106,11 @@ namespace Backend.DataAccess
             return isSuccess;
         }
 
-        //Редактировать данные
+        /// <summary>
+        /// Обновляет данные существующего пользователя в базе данных.
+        /// </summary>
+        /// <param name="user">Объект типа User, содержащий обновленную информацию о пользователе.</param>
+        /// <returns>Возвращает true, если данные пользователя были успешно обновлены; в противном случае — false.</returns>
         public bool Update(User user)
         {
             bool isSuccess = false;
@@ -136,15 +139,8 @@ namespace Backend.DataAccess
                 conn.Open();
 
                 int rows = cmd.ExecuteNonQuery();
-                if (rows > 0)
-                {
-                    isSuccess = true;
-                }
-                else
-                {
-                    isSuccess = false;
-                }
 
+                isSuccess = rows > 0;
             }
             catch (Exception ex)
             {
@@ -157,7 +153,11 @@ namespace Backend.DataAccess
             return isSuccess;
         }
 
-        //Удаление данных
+        /// <summary>
+        /// Удаляет пользователя из базы данных.
+        /// </summary>
+        /// <param name="user">Объект типа User, представляющий пользователя, который нужно удалить.</param>
+        /// <returns>Возвращает true, если пользователь был успешно удален; в противном случае — false.</returns>
         public bool Delete(User user)
         {
             bool isSuccess = false;
@@ -174,14 +174,7 @@ namespace Backend.DataAccess
                 conn.Open();
 
                 int rows = cmd.ExecuteNonQuery();
-                if (rows > 0)
-                {
-                    isSuccess = true;
-                }
-                else
-                {
-                    isSuccess = false;
-                }
+                isSuccess = rows > 0;
             }
             catch (Exception ex)
             {
@@ -194,7 +187,11 @@ namespace Backend.DataAccess
             return isSuccess;
         }
 
-        //Данные поиска
+        /// <summary>
+        /// Ищет пользователей в базе данных по заданным ключевым словам.
+        /// </summary>
+        /// <param name="keywords">Строка с ключевыми словами для поиска.</param>
+        /// <returns>Возвращает <see cref="DataTable"/> с данными пользователей, соответствующих критериям поиска.</returns>
         public DataTable Search(string keywords)
         {
             SqlConnection conn = new SqlConnection(myconnstrng);
@@ -202,14 +199,12 @@ namespace Backend.DataAccess
             DataTable dt = new DataTable();
             try
             {
-                String sql = "SELECT * FROM table_users WHERE id LIKE '%" + keywords + "%' OR first_name LIKE '%" + keywords + "%' OR last_name LIKE '%" + keywords + "%' OR username LIKE '%" + keywords + "%'";
+                string sql = "SELECT * FROM table_users WHERE id LIKE '%" + keywords + "%' OR first_name LIKE '%" + keywords + "%' OR last_name LIKE '%" + keywords + "%' OR username LIKE '%" + keywords + "%'";
 
                 SqlCommand cmd = new SqlCommand(sql, conn);
-                
                 SqlDataAdapter adapter = new SqlDataAdapter(cmd);
 
                 conn.Open();
-
                 adapter.Fill(dt);
             }
             catch (Exception ex)
@@ -223,7 +218,11 @@ namespace Backend.DataAccess
             return dt;
         }
 
-        //Получение идентификатора от вошедшего пользователя
+        /// <summary>
+        /// Получает идентификатор пользователя по его имени пользователя.
+        /// </summary>
+        /// <param name="username">Имя пользователя, для которого требуется получить идентификатор.</param>
+        /// <returns>Возвращает объект <see cref="User"/> с идентификатором пользователя.</returns>
         public User GetIDFromUsername(string username)
         {
             User user = new User();
@@ -254,13 +253,15 @@ namespace Backend.DataAccess
             return user;
         }
 
-        //Поиск пользователей по логистике
+        /// <summary>
+        /// Ищет пользователей по логистике по заданному ключевому слову.
+        /// </summary>
+        /// <param name="keyword">Ключевое слово для поиска.</param>
+        /// <returns>Возвращает объект <see cref="User"/> с данными найденного пользователя.</returns>
         public User SearchUserForLogistic(string keyword)
         {
             User user = new User();
-
             SqlConnection conn = new SqlConnection(myconnstrng);
-
             DataTable dt = new DataTable();
 
             try
@@ -268,18 +269,16 @@ namespace Backend.DataAccess
                 string sql = "SELECT first_name, last_name from table_users WHERE username LIKE '%" + keyword + "%'";
 
                 SqlDataAdapter adapter = new SqlDataAdapter(sql, conn);
-
                 conn.Open();
 
                 adapter.Fill(dt);
 
-                //Если я успешно нашел данные, мы сохраняем их в объекте из бизнес-логики
+                // Если успешно найдены данные, сохраняем их в объекте
                 if (dt.Rows.Count > 0)
                 {
                     user.FirstName = dt.Rows[0]["first_name"].ToString();
                     user.LastName = dt.Rows[0]["last_name"].ToString();
                 }
-
             }
             catch (Exception ex)
             {
@@ -289,7 +288,6 @@ namespace Backend.DataAccess
             {
                 conn.Close();
             }
-
             return user;
         }
     }

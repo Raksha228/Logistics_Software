@@ -1,82 +1,99 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Data;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using Backend.BusinessLogic;
 using Backend.DataAccess;
-using Backend.Interfaces;
-using System;
-using System.Data;
 
 namespace Frontend.Views
 {
+    /// <summary>
+    /// Окно управления доставками товаров.
+    /// Позволяет просматривать, фильтровать и отмечать доставки как выполненные.
+    /// </summary>
     public partial class formDelivery : Window
     {
-        private readonly LogisticData logisticData;
-        private readonly PersonalLogisticData personalLogisticData;
+        private readonly LogisticData _logisticData;
+        private readonly PersonalLogisticData _personalLogisticData;
 
+        /// <summary>
+        /// Инициализирует новый экземпляр окна управления доставками.
+        /// </summary>
         public formDelivery()
         {
             InitializeComponent();
-            logisticData = new LogisticData();
-            personalLogisticData = new PersonalLogisticData();
+            _logisticData = new LogisticData();
+            _personalLogisticData = new PersonalLogisticData();
         }
 
+        /// <summary>
+        /// Обработчик загрузки окна. Загружает список доставок и инициализирует элементы управления.
+        /// </summary>
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             LoadLogistics();
             cmbDate.SelectedIndex = 0;
         }
 
+        /// <summary>
+        /// Загружает список всех доставок из базы данных.
+        /// </summary>
         private void LoadLogistics()
         {
             try
             {
-                DataTable dt = logisticData.Select();
+                DataTable dt = _logisticData.Select();
                 dgvLogistic.ItemsSource = dt.DefaultView;
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(ex.Message, "Ошибка",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
+        /// <summary>
+        /// Обработчик изменения выбора в комбобоксе даты.
+        /// Фильтрует доставки по выбранному типу (Закупка/Продажа).
+        /// </summary>
         private void cmbDate_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             try
             {
-                string type = ((ComboBoxItem)cmbDate.SelectedItem).Content.ToString() == "Закупка" ? "Purchase" : "Sales";
-                DataTable dt = personalLogisticData.DisplayLogisticnByDate(type, "");
+                string type = ((ComboBoxItem)cmbDate.SelectedItem).Content.ToString() == "Закупка"
+                    ? "Purchase"
+                    : "Sales";
+                DataTable dt = _personalLogisticData.DisplayLogisticnByDate(type, "");
                 dgvLogistic.ItemsSource = dt.DefaultView;
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(ex.Message, "Ошибка",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
+        /// <summary>
+        /// Обработчик нажатия кнопки "Все".
+        /// Сбрасывает фильтры и показывает все доставки.
+        /// </summary>
         private void btnAll_Click(object sender, RoutedEventArgs e)
         {
             LoadLogistics();
         }
 
+        /// <summary>
+        /// Обработчик нажатия кнопки "Доставлено".
+        /// Помечает выбранную доставку как выполненную.
+        /// </summary>
         private void btnDelivered_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                if (dgvLogistic.SelectedItem != null)
+                if (dgvLogistic.SelectedItem is DataRowView row)
                 {
-                    DataRowView row = (DataRowView)dgvLogistic.SelectedItem;
-                    Logistic logistic = new Logistic
+                    var logistic = new Logistic
                     {
                         Id = Convert.ToInt32(row["id"]),
                         Empleyee = row["employee"].ToString(),
@@ -89,7 +106,7 @@ namespace Frontend.Views
                         Price = Convert.ToDecimal(row["price"])
                     };
 
-                    if (logisticData.Delete(logistic))
+                    if (_logisticData.Delete(logistic))
                     {
                         MessageBox.Show("Доставка отмечена как выполненная", "Успех",
                             MessageBoxButton.OK, MessageBoxImage.Information);
@@ -99,16 +116,19 @@ namespace Frontend.Views
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(ex.Message, "Ошибка",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
-        private void dgvLogistic_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        /// <summary>
+        /// Обработчик двойного клика по списку доставок.
+        /// Показывает информацию о выбранной доставке.
+        /// </summary>
+        private void dgvLogistic_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            if (dgvLogistic.SelectedItem != null)
+            if (dgvLogistic.SelectedItem is DataRowView row)
             {
-                DataRowView row = (DataRowView)dgvLogistic.SelectedItem;
-                // Логика обработки двойного клика (например, открытие деталей)
                 MessageBox.Show($"Выбрана доставка ID: {row["id"]}", "Информация",
                     MessageBoxButton.OK, MessageBoxImage.Information);
             }

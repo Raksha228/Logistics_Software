@@ -11,11 +11,21 @@ using Backend.Interfaces;
 
 namespace Backend.DataAccess
 {
-    public class TransactionDetailsData :TransactionDetails,ITransactionDetail
+    /// <summary>
+    /// Класс для работы с деталями транзакций.
+    /// </summary>
+    public class TransactionDetailsData : TransactionDetails, ITransactionDetail
     {
+        /// <summary>
+        /// Строка подключения к базе данных.
+        /// </summary>
         static string myconnstrng = ConfigurationManager.ConnectionStrings["connstrng"].ConnectionString;
 
-        //Добавьте детали транзакции
+        /// <summary>
+        /// Добавляет детали транзакции в базу данных.
+        /// </summary>
+        /// <param name="transactionDetail">Объект типа TransactionDetails, содержащий детали транзакции.</param>
+        /// <returns>Возвращает true, если детали транзакции были успешно добавлены; в противном случае — false.</returns>
         public bool InsertTransactionDetail(TransactionDetails transactionDetail)
         {
             bool isSuccess = false;
@@ -39,17 +49,11 @@ namespace Backend.DataAccess
 
                 conn.Open();
 
-                //Есть ли затронутая или измененная строка при успешном добавлении данных
+                // Выполнение команды и получение количества затронутых строк
                 int rows = cmd.ExecuteNonQuery();
 
-                if (rows > 0)
-                {
-                    isSuccess = true;
-                }
-                else
-                {
-                    isSuccess = false;
-                }
+                // Если хотя бы одна строка была добавлена успешно
+                isSuccess = rows > 0;
             }
             catch (Exception ex)
             {
