@@ -36,7 +36,8 @@ git clone https://github.com/Raksha228/Logistics_Software.git
 
 ## XML Документация
 Ссылка на документацию
-> link
+> [Frontend](/XML/Frontend.xml)
+> [Backend](/XML/Backend.xml)
 
 ## Диаграммы сущностей
 ![Диаграмма класов]()
