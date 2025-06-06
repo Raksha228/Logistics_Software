@@ -3,6 +3,7 @@ using System.Data;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Backend.BusinesLogic;
 using Backend.BusinessLogic;
 using Backend.DataAccess;
 
@@ -14,10 +15,11 @@ namespace Frontend.Views
     /// </summary>
     public partial class formDealerCustomer : Window
     {
-        private readonly DealerCustomerData _dealerCustomerData;
+        private DealerCustomerData _dealerCustomerData;
         private DataTable _dealerCustomerTable;
-        private readonly UserData _userData = new UserData();
-        private readonly string _loggedInUser;
+
+        private UserData _userData = new UserData();
+        private string _loggedInUser;
 
         /// <summary>
         /// Инициализирует новый экземпляр окна управления дилерами/клиентами.
@@ -44,9 +46,10 @@ namespace Frontend.Views
             catch (Exception ex)
             {
                 MessageBox.Show($"Ошибка загрузки данных: {ex.Message}", "Ошибка",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
+                              MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
 
         /// <summary>
         /// Создает объект DealerCustomer на основе данных формы.
@@ -54,7 +57,7 @@ namespace Frontend.Views
         /// <returns>Заполненный объект DealerCustomer</returns>
         private DealerCustomer GetDealerCustomerFromForm()
         {
-            return new DealerCustomer()
+            DealerCustomer dealerCustomer = new DealerCustomer()
             {
                 Id = string.IsNullOrEmpty(txtDeaCustID.Text) ? 0 : int.Parse(txtDeaCustID.Text),
                 Type = (cmbDeaCust.SelectedItem as ComboBoxItem)?.Content.ToString(),
@@ -62,10 +65,14 @@ namespace Frontend.Views
                 Email = txtEmail.Text.Trim(),
                 Contact = txtContact.Text.Trim(),
                 Address = txtAddress.Text.Trim(),
-                AddedDate = DateTime.Now,
-                AddedBy = _userData.GetIDFromUsername(_loggedInUser).Id,
-                AddedByName = _loggedInUser
+                AddedDate = DateTime.Now
             };
+
+            User currentUser = _userData.GetIDFromUsername(_loggedInUser);
+            dealerCustomer.AddedBy = currentUser.Id;
+            dealerCustomer.AddedByName = _loggedInUser;
+
+            return dealerCustomer;
         }
 
         /// <summary>
@@ -81,6 +88,10 @@ namespace Frontend.Views
             txtAddress.Clear();
         }
 
+
+
+
+
         /// <summary>
         /// Обработчик нажатия кнопки "Добавить".
         /// Добавляет нового дилера/клиента в базу данных.
@@ -94,29 +105,30 @@ namespace Frontend.Views
                 if (string.IsNullOrEmpty(dealerCustomer.Type))
                 {
                     MessageBox.Show("Выберите тип", "Ошибка",
-                        MessageBoxButton.OK, MessageBoxImage.Warning);
+                                  MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
 
                 if (string.IsNullOrEmpty(dealerCustomer.Name))
                 {
                     MessageBox.Show("Введите название", "Ошибка",
-                        MessageBoxButton.OK, MessageBoxImage.Warning);
+                                  MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
 
-                if (_dealerCustomerData.Insert(dealerCustomer))
+                bool success = _dealerCustomerData.Insert(dealerCustomer);
+                if (success)
                 {
                     LoadDealerCustomers();
                     ClearForm();
                     MessageBox.Show("Запись успешно добавлена", "Успех",
-                        MessageBoxButton.OK, MessageBoxImage.Information);
+                                  MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Ошибка добавления: {ex.Message}", "Ошибка",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
+                              MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -131,21 +143,23 @@ namespace Frontend.Views
                 if (string.IsNullOrEmpty(txtDeaCustID.Text))
                 {
                     MessageBox.Show("Выберите запись для редактирования", "Ошибка",
-                        MessageBoxButton.OK, MessageBoxImage.Warning);
+                                  MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
 
-                if (_dealerCustomerData.Update(GetDealerCustomerFromForm()))
+                var dealerCustomer = GetDealerCustomerFromForm();
+                bool success = _dealerCustomerData.Update(dealerCustomer);
+                if (success)
                 {
                     LoadDealerCustomers();
                     MessageBox.Show("Запись успешно обновлена", "Успех",
-                        MessageBoxButton.OK, MessageBoxImage.Information);
+                                  MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Ошибка обновления: {ex.Message}", "Ошибка",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
+                              MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -160,22 +174,24 @@ namespace Frontend.Views
                 if (string.IsNullOrEmpty(txtDeaCustID.Text))
                 {
                     MessageBox.Show("Выберите запись для удаления", "Ошибка",
-                        MessageBoxButton.OK, MessageBoxImage.Warning);
+                                  MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
 
-                if (_dealerCustomerData.Delete(GetDealerCustomerFromForm()))
+                var dealerCustomer = GetDealerCustomerFromForm();
+                bool success = _dealerCustomerData.Delete(dealerCustomer);
+                if (success)
                 {
                     LoadDealerCustomers();
                     ClearForm();
                     MessageBox.Show("Запись успешно удалена", "Успех",
-                        MessageBoxButton.OK, MessageBoxImage.Information);
+                                  MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Ошибка удаления: {ex.Message}", "Ошибка",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
+                              MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -187,8 +203,9 @@ namespace Frontend.Views
         {
             try
             {
-                if (dgvDeaCust.SelectedItem is DataRowView row)
+                if (dgvDeaCust.SelectedItem != null)
                 {
+                    DataRowView row = (DataRowView)dgvDeaCust.SelectedItem;
                     txtDeaCustID.Text = row["id"].ToString();
                     cmbDeaCust.Text = row["type"].ToString();
                     txtName.Text = row["name"].ToString();
@@ -200,24 +217,32 @@ namespace Frontend.Views
             catch (Exception ex)
             {
                 MessageBox.Show($"Ошибка выбора записи: {ex.Message}", "Ошибка",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
+                              MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        private void btnClear_Click(object sender, RoutedEventArgs e)
+        {
+            ClearForm();
         }
 
         /// <summary>
         /// Обработчик изменения текста поиска.
         /// Фильтрует список по введенному ключевому слову.
         /// </summary>
+        
         private void txtSearch_TextChanged(object sender, TextChangedEventArgs e)
         {
             try
             {
-                dgvDeaCust.ItemsSource = _userData.Search(txtSearch.Text).DefaultView;
+                string keyword = txtSearch.Text;
+                DataTable dt = _userData.Search(keyword);
+                dgvDeaCust.ItemsSource = dt.DefaultView;
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Ошибка поиска: {ex.Message}", "Ошибка",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
+                              MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

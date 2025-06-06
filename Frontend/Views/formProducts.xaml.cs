@@ -18,8 +18,11 @@ namespace Frontend.Views
     {
         private readonly ICrudProduct _productService = new ProductData();
         private readonly ICrudCategory _categoryService = new CategoryData();
-        private readonly UserData _userData = new UserData();
-        private readonly string _loggedInUser;
+        private readonly int _currentUserId;
+        private readonly string _currentUsername;
+
+        private UserData _userData = new UserData();
+        private string _loggedInUser;
 
         /// <summary>
         /// Инициализирует новый экземпляр окна управления товарами.
@@ -29,16 +32,14 @@ namespace Frontend.Views
         {
             InitializeComponent();
             _loggedInUser = loggedInUser;
-            InitializeWindow();
+            LoadCategories();
+            LoadProducts();
         }
 
         /// <summary>
         /// Инициализирует окно при загрузке.
         /// </summary>
-        private void InitializeWindow()
-        {
-            Window_Loaded(null, null);
-        }
+
 
         /// <summary>
         /// Загружает список категорий в комбобокс.
@@ -54,7 +55,8 @@ namespace Frontend.Views
             }
             catch (Exception ex)
             {
-                ShowErrorMessage($"Ошибка загрузки категорий: {ex.Message}");
+                MessageBox.Show($"Ошибка загрузки категорий: {ex.Message}",
+                    "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -70,7 +72,8 @@ namespace Frontend.Views
             }
             catch (Exception ex)
             {
-                ShowErrorMessage($"Ошибка загрузки товаров: {ex.Message}");
+                MessageBox.Show($"Ошибка загрузки товаров: {ex.Message}",
+                    "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -93,21 +96,19 @@ namespace Frontend.Views
         /// <returns>True если данные валидны, иначе False</returns>
         private bool ValidateInputs()
         {
-            if (string.IsNullOrWhiteSpace(txtName.Text))
+            if (string.IsNullOrWhiteSpace(txtName.Text) ||
+                cmbCategory.SelectedValue == null ||
+                string.IsNullOrWhiteSpace(txtRate.Text))
             {
-                ShowWarningMessage("Введите название товара");
-                return false;
-            }
-
-            if (cmbCategory.SelectedValue == null)
-            {
-                ShowWarningMessage("Выберите категорию");
+                MessageBox.Show("Заполните обязательные поля: Название, Категория, Цена",
+                    "Внимание", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
 
             if (!decimal.TryParse(txtRate.Text, out _))
             {
-                ShowErrorMessage("Некорректный формат цены");
+                MessageBox.Show("Некорректный формат цены",
+                    "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
 
@@ -123,38 +124,43 @@ namespace Frontend.Views
 
             try
             {
-                var product = CreateProductFromInput();
+                var product = new Product
+                {
+                    Name = txtName.Text,
+                    Category = cmbCategory.SelectedValue.ToString(),
+                    SpecialNumber = txtSpecialNumber.Text,
+                    Description = txtDescription.Text,
+                    Rate = decimal.Parse(txtRate.Text),
+                    AddedDate = DateTime.Now,
+                    AddedBy = _currentUserId,
+                    AddedByName = _currentUsername
+                };
+
+                User currentUser = _userData.GetIDFromUsername(_loggedInUser);
+                product.AddedBy = currentUser.Id;
+                product.AddedByName = _loggedInUser;
+
+
+
                 if (_productService.Insert(product))
                 {
-                    ShowSuccessMessage("Товар успешно добавлен");
-                    ResetView();
+                    MessageBox.Show("Товар успешно добавлен",
+                        "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                    LoadProducts();
+                    ClearFields();
                 }
             }
             catch (Exception ex)
             {
-                ShowErrorMessage($"Ошибка добавления: {ex.Message}");
+                MessageBox.Show($"Ошибка добавления: {ex.Message}",
+                    "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
         /// <summary>
         /// Создает объект Product на основе данных формы.
         /// </summary>
-        private Product CreateProductFromInput()
-        {
-            User currentUser = _userData.GetIDFromUsername(_loggedInUser);
 
-            return new Product
-            {
-                Name = txtName.Text,
-                Category = cmbCategory.SelectedValue.ToString(),
-                SpecialNumber = txtSpecialNumber.Text,
-                Description = txtDescription.Text,
-                Rate = decimal.Parse(txtRate.Text),
-                AddedDate = DateTime.Now,
-                AddedBy = currentUser.Id,
-                AddedByName = _loggedInUser
-            };
-        }
 
         /// <summary>
         /// Обработчик кнопки обновления товара.
@@ -165,18 +171,28 @@ namespace Frontend.Views
 
             try
             {
-                var product = CreateProductFromInput();
-                product.Id = int.Parse(txtID.Text);
+                var product = new Product
+                {
+                    Id = int.Parse(txtID.Text),
+                    Name = txtName.Text,
+                    Category = cmbCategory.SelectedValue.ToString(),
+                    SpecialNumber = txtSpecialNumber.Text,
+                    Description = txtDescription.Text,
+                    Rate = decimal.Parse(txtRate.Text)
+                };
 
                 if (_productService.Update(product))
                 {
-                    ShowSuccessMessage("Товар успешно обновлён");
-                    ResetView();
+                    MessageBox.Show("Товар успешно обновлён",
+                        "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                    LoadProducts();
+                    ClearFields();
                 }
             }
             catch (Exception ex)
             {
-                ShowErrorMessage($"Ошибка обновления: {ex.Message}");
+                MessageBox.Show($"Ошибка обновления: {ex.Message}",
+                    "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -189,33 +205,27 @@ namespace Frontend.Views
 
             try
             {
-                if (ConfirmDelete())
-                {
-                    var product = new Product { Id = int.Parse(txtID.Text) };
+                var product = new Product { Id = int.Parse(txtID.Text) };
 
-                    if (_productService.Delete(product))
-                    {
-                        ShowSuccessMessage("Товар успешно удалён");
-                        ResetView();
-                    }
+                if (_productService.Delete(product))
+                {
+                    MessageBox.Show("Товар успешно удалён",
+                        "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                    LoadProducts();
+                    ClearFields();
                 }
             }
             catch (Exception ex)
             {
-                ShowErrorMessage($"Ошибка удаления: {ex.Message}");
+                MessageBox.Show($"Ошибка удаления: {ex.Message}",
+                    "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
         /// <summary>
         /// Запрашивает подтверждение удаления товара.
         /// </summary>
-        private bool ConfirmDelete()
-        {
-            return MessageBox.Show("Вы уверены, что хотите удалить этот товар?",
-                "Подтверждение удаления",
-                MessageBoxButton.YesNo,
-                MessageBoxImage.Question) == MessageBoxResult.Yes;
-        }
+
 
         /// <summary>
         /// Обработчик кнопки очистки формы.
@@ -228,23 +238,24 @@ namespace Frontend.Views
         /// <summary>
         /// Обработчик двойного клика по списку товаров.
         /// </summary>
-        private void dgvProducts_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        private void dgvProducts_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             try
             {
-                if (dgvProducts.SelectedItem is DataRowView row)
-                {
-                    txtID.Text = row["id"].ToString();
-                    txtName.Text = row["name"].ToString();
-                    cmbCategory.SelectedValue = row["category"];
-                    txtSpecialNumber.Text = row["special_number"].ToString();
-                    txtDescription.Text = row["description"].ToString();
-                    txtRate.Text = row["rate"].ToString();
-                }
+                if (dgvProducts.SelectedItem == null) return;
+
+                DataRowView row = (DataRowView)dgvProducts.SelectedItem;
+                txtID.Text = row["id"].ToString();
+                txtName.Text = row["name"].ToString();
+                cmbCategory.SelectedValue = row["category"];
+                txtSpecialNumber.Text = row["special_number"].ToString();
+                txtDescription.Text = row["description"].ToString();
+                txtRate.Text = row["rate"].ToString();
             }
             catch (Exception ex)
             {
-                ShowErrorMessage($"Ошибка загрузки данных: {ex.Message}");
+                MessageBox.Show($"Ошибка загрузки данных: {ex.Message}",
+                    "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -260,7 +271,8 @@ namespace Frontend.Views
             }
             catch (Exception ex)
             {
-                ShowErrorMessage($"Ошибка поиска: {ex.Message}");
+                MessageBox.Show($"Ошибка поиска: {ex.Message}",
+                    "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -276,34 +288,21 @@ namespace Frontend.Views
         /// <summary>
         /// Обновляет данные в окне.
         /// </summary>
-        private void ResetView()
-        {
-            LoadProducts();
-            ClearFields();
-        }
+
 
         /// <summary>
         /// Показывает сообщение об ошибке.
         /// </summary>
-        private void ShowErrorMessage(string message)
-        {
-            MessageBox.Show(message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-        }
+
 
         /// <summary>
         /// Показывает предупреждающее сообщение.
         /// </summary>
-        private void ShowWarningMessage(string message)
-        {
-            MessageBox.Show(message, "Внимание", MessageBoxButton.OK, MessageBoxImage.Warning);
-        }
+ 
 
         /// <summary>
         /// Показывает сообщение об успешном выполнении операции.
         /// </summary>
-        private void ShowSuccessMessage(string message)
-        {
-            MessageBox.Show(message, "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
-        }
+
     }
 }

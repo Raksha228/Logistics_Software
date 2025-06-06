@@ -13,13 +13,14 @@ namespace Frontend.Views
     /// </summary>
     public partial class formLogin : Window
     {
-        private readonly Login _login = new Login();
-        private readonly LoginData _loginData = new LoginData();
+        Login login = new Login();
+        LoginData loginData = new LoginData();
+
 
         /// <summary>
         /// Статическое поле для хранения логина авторизованного пользователя
         /// </summary>
-        public static string LoggedInUser;
+        public static string loggedIn;
 
         /// <summary>
         /// Инициализирует новый экземпляр окна авторизации.
@@ -53,99 +54,98 @@ namespace Frontend.Views
         {
             try
             {
-                if (!ValidateInput())
-                    return;
+                login.Username = txtUsername.Text.Trim();
+                login.Password = txtPassword.Password.Trim();
+                login.UserType = cmbUserType.Text.Trim();
 
-                _login.Username = txtUsername.Text.Trim();
-                _login.Password = txtPassword.Password.Trim();
-                _login.UserType = cmbUserType.Text.Trim();
+                //Проверка, есть ли такой пользователь с такими правами
+                bool sucess = loginData.loginCheck(login);
 
-                bool isAuthenticated = _loginData.LoginCheck(_login);
 
-                if (isAuthenticated)
+
+                // Проверяем введенные данные
+                if (string.IsNullOrEmpty(login.Username))
                 {
-                    LoggedInUser = _login.Username;
-                    OpenDashboardWindow();
+                    MessageBox.Show("Введите логин", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                if (string.IsNullOrEmpty(login.Password))
+                {
+                    MessageBox.Show("Введите пароль", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                if (string.IsNullOrEmpty(login.UserType))
+                {
+                    MessageBox.Show("Выберите тип пользователя", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+
+                if (sucess == true)
+                {
+                    // Определяем какое окно открывать в зависимости от типа пользователя
+                    if (login.UserType == "Admin")
+                    {
+                        formAdminDashboard adminDashboard = new formAdminDashboard(login);
+                        adminDashboard.Show();
+                    }
+                    else
+                    {
+                        formUserDashboard userDashboard = new formUserDashboard(login);
+                        userDashboard.Show();
+                    }
+
                     this.Close();
                 }
                 else
                 {
-                    ShowAuthError();
+                    MessageBox.Show("Неверный логин, пароль или тип пользователя", "Ошибка авторизации",
+                                  MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
             catch (Exception ex)
             {
-                ShowErrorMessage($"Произошла ошибка: {ex.Message}");
+                MessageBox.Show($"Произошла ошибка: {ex.Message}", "Ошибка",
+                              MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            // Закрываем приложение при закрытии окна авторизации
+            //Application.Current.Shutdown();
         }
 
         /// <summary>
         /// Проверяет корректность введенных данных.
         /// </summary>
         /// <returns>True если данные валидны, иначе False</returns>
-        private bool ValidateInput()
-        {
-            if (string.IsNullOrEmpty(txtUsername.Text))
-            {
-                ShowErrorMessage("Введите логин");
-                return false;
-            }
 
-            if (string.IsNullOrEmpty(txtPassword.Password))
-            {
-                ShowErrorMessage("Введите пароль");
-                return false;
-            }
-
-            if (string.IsNullOrEmpty(cmbUserType.Text))
-            {
-                ShowErrorMessage("Выберите тип пользователя");
-                return false;
-            }
-
-            return true;
-        }
 
         /// <summary>
         /// Открывает соответствующее окно в зависимости от типа пользователя.
         /// </summary>
-        private void OpenDashboardWindow()
-        {
-            Window dashboard = _login.UserType == "Admin"
-                ? new formAdminDashboard(_login)
-                : new formUserDashboard(_login);
 
-            dashboard.Show();
-        }
 
         /// <summary>
         /// Показывает сообщение об ошибке авторизации.
         /// </summary>
-        private void ShowAuthError()
-        {
-            MessageBox.Show("Неверный логин, пароль или тип пользователя",
-                "Ошибка авторизации",
-                MessageBoxButton.OK,
-                MessageBoxImage.Error);
-        }
+
 
         /// <summary>
         /// Показывает стандартное сообщение об ошибке.
         /// </summary>
         /// <param name="message">Текст сообщения</param>
-        private void ShowErrorMessage(string message)
-        {
-            MessageBox.Show(message, "Ошибка",
-                MessageBoxButton.OK,
-                MessageBoxImage.Error);
-        }
+
 
         /// <summary>
         /// Обработчик изменения выбранного типа пользователя.
         /// </summary>
         private void cmbUserType_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            // Реализация может быть добавлена при необходимости
+
         }
     }
 }

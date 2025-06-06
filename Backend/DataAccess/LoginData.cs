@@ -40,15 +40,17 @@ namespace Backend.DataAccess
         {
             bool isSuccess = false;
 
-            // Подключение к базе данных
+            //Подключение к базе данных
             SqlConnection conn = new SqlConnection(myconnstrng);
 
             try
             {
-                // Создать SQL-запрос для проверки существования пользователя
+                //Создайте запрос для получения данных из базы данных
                 string sql = "SELECT * FROM table_users WHERE username=@username AND password=@password AND user_type=@user_type";
 
-                // Подготовить команду с параметрами
+
+
+                //Получение значений с помощью выполнения запроса
                 SqlCommand cmd = new SqlCommand(sql, conn);
 
                 cmd.Parameters.AddWithValue("@username", login.Username ?? (object)DBNull.Value);
@@ -61,7 +63,7 @@ namespace Backend.DataAccess
 
                 adapter.Fill(dt);
 
-                // Проверка наличия пользователя с такими учётными данными
+                //Проверьте, есть ли у нас строки в таблице
                 if (dt.Rows.Count > 0)
                 {
                     isSuccess = true;

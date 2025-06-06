@@ -16,16 +16,19 @@ namespace Frontend.Views
     /// </summary>
     public partial class formLogistic : Window
     {
-        private readonly UserData _userData = new UserData();
-        private readonly Logistic _logistic = new Logistic();
-        private readonly LogisticData _logisticData = new LogisticData();
-        private readonly ProductData _productData = new ProductData();
+        private UserData userData = new UserData();
+        private Logistic logistic = new Logistic();
+        private LogisticData logisticData = new LogisticData();
+        private ProductData productData = new ProductData();
 
-        private readonly string _loggedInUser;
-        private readonly DataTable _transactionTable = new DataTable();
-        private int _productId;
-        private string _description;
-        private string _specialNumber;
+        private string _loggedInUser;
+
+
+
+        private DataTable transactionTable = new DataTable(); // Таблица для хранения товаров
+        private int productId; // ID текущего продукта
+        private string description = null; // Описание доставки
+        private string specialNumber = null; // Артикул товара
 
         /// <summary>
         /// Инициализирует новый экземпляр окна управления логистикой.
@@ -44,11 +47,11 @@ namespace Frontend.Views
         /// </summary>
         private void InitializeDataTable()
         {
-            _transactionTable.Columns.Add("Артикул");
-            _transactionTable.Columns.Add("Наименование");
-            _transactionTable.Columns.Add("Цена");
-            _transactionTable.Columns.Add("Количество");
-            _transactionTable.Columns.Add("Сумма");
+            transactionTable.Columns.Add("Артикул");
+            transactionTable.Columns.Add("Наименование");
+            transactionTable.Columns.Add("Цена");
+            transactionTable.Columns.Add("Количество");
+            transactionTable.Columns.Add("Сумма");
         }
 
         /// <summary>
@@ -58,32 +61,28 @@ namespace Frontend.Views
         {
             try
             {
-                LoadEmployees();
+                // Загрузка списка сотрудников
+                DataTable employees = userData.Select();
+                cmbEmployee.ItemsSource = employees.DefaultView;
+                cmbEmployee.DisplayMemberPath = "username";
+                cmbEmployee.SelectedValuePath = "username";
+
+                // Загрузка данных о доставках
                 RefreshLogisticsData();
             }
             catch (Exception ex)
             {
-                ShowErrorMessage($"Ошибка загрузки данных: {ex.Message}");
+                MessageBox.Show($"Ошибка загрузки данных: {ex.Message}");
             }
         }
 
-        /// <summary>
-        /// Загружает список сотрудников в комбобокс.
-        /// </summary>
-        private void LoadEmployees()
-        {
-            DataTable employees = _userData.Select();
-            cmbEmployee.ItemsSource = employees.DefaultView;
-            cmbEmployee.DisplayMemberPath = "username";
-            cmbEmployee.SelectedValuePath = "username";
-        }
 
         /// <summary>
         /// Обновляет данные о доставках в таблице.
         /// </summary>
         private void RefreshLogisticsData()
         {
-            DataTable logistics = _logisticData.Select();
+            DataTable logistics = logisticData.Select();
             dgvLogistic.ItemsSource = logistics.DefaultView;
         }
 
@@ -92,73 +91,55 @@ namespace Frontend.Views
         /// </summary>
         private void btnAdd_Click(object sender, RoutedEventArgs e)
         {
-            if (!ValidateLogisticInput())
+            // Валидация контактных данных
+            if (string.IsNullOrWhiteSpace(txtContact.Text))
+            {
+                MessageBox.Show("Введите корректные контактные данные!");
                 return;
+            }
 
             try
             {
-                FillLogisticData();
+                // Заполнение данных о доставке
+                logistic.Empleyee = cmbEmployee.Text;
+                logistic.FirstNameEmployee = txtFirstName.Text;
+                logistic.LastNameEmployee = txtLastName.Text;
+                logistic.Address = txtAddress.Text;
+                logistic.Contact = txtContact.Text;
+                logistic.Date = txtDate.Text;
+                logistic.Description = description;
+                logistic.Price = decimal.Parse(txtTotal.Text);
+                logistic.AddedDate = DateTime.Now;
 
-                if (_logisticData.Insert(_logistic))
+                // Получение данных текущего пользователя
+                User currentUser = userData.GetIDFromUsername(formLogin.loggedIn);
+                logistic.AddedBy = currentUser.Id;
+                logistic.AddedByName = _loggedInUser;
+
+                // Сохранение в БД
+                bool success = logisticData.Insert(logistic);
+
+                if (success)
                 {
-                    ShowSuccessMessage("Доставка успешно добавлена!");
-                    ResetForm();
+                    MessageBox.Show("Доставка успешно добавлена!");
+                    ClearForm();
+                    RefreshLogisticsData();
+                    transactionTable.Clear();
+                    description = null;
+                    dgvAddedProducts.ItemsSource = null;
                 }
                 else
                 {
-                    ShowErrorMessage("Ошибка при добавлении доставки!");
+                    MessageBox.Show("Ошибка при добавлении доставки!");
                 }
             }
             catch (Exception ex)
             {
-                ShowErrorMessage($"Ошибка: {ex.Message}");
+                MessageBox.Show($"Ошибка: {ex.Message}");
             }
         }
 
-        /// <summary>
-        /// Проверяет корректность введенных данных о доставке.
-        /// </summary>
-        private bool ValidateLogisticInput()
-        {
-            if (string.IsNullOrWhiteSpace(txtContact.Text))
-            {
-                ShowErrorMessage("Введите корректные контактные данные!");
-                return false;
-            }
-            return true;
-        }
 
-        /// <summary>
-        /// Заполняет объект Logistic данными из формы.
-        /// </summary>
-        private void FillLogisticData()
-        {
-            _logistic.Empleyee = cmbEmployee.Text;
-            _logistic.FirstNameEmployee = txtFirstName.Text;
-            _logistic.LastNameEmployee = txtLastName.Text;
-            _logistic.Address = txtAddress.Text;
-            _logistic.Contact = txtContact.Text;
-            _logistic.Date = txtDate.Text;
-            _logistic.Description = _description;
-            _logistic.Price = decimal.Parse(txtTotal.Text);
-            _logistic.AddedDate = DateTime.Now;
-
-            User currentUser = _userData.GetIDFromUsername(formLogin.LoggedInUser);
-            _logistic.AddedBy = currentUser.Id;
-            _logistic.AddedByName = _loggedInUser;
-        }
-
-        /// <summary>
-        /// Очищает форму и сбрасывает состояние.
-        /// </summary>
-        private void ResetForm()
-        {
-            ClearForm();
-            RefreshLogisticsData();
-            _transactionTable.Clear();
-            _description = null;
-            dgvAddedProducts.ItemsSource = null;
-        }
 
         /// <summary>
         /// Очищает основные поля формы.
@@ -180,10 +161,11 @@ namespace Frontend.Views
         /// Обработчик двойного клика по списку доставок.
         /// Заполняет форму данными выбранной доставки.
         /// </summary>
-        private void dgvLogistic_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        private void dgvLogistic_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            if (dgvLogistic.SelectedItem is DataRowView row)
+            if (dgvLogistic.SelectedItem != null)
             {
+                DataRowView row = (DataRowView)dgvLogistic.SelectedItem;
                 txtID.Text = row["Logistic ID"].ToString();
                 cmbEmployee.Text = row["Employee"].ToString();
                 txtFirstName.Text = row["Employee Name"].ToString();
@@ -203,41 +185,47 @@ namespace Frontend.Views
         {
             if (string.IsNullOrEmpty(txtID.Text))
             {
-                ShowErrorMessage("Выберите запись для изменения!");
+                MessageBox.Show("Выберите запись для изменения!");
                 return;
             }
 
             try
             {
-                UpdateLogisticData();
+                logistic.Id = int.Parse(txtID.Text);
+                logistic.Empleyee = cmbEmployee.Text;
+                logistic.FirstNameEmployee = txtFirstName.Text;
+                logistic.LastNameEmployee = txtLastName.Text;
+                logistic.Address = txtAddress.Text;
+                logistic.Contact = txtContact.Text;
+                logistic.Date = txtDate.Text;
+                logistic.Description = txtDescription.Text;
+                logistic.Price = decimal.Parse(txtTotal.Text);
+                logistic.AddedDate = DateTime.Now;
 
-                if (_logisticData.Update(_logistic))
+                // Получение данных текущего пользователя
+                User currentUser = userData.GetIDFromUsername(formLogin.loggedIn);
+                logistic.AddedBy = currentUser.Id;
+                logistic.AddedByName = currentUser.Username;
+
+                bool success = logisticData.Update(logistic);
+
+                if (success)
                 {
-                    ShowSuccessMessage("Данные доставки обновлены!");
-                    ResetForm();
+                    MessageBox.Show("Данные доставки обновлены!");
+                    ClearForm();
+                    RefreshLogisticsData();
                 }
                 else
                 {
-                    ShowErrorMessage("Ошибка при обновлении данных!");
+                    MessageBox.Show("Ошибка при обновлении данных!");
                 }
             }
             catch (Exception ex)
             {
-                ShowErrorMessage($"Ошибка: {ex.Message}");
+                MessageBox.Show($"Ошибка: {ex.Message}");
             }
         }
 
-        /// <summary>
-        /// Обновляет данные объекта Logistic для редактирования.
-        /// </summary>
-        private void UpdateLogisticData()
-        {
-            _logistic.Id = int.Parse(txtID.Text);
-            FillLogisticData();
-
-            User currentUser = _userData.GetIDFromUsername(formLogin.LoggedInUser);
-            _logistic.AddedByName = currentUser.Username;
-        }
 
         /// <summary>
         /// Обработчик кнопки удаления доставки.
@@ -246,58 +234,47 @@ namespace Frontend.Views
         {
             if (string.IsNullOrEmpty(txtID.Text))
             {
-                ShowErrorMessage("Выберите запись для удаления!");
+                MessageBox.Show("Выберите запись для удаления!");
                 return;
             }
 
             try
             {
-                _logistic.Id = int.Parse(txtID.Text);
-                ReturnProductsToStock();
+                logistic.Id = int.Parse(txtID.Text);
 
-                if (_logisticData.Delete(_logistic))
+                // Возврат товаров на склад
+                if (!string.IsNullOrEmpty(txtDescription.Text))
                 {
-                    ShowSuccessMessage("Доставка удалена!");
-                    ResetForm();
+                    string[] items = txtDescription.Text.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    foreach (string item in items)
+                    {
+                        string[] parts = item.Split('=');
+                        if (parts.Length == 2)
+                        {
+                            string productName = parts[0];
+                            int qty = int.Parse(parts[1]);
+                            Product product = productData.GetProductIDFromName(productName);
+                            productData.IncreaseProduct(product.Id, qty);
+                        }
+                    }
+                }
+
+                bool success = logisticData.Delete(logistic);
+
+                if (success)
+                {
+                    MessageBox.Show("Доставка удалена!");
+                    ClearForm();
+                    RefreshLogisticsData();
                 }
                 else
                 {
-                    ShowErrorMessage("Ошибка при удалении!");
+                    MessageBox.Show("Ошибка при удалении!");
                 }
             }
             catch (Exception ex)
             {
-                ShowErrorMessage($"Ошибка: {ex.Message}");
-            }
-        }
-
-        /// <summary>
-        /// Возвращает товары из доставки на склад.
-        /// </summary>
-        private void ReturnProductsToStock()
-        {
-            if (!string.IsNullOrEmpty(txtDescription.Text))
-            {
-                string[] items = txtDescription.Text.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                foreach (string item in items)
-                {
-                    ProcessReturnedItem(item);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Обрабатывает возврат одного товара на склад.
-        /// </summary>
-        private void ProcessReturnedItem(string item)
-        {
-            string[] parts = item.Split('=');
-            if (parts.Length == 2)
-            {
-                string productName = parts[0];
-                int qty = int.Parse(parts[1]);
-                Product product = _productData.GetProductIDFromName(productName);
-                _productData.IncreaseProduct(product.Id, qty);
+                MessageBox.Show($"Ошибка: {ex.Message}");
             }
         }
 
@@ -307,9 +284,11 @@ namespace Frontend.Views
         private void txtSearch_TextChanged(object sender, TextChangedEventArgs e)
         {
             string searchText = txtSearch.Text.Trim();
+
             DataTable result = string.IsNullOrEmpty(searchText)
-                ? _logisticData.Select()
-                : _logisticData.Search(searchText);
+                ? logisticData.Select()
+                : logisticData.Search(searchText);
+
             dgvLogistic.ItemsSource = result.DefaultView;
         }
 
@@ -318,10 +297,11 @@ namespace Frontend.Views
         /// </summary>
         private void cmbEmployee_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (cmbEmployee.SelectedItem is DataRowView selected)
+            if (cmbEmployee.SelectedItem != null)
             {
+                DataRowView selected = (DataRowView)cmbEmployee.SelectedItem;
                 string username = selected["username"].ToString();
-                User user = _userData.SearchUserForLogistic(username);
+                User user = userData.SearchUserForLogistic(username);
                 txtFirstName.Text = user.FirstName;
                 txtLastName.Text = user.LastName;
             }
@@ -340,28 +320,20 @@ namespace Frontend.Views
                 return;
             }
 
-            Product product = _logisticData.GetProductsForLogistic(searchText);
+            Product product = logisticData.GetProductsForLogistic(searchText);
             if (product != null)
             {
-                DisplayProductInfo(product);
+                productId = product.Id;
+                specialNumber = product.SpecialNumber;
+                txtProductName.Text = product.Name;
+                txtInventory.Text = product.Quantity.ToString();
+                txtRate.Text = product.Rate.ToString();
             }
             else
             {
                 ClearProductFields();
-                ShowErrorMessage("Товар не найден!");
+                MessageBox.Show("Товар не найден!");
             }
-        }
-
-        /// <summary>
-        /// Отображает информацию о найденном товаре.
-        /// </summary>
-        private void DisplayProductInfo(Product product)
-        {
-            _productId = product.Id;
-            _specialNumber = product.SpecialNumber;
-            txtProductName.Text = product.Name;
-            txtInventory.Text = product.Quantity.ToString();
-            txtRate.Text = product.Rate.ToString();
         }
 
         /// <summary>
@@ -373,8 +345,8 @@ namespace Frontend.Views
             txtInventory.Clear();
             txtRate.Clear();
             txtQty.Clear();
-            _productId = 0;
-            _specialNumber = null;
+            productId = 0;
+            specialNumber = null;
         }
 
         /// <summary>
@@ -382,104 +354,62 @@ namespace Frontend.Views
         /// </summary>
         private void btnAddProduct_Click(object sender, RoutedEventArgs e)
         {
-            if (!ValidateProductInput())
-                return;
-
-            try
-            {
-                AddProductToDelivery();
-                ClearProductFields();
-            }
-            catch (Exception ex)
-            {
-                ShowErrorMessage($"Ошибка: {ex.Message}");
-            }
-        }
-
-        /// <summary>
-        /// Проверяет корректность введенных данных о товаре.
-        /// </summary>
-        private bool ValidateProductInput()
-        {
             if (string.IsNullOrEmpty(txtProductName.Text))
             {
-                ShowErrorMessage("Сначала выберите товар!");
-                return false;
+                MessageBox.Show("Сначала выберите товар!");
+                return;
             }
 
             if (!decimal.TryParse(txtQty.Text, out decimal quantity) || quantity <= 0)
             {
-                ShowErrorMessage("Введите корректное количество!");
-                return false;
+                MessageBox.Show("Введите корректное количество!");
+                return;
             }
 
-            return true;
-        }
-
-        /// <summary>
-        /// Добавляет товар в текущую доставку.
-        /// </summary>
-        private void AddProductToDelivery()
-        {
-            decimal price = decimal.Parse(txtRate.Text);
-            decimal quantity = decimal.Parse(txtQty.Text);
-            decimal total = price * quantity;
-            decimal currentTotal = decimal.Parse(txtTotal.Text);
-
-            UpdateDeliveryTotal(currentTotal + total + 8); // +8 за доставку
-            AddToDescription(txtProductName.Text, quantity);
-            AddToTransactionTable(price, quantity, total);
-
-            if (!_productData.DecreaseProduct(_productId, quantity))
+            try
             {
-                ShowErrorMessage("Недостаточно товара на складе!");
+                decimal price = decimal.Parse(txtRate.Text);
+                decimal total = price * quantity;
+                decimal currentTotal = decimal.Parse(txtTotal.Text);
+                txtTotal.Text = (currentTotal + total + 8).ToString(); // +8 за доставку
+
+                // Добавление в описание
+                description += $"{txtProductName.Text}={quantity} ";
+
+                // Добавление в таблицу
+                transactionTable.Rows.Add(
+                    specialNumber,
+                    txtProductName.Text,
+                    price,
+                    quantity,
+                    total
+                );
+
+                dgvAddedProducts.ItemsSource = transactionTable.DefaultView;
+                txtDescription.Text = description;
+
+                // Уменьшение количества на складе
+                bool success = productData.DecreaseProduct(productId, quantity);
+                if (!success)
+                {
+                    MessageBox.Show("Недостаточно товара на складе!");
+                    return;
+                }
+
+                ClearProductFields();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка: {ex.Message}");
             }
         }
 
-        /// <summary>
-        /// Обновляет общую стоимость доставки.
-        /// </summary>
-        private void UpdateDeliveryTotal(decimal newTotal)
-        {
-            txtTotal.Text = newTotal.ToString();
-        }
 
-        /// <summary>
-        /// Добавляет товар в описание доставки.
-        /// </summary>
-        private void AddToDescription(string productName, decimal quantity)
-        {
-            _description += $"{productName}={quantity} ";
-            txtDescription.Text = _description;
-        }
-
-        /// <summary>
-        /// Добавляет товар в таблицу товаров доставки.
-        /// </summary>
-        private void AddToTransactionTable(decimal price, decimal quantity, decimal total)
-        {
-            _transactionTable.Rows.Add(
-                _specialNumber,
-                txtProductName.Text,
-                price,
-                quantity,
-                total
-            );
-            dgvAddedProducts.ItemsSource = _transactionTable.DefaultView;
-        }
 
         /// <summary>
         /// Обработчик кнопки очистки формы.
         /// </summary>
         private void btnClear_Click(object sender, RoutedEventArgs e)
-        {
-            ClearAll();
-        }
-
-        /// <summary>
-        /// Полностью очищает форму и сбрасывает состояние.
-        /// </summary>
-        private void ClearAll()
         {
             ClearForm();
             txtSearch.Clear();
@@ -487,24 +417,14 @@ namespace Frontend.Views
             txtTotal.Text = "0";
             txtDescription.Clear();
             dgvAddedProducts.ItemsSource = null;
-            _transactionTable.Clear();
-            _description = null;
+            transactionTable.Clear();
+            description = null;
         }
 
         /// <summary>
-        /// Показывает сообщение об ошибке.
+        /// Полностью очищает форму и сбрасывает состояние.
         /// </summary>
-        private void ShowErrorMessage(string message)
-        {
-            MessageBox.Show(message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-        }
 
-        /// <summary>
-        /// Показывает сообщение об успешном выполнении операции.
-        /// </summary>
-        private void ShowSuccessMessage(string message)
-        {
-            MessageBox.Show(message, "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
-        }
+
     }
 }

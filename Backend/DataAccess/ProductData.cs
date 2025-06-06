@@ -25,7 +25,7 @@ namespace Backend.DataAccess
         /// <summary>
         /// Строка подключения к базе данных, полученная из конфигурационного файла приложения.
         /// </summary>
-        private static string myconnstrng = ConfigurationManager.ConnectionStrings["connstrng"].ConnectionString;
+        static string myconnstrng = ConfigurationManager.ConnectionStrings["connstrng"].ConnectionString;
 
         /// <summary>
         /// Выбирает и возвращает все записи по продуктам из таблицы <c>table_products</c>.
@@ -35,14 +35,25 @@ namespace Backend.DataAccess
         /// </returns>
         public DataTable Select()
         {
+            //Установка соединения с базой данных
             SqlConnection conn = new SqlConnection(myconnstrng);
+
+            //Создайте временную таблицу для хранения данных
             DataTable dt = new DataTable();
+
             try
             {
+                //Создайте запрос, который берет все данные из таблицы
                 String sql = "SELECT * FROM table_products";
+
+                //Создайте команду для выполнения запроса
                 SqlCommand cmd = new SqlCommand(sql, conn);
+
+                //создайте адаптер для хранения информации и заполните таблицу
                 SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+
                 conn.Open();
+
                 adapter.Fill(dt);
             }
             catch (Exception ex)
@@ -53,6 +64,7 @@ namespace Backend.DataAccess
             {
                 conn.Close();
             }
+
             return dt;
         }
 
@@ -72,11 +84,15 @@ namespace Backend.DataAccess
         public bool Insert(Product product)
         {
             bool isSuccess = false;
+
             SqlConnection conn = new SqlConnection(myconnstrng);
+
             try
             {
                 String sql = "INSERT INTO table_products (name, category, special_number, description, rate, qty, added_date, added_by, added_by_name) VALUES (@name, @category, @special_number, @description, @rate, @qty, @added_date, @added_by, @added_by_name)";
+
                 SqlCommand cmd = new SqlCommand(sql, conn);
+
                 cmd.Parameters.AddWithValue("@name", product.Name);
                 cmd.Parameters.AddWithValue("@category", product.Category);
                 cmd.Parameters.AddWithValue("@special_number", product.SpecialNumber);
@@ -86,9 +102,19 @@ namespace Backend.DataAccess
                 cmd.Parameters.AddWithValue("@added_date", product.AddedDate);
                 cmd.Parameters.AddWithValue("@added_by", product.AddedBy);
                 cmd.Parameters.AddWithValue("@added_by_name", product.AddedByName);
+
                 conn.Open();
+
                 int rows = cmd.ExecuteNonQuery();
-                isSuccess = rows > 0;
+
+                if (rows > 0)
+                {
+                    isSuccess = true;
+                }
+                else
+                {
+                    isSuccess = false;
+                }
             }
             catch (Exception ex)
             {
@@ -98,6 +124,7 @@ namespace Backend.DataAccess
             {
                 conn.Close();
             }
+
             return isSuccess;
         }
 
@@ -111,11 +138,15 @@ namespace Backend.DataAccess
         public bool Update(Product product)
         {
             bool isSuccess = false;
+
             SqlConnection conn = new SqlConnection(myconnstrng);
+
             try
             {
                 String sql = "UPDATE table_products SET name=@name, category=@category, special_number=@special_number, description=@description, rate=@rate, added_date=@added_date, added_by=@added_by, added_by_name=@added_by_name WHERE id=@id";
+
                 SqlCommand cmd = new SqlCommand(sql, conn);
+
                 cmd.Parameters.AddWithValue("@name", product.Name);
                 cmd.Parameters.AddWithValue("@category", product.Category);
                 cmd.Parameters.AddWithValue("@special_number", product.SpecialNumber);
@@ -126,9 +157,19 @@ namespace Backend.DataAccess
                 cmd.Parameters.AddWithValue("@added_by", product.AddedBy);
                 cmd.Parameters.AddWithValue("@added_by_name", product.AddedByName);
                 cmd.Parameters.AddWithValue("@id", product.Id);
+
                 conn.Open();
+
                 int rows = cmd.ExecuteNonQuery();
-                isSuccess = rows > 0;
+
+                if (rows > 0)
+                {
+                    isSuccess = true;
+                }
+                else
+                {
+                    isSuccess = false;
+                }
             }
             catch (Exception ex)
             {
@@ -138,6 +179,7 @@ namespace Backend.DataAccess
             {
                 conn.Close();
             }
+
             return isSuccess;
         }
 
@@ -151,15 +193,29 @@ namespace Backend.DataAccess
         public bool Delete(Product product)
         {
             bool isSuccess = false;
+
             SqlConnection conn = new SqlConnection(myconnstrng);
+
             try
             {
                 String sql = "DELETE FROM table_products WHERE id=@id";
+
                 SqlCommand cmd = new SqlCommand(sql, conn);
+
                 cmd.Parameters.AddWithValue("@id", product.Id);
+
                 conn.Open();
+
                 int rows = cmd.ExecuteNonQuery();
-                isSuccess = rows > 0;
+
+                if (rows > 0)
+                {
+                    isSuccess = true;
+                }
+                else
+                {
+                    isSuccess = false;
+                }
             }
             catch (Exception ex)
             {
@@ -169,6 +225,7 @@ namespace Backend.DataAccess
             {
                 conn.Close();
             }
+
             return isSuccess;
         }
 
@@ -187,13 +244,19 @@ namespace Backend.DataAccess
         public DataTable Search(string keywords)
         {
             SqlConnection conn = new SqlConnection(myconnstrng);
+
             DataTable dt = new DataTable();
+
             try
             {
                 string sql = "SELECT * FROM table_products WHERE special_number LIKE '%" + keywords + "%' OR name LIKE '%" + keywords + "%' OR category LIKE '%" + keywords + "%'";
+
                 SqlCommand cmd = new SqlCommand(sql, conn);
+
                 SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+
                 conn.Open();
+
                 adapter.Fill(dt);
             }
             catch (Exception ex)
@@ -204,6 +267,7 @@ namespace Backend.DataAccess
             {
                 conn.Close();
             }
+
             return dt;
         }
 
@@ -217,13 +281,19 @@ namespace Backend.DataAccess
         public Product GetProductsForTransaction(string keyword)
         {
             Product product = new Product();
+
             SqlConnection conn = new SqlConnection(myconnstrng);
+
             DataTable dt = new DataTable();
+
             try
             {
                 string sql = "SELECT name, special_number, rate, qty FROM table_products WHERE special_number LIKE '%" + keyword + "%' OR name LIKE '%" + keyword + "%'";
+
                 SqlDataAdapter adapter = new SqlDataAdapter(sql, conn);
+
                 conn.Open();
+
                 adapter.Fill(dt);
 
                 if (dt.Rows.Count > 0)
@@ -242,6 +312,7 @@ namespace Backend.DataAccess
             {
                 conn.Close();
             }
+
             return product;
         }
 
@@ -255,13 +326,19 @@ namespace Backend.DataAccess
         public Product GetProductIDFromName(string productName)
         {
             Product product = new Product();
+
             SqlConnection conn = new SqlConnection(myconnstrng);
+
             DataTable dt = new DataTable();
+
             try
             {
                 string sql = "SELECT id FROM table_products WHERE name='" + productName + "'";
+
                 SqlDataAdapter adapter = new SqlDataAdapter(sql, conn);
+
                 conn.Open();
+
                 adapter.Fill(dt);
 
                 if (dt.Rows.Count > 0)
@@ -277,6 +354,7 @@ namespace Backend.DataAccess
             {
                 conn.Close();
             }
+
             return product;
         }
 
@@ -290,14 +368,21 @@ namespace Backend.DataAccess
         public decimal GetProductQty(int productID)
         {
             SqlConnection conn = new SqlConnection(myconnstrng);
+
             decimal qty = 0;
+
             DataTable dt = new DataTable();
+
             try
             {
                 string sql = "SELECT qty FROM table_products WHERE id = " + productID;
+
                 SqlCommand cmd = new SqlCommand(sql, conn);
+
                 SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+
                 conn.Open();
+
                 adapter.Fill(dt);
 
                 if (dt.Rows.Count > 0)
@@ -313,6 +398,7 @@ namespace Backend.DataAccess
             {
                 conn.Close();
             }
+
             return qty;
         }
 
@@ -327,16 +413,29 @@ namespace Backend.DataAccess
         public bool UpdateQuantity(int productID, decimal quantity)
         {
             bool success = false;
+
             SqlConnection conn = new SqlConnection(myconnstrng);
+
             try
             {
                 string sql = "UPDATE table_products SET qty=@qty WHERE id=@id";
+
                 SqlCommand cmd = new SqlCommand(sql, conn);
+
                 cmd.Parameters.AddWithValue("@qty", quantity);
                 cmd.Parameters.AddWithValue("@id", productID);
+
                 conn.Open();
+
                 int rows = cmd.ExecuteNonQuery();
-                success = rows > 0;
+                if (rows > 0)
+                {
+                    success = true;
+                }
+                else
+                {
+                    success = false;
+                }
             }
             catch (Exception ex)
             {
@@ -346,6 +445,7 @@ namespace Backend.DataAccess
             {
                 conn.Close();
             }
+
             return success;
         }
 
@@ -360,11 +460,18 @@ namespace Backend.DataAccess
         public bool IncreaseProduct(int productID, decimal increaseQuantity)
         {
             bool success = false;
+
             SqlConnection conn = new SqlConnection(myconnstrng);
+
             try
             {
+                //Принимая текущее количество
                 decimal currentQuantity = GetProductQty(productID);
+
+                //Увеличить текущее количество за счет того, что мы уже купили
                 decimal newQuantity = currentQuantity + increaseQuantity;
+
+                //Изменение количества
                 success = UpdateQuantity(productID, newQuantity);
             }
             catch (Exception ex)
@@ -389,11 +496,15 @@ namespace Backend.DataAccess
         public bool DecreaseProduct(int productID, decimal decreaseQuantity)
         {
             bool success = false;
+
             SqlConnection conn = new SqlConnection(myconnstrng);
+
             try
             {
                 decimal currentQuantity = GetProductQty(productID);
+
                 decimal newQuantity = currentQuantity - decreaseQuantity;
+
                 success = UpdateQuantity(productID, newQuantity);
             }
             catch (Exception ex)
@@ -417,13 +528,19 @@ namespace Backend.DataAccess
         public DataTable DisplayProductsByCategory(string category)
         {
             SqlConnection conn = new SqlConnection(myconnstrng);
+
             DataTable dt = new DataTable();
+
             try
             {
                 string sql = "SELECT * FROM table_products WHERE category='" + category + "'";
+
                 SqlCommand cmd = new SqlCommand(sql, conn);
+
                 SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+
                 conn.Open();
+
                 adapter.Fill(dt);
             }
             catch (Exception ex)
@@ -434,6 +551,7 @@ namespace Backend.DataAccess
             {
                 conn.Close();
             }
+
             return dt;
         }
     }

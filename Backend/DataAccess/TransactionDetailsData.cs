@@ -49,11 +49,17 @@ namespace Backend.DataAccess
 
                 conn.Open();
 
-                // Выполнение команды и получение количества затронутых строк
+                //Есть ли затронутая или измененная строка при успешном добавлении данных
                 int rows = cmd.ExecuteNonQuery();
 
-                // Если хотя бы одна строка была добавлена успешно
-                isSuccess = rows > 0;
+                if (rows > 0)
+                {
+                    isSuccess = true;
+                }
+                else
+                {
+                    isSuccess = false;
+                }
             }
             catch (Exception ex)
             {

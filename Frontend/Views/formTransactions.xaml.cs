@@ -13,7 +13,7 @@ namespace Frontend.Views
     /// </summary>
     public partial class formTransactions : Window
     {
-        private readonly TransactionData _transactionData = new TransactionData();
+        private TransactionData transactionData;
 
         /// <summary>
         /// Инициализирует новый экземпляр окна управления транзакциями.
@@ -21,6 +21,7 @@ namespace Frontend.Views
         public formTransactions()
         {
             InitializeComponent();
+            transactionData = new TransactionData();
             Loaded += FormTransactions_Loaded;
         }
 
@@ -39,12 +40,13 @@ namespace Frontend.Views
         {
             try
             {
-                DataTable transactions = _transactionData.DisplayAllTransactions();
-                dgvTransactions.ItemsSource = transactions.DefaultView;
+                DataTable dt = transactionData.DisplayAllTransactions();
+                dgvTransactions.ItemsSource = dt.DefaultView;
             }
             catch (Exception ex)
             {
-                ShowErrorMessage($"Ошибка загрузки транзакций: {ex.Message}");
+                MessageBox.Show($"Ошибка загрузки транзакций: {ex.Message}", "Ошибка",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -54,18 +56,19 @@ namespace Frontend.Views
         /// </summary>
         private void cmbTransactionType_SelectedIndexChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (cmbTransactionType.SelectedIndex == -1)
+            if (cmbTransactionType.SelectedIndex == -1 || transactionData == null)
                 return;
 
             try
             {
-                string selectedType = ((ComboBoxItem)cmbTransactionType.SelectedItem).Content.ToString();
-                DataTable filteredTransactions = _transactionData.DisplayTransactionByType(selectedType);
-                dgvTransactions.ItemsSource = filteredTransactions.DefaultView;
+                string type = ((ComboBoxItem)cmbTransactionType.SelectedItem).Content.ToString();
+                DataTable dt = transactionData.DisplayTransactionByType(type);
+                dgvTransactions.ItemsSource = dt.DefaultView;
             }
             catch (Exception ex)
             {
-                ShowErrorMessage($"Ошибка фильтрации: {ex.Message}");
+                MessageBox.Show($"Ошибка фильтрации: {ex.Message}", "Ошибка",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -74,7 +77,6 @@ namespace Frontend.Views
         /// </summary>
         private void btnAll_Click(object sender, RoutedEventArgs e)
         {
-            cmbTransactionType.SelectedIndex = -1;
             LoadAllTransactions();
         }
 
@@ -83,46 +85,33 @@ namespace Frontend.Views
         /// </summary>
         private void btnClear_Click(object sender, RoutedEventArgs e)
         {
-            if (ConfirmClearTransactions())
+            try
             {
-                try
-                {
-                    _transactionData.DeleteAllTransactions();
-                    LoadAllTransactions();
-                    ShowSuccessMessage("Все транзакции очищены");
-                }
-                catch (Exception ex)
-                {
-                    ShowErrorMessage($"Ошибка очистки: {ex.Message}");
-                }
+                transactionData.DeleteAllTransactions();
+                LoadAllTransactions();
+                MessageBox.Show("Все транзакции очищены", "Успех",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка очистки: {ex.Message}", "Ошибка",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
         /// <summary>
         /// Запрашивает подтверждение на очистку всех транзакций.
         /// </summary>
-        private bool ConfirmClearTransactions()
-        {
-            return MessageBox.Show("Вы уверены, что хотите удалить все транзакции?",
-                "Подтверждение удаления",
-                MessageBoxButton.YesNo,
-                MessageBoxImage.Warning) == MessageBoxResult.Yes;
-        }
+
 
         /// <summary>
         /// Показывает сообщение об ошибке.
         /// </summary>
-        private void ShowErrorMessage(string message)
-        {
-            MessageBox.Show(message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-        }
+
 
         /// <summary>
         /// Показывает сообщение об успешном выполнении операции.
         /// </summary>
-        private void ShowSuccessMessage(string message)
-        {
-            MessageBox.Show(message, "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
-        }
+
     }
 }

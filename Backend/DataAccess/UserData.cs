@@ -28,36 +28,42 @@ namespace Backend.DataAccess
         /// <returns>Возвращает <see cref="DataTable"/> с данными о пользователях.</returns>
         public DataTable Select()
         {
-            // Подключение к базе данных
+            //Подключение к базе данных
             SqlConnection conn = new SqlConnection(myconnstrng);
-            // Сохранение данных в таблице
+
+            //Сохранение данных в таблице
             DataTable dt = new DataTable();
             try
             {
-                // Запрос для получения данных из таблицы пользователей
-                string sql = "SELECT * FROM table_users";
+                //Запрос для получения данных из таблицы пользователей
+                String sql = "SELECT * FROM table_users";
 
-                // Выполняем запрос
+                //Выполните запрос
                 SqlCommand cmd = new SqlCommand(sql, conn);
-                // Получаем данные в адаптер
+
+                //Получение данных в адаптер
                 SqlDataAdapter adapter = new SqlDataAdapter(cmd);
-                // Открываем соединение
+
+                //Открытие ссылки
                 conn.Open();
-                // Заполняем данные в таблице
+
+                //Заполните данные в таблице
                 adapter.Fill(dt);
             }
             catch (Exception ex)
             {
-                // Ошибка
+                //Ошибка
                 MessageBox.Show(ex.Message);
             }
             finally
             {
-                // Закрытие соединения
+                //Закрытие соединения
                 conn.Close();
             }
-            // Возвращаем данные
+            //Верните данные
             return dt;
+
+
         }
 
         /// <summary>
@@ -72,7 +78,7 @@ namespace Backend.DataAccess
 
             try
             {
-                string sql = "INSERT INTO table_users (first_name, last_name, email, username, password, contact, address, gender, user_type, added_date, added_by, added_by_name) VALUES (@first_name, @last_name, @email, @username, @password, @contact, @address, @gender, @user_type, @added_date, @added_by, @added_by_name)";
+                String sql = "INSERT INTO table_users (first_name, last_name, email, username, password, contact, address, gender, user_type, added_date, added_by, added_by_name) VALUES (@first_name, @last_name, @email, @username, @password, @contact, @address, @gender, @user_type, @added_date, @added_by, @added_by_name)";
 
                 SqlCommand cmd = new SqlCommand(sql, conn);
 
@@ -93,7 +99,16 @@ namespace Backend.DataAccess
 
                 int rows = cmd.ExecuteNonQuery();
 
-                isSuccess = rows > 0;
+                //Если запрос будет выполнен, он вернет значение больше 0, если не будет выполнен, вернет значение меньше 0
+
+                if (rows > 0)
+                {
+                    isSuccess = true;
+                }
+                else
+                {
+                    isSuccess = false;
+                }
             }
             catch (Exception ex)
             {
@@ -139,8 +154,15 @@ namespace Backend.DataAccess
                 conn.Open();
 
                 int rows = cmd.ExecuteNonQuery();
+                if (rows > 0)
+                {
+                    isSuccess = true;
+                }
+                else
+                {
+                    isSuccess = false;
+                }
 
-                isSuccess = rows > 0;
             }
             catch (Exception ex)
             {
@@ -174,7 +196,14 @@ namespace Backend.DataAccess
                 conn.Open();
 
                 int rows = cmd.ExecuteNonQuery();
-                isSuccess = rows > 0;
+                if (rows > 0)
+                {
+                    isSuccess = true;
+                }
+                else
+                {
+                    isSuccess = false;
+                }
             }
             catch (Exception ex)
             {
@@ -199,12 +228,14 @@ namespace Backend.DataAccess
             DataTable dt = new DataTable();
             try
             {
-                string sql = "SELECT * FROM table_users WHERE id LIKE '%" + keywords + "%' OR first_name LIKE '%" + keywords + "%' OR last_name LIKE '%" + keywords + "%' OR username LIKE '%" + keywords + "%'";
+                String sql = "SELECT * FROM table_users WHERE id LIKE '%" + keywords + "%' OR first_name LIKE '%" + keywords + "%' OR last_name LIKE '%" + keywords + "%' OR username LIKE '%" + keywords + "%'";
 
                 SqlCommand cmd = new SqlCommand(sql, conn);
+
                 SqlDataAdapter adapter = new SqlDataAdapter(cmd);
 
                 conn.Open();
+
                 adapter.Fill(dt);
             }
             catch (Exception ex)
@@ -261,7 +292,9 @@ namespace Backend.DataAccess
         public User SearchUserForLogistic(string keyword)
         {
             User user = new User();
+
             SqlConnection conn = new SqlConnection(myconnstrng);
+
             DataTable dt = new DataTable();
 
             try
@@ -269,16 +302,18 @@ namespace Backend.DataAccess
                 string sql = "SELECT first_name, last_name from table_users WHERE username LIKE '%" + keyword + "%'";
 
                 SqlDataAdapter adapter = new SqlDataAdapter(sql, conn);
+
                 conn.Open();
 
                 adapter.Fill(dt);
 
-                // Если успешно найдены данные, сохраняем их в объекте
+                //Если я успешно нашел данные, мы сохраняем их в объекте из бизнес-логики
                 if (dt.Rows.Count > 0)
                 {
                     user.FirstName = dt.Rows[0]["first_name"].ToString();
                     user.LastName = dt.Rows[0]["last_name"].ToString();
                 }
+
             }
             catch (Exception ex)
             {
@@ -288,6 +323,7 @@ namespace Backend.DataAccess
             {
                 conn.Close();
             }
+
             return user;
         }
     }

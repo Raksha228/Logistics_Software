@@ -68,16 +68,16 @@
         <Border Grid.Row="0" Background="{StaticResource LightBgBrush}" CornerRadius="0,0,18,18" Height="56">
             <DockPanel LastChildFill="False" VerticalAlignment="Center">
                 <Menu DockPanel.Dock="Left" Background="{x:Null}" Height="40" VerticalAlignment="Center" HorizontalAlignment="Left">
-                    <MenuItem Header="Пользователи" Style="{StaticResource MenuButtonStyle}" Click="UsersMenuItem_Click"/>
-                    <MenuItem Header="Категории" Style="{StaticResource MenuButtonStyle}" Click="CategoryMenuItem_Click"/>
-                    <MenuItem Header="Товары" Style="{StaticResource MenuButtonStyle}" Click="ProductsMenuItem_Click"/>
-                    <MenuItem Header="Поставщики и клиенты" Style="{StaticResource MenuButtonStyle}" Click="DealerAndCustomerMenuItem_Click"/>
-                    <MenuItem Header="Инвентарь" Style="{StaticResource MenuButtonStyle}" Click="InventoryMenuItem_Click"/>
-                    <MenuItem Header="Транзакции" Style="{StaticResource MenuButtonStyle}" Click="TransactionsMenuItem_Click"/>
-                    <MenuItem Header="Логистика" Style="{StaticResource MenuButtonStyle}" Click="LogisticMenuItem_Click"/>
-                    <MenuItem Header="Доставки" Style="{StaticResource MenuButtonStyle}" Click="DeliveriesMenuItem_Click"/>
-                    <MenuItem Header="Архив доставок" Style="{StaticResource MenuButtonStyle}" Click="ArchiveDeliveriesMenuItem_Click"/>
-                    <MenuItem Header="Выход" Style="{StaticResource MenuButtonStyle}" Click="LogOutMenuItem_Click"/>
+                    <MenuItem Header="Пользователи" Style="{StaticResource MenuButtonStyle}" Click="UsersMenuItem_Click" Width="120"/>
+                    <MenuItem Header="Категории" Style="{StaticResource MenuButtonStyle}" Click="CategoryMenuItem_Click" Width="90"/>
+                    <MenuItem Header="Товары" Style="{StaticResource MenuButtonStyle}" Click="ProductsMenuItem_Click" Width="70"/>
+                    <MenuItem Header="Поставщики и клиенты" Style="{StaticResource MenuButtonStyle}" Click="DealerAndCustomerMenuItem_Click" Width="190"/>
+                    <MenuItem Header="Инвентарь" Style="{StaticResource MenuButtonStyle}" Click="InventoryMenuItem_Click" Width="90"/>
+                    <MenuItem Header="Транзакции" Style="{StaticResource MenuButtonStyle}" Click="TransactionsMenuItem_Click" Width="100"/>
+                    <MenuItem Header="Логистика" Style="{StaticResource MenuButtonStyle}" Click="LogisticMenuItem_Click" Width="90"/>
+                    <MenuItem Header="Доставки" Style="{StaticResource MenuButtonStyle}" Click="DeliveriesMenuItem_Click" Width="80"/>
+                    <MenuItem Header="Архив доставок" Style="{StaticResource MenuButtonStyle}" Click="ArchiveDeliveriesMenuItem_Click" Width="130"/>
+                    <MenuItem Header="Выход" Style="{StaticResource MenuButtonStyle}" Click="LogOutMenuItem_Click" Width="60"/>
                 </Menu>
             </DockPanel>
         </Border>
@@ -102,7 +102,7 @@
                             <Ellipse.OpacityMask>
                                 <VisualBrush Stretch="Uniform">
                                     <VisualBrush.Visual>
-                                        <TextBlock Text="卐☭"
+                                        <TextBlock Text="☭"
                                                    VerticalAlignment="Center" HorizontalAlignment="Center"
                                                    FontSize="32" FontWeight="Bold" Foreground="#23272F"/>
                                     </VisualBrush.Visual>

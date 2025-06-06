@@ -54,6 +54,7 @@ namespace Backend.BusinessLogic
         /// <exception cref="ArgumentException">Выбрасывается при попытке установить отрицательное или нулевое значение.</exception>
         public decimal Tax
         {
+            //Утверждение платы за услуги
             get => this.tax;
             set
             {
@@ -73,6 +74,7 @@ namespace Backend.BusinessLogic
         /// <exception cref="ArgumentException">Выбрасывается при попытке установить отрицательное или нулевое значение.</exception>
         public decimal Discount
         {
+
             get => this.discount;
             set
             {
@@ -92,6 +94,7 @@ namespace Backend.BusinessLogic
         /// <exception cref="ArgumentException">Выбрасывается при попытке установить отрицательное или нулевое значение.</exception>
         public decimal PaidAmount
         {
+            //Проверка оплаты
             get => this.paidAmount;
             set
             {

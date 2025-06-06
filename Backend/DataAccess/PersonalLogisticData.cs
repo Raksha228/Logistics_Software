@@ -25,7 +25,7 @@ namespace Backend.DataAccess
         /// <summary>
         /// Строка подключения к базе данных, полученная из конфигурации приложения.
         /// </summary>
-        private static string myconnstrng = ConfigurationManager.ConnectionStrings["connstrng"].ConnectionString;
+        static string myconnstrng = ConfigurationManager.ConnectionStrings["connstrng"].ConnectionString;
 
         /// <summary>
         /// Выполняет выборку и отображает записи логистики,
@@ -44,14 +44,19 @@ namespace Backend.DataAccess
         public DataTable DisplayLogisticByUsername(string username)
         {
             SqlConnection conn = new SqlConnection(myconnstrng);
+
             DataTable dt = new DataTable();
 
             try
             {
                 string sql = "SELECT * FROM table_logistic WHERE employee='" + username + "'";
+
                 SqlCommand cmd = new SqlCommand(sql, conn);
+
                 SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+
                 conn.Open();
+
                 adapter.Fill(dt);
             }
             catch (Exception ex)
@@ -62,6 +67,7 @@ namespace Backend.DataAccess
             {
                 conn.Close();
             }
+
             return dt;
         }
 
@@ -82,14 +88,19 @@ namespace Backend.DataAccess
         public DataTable DisplayLogisticnByDate(string date, string username)
         {
             SqlConnection conn = new SqlConnection(myconnstrng);
+
             DataTable dt = new DataTable();
 
             try
             {
                 string sql = "SELECT * FROM table_logistic WHERE date='" + date + "' AND employee='" + username + "'";
+
                 SqlCommand cmd = new SqlCommand(sql, conn);
+
                 SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+
                 conn.Open();
+
                 adapter.Fill(dt);
             }
             catch (Exception ex)
@@ -100,6 +111,7 @@ namespace Backend.DataAccess
             {
                 conn.Close();
             }
+
             return dt;
         }
     }

@@ -235,6 +235,7 @@ namespace Backend.DataAccess
 
             try
             {
+                //Write the Query to Search Dealer or Customer Based in id, type and name
                 string sql = "SELECT * FROM table_dealer_customer WHERE id LIKE '%" + keyword + "%' OR type LIKE '%" + keyword + "%' OR name LIKE '%" + keyword + "%'";
 
                 SqlCommand cmd = new SqlCommand(sql, conn);
@@ -285,7 +286,7 @@ namespace Backend.DataAccess
 
                 adapter.Fill(dt);
 
-                //Если данные найдены, сохранить их в объекте бизнес-логики
+                //Если я успешно нашел данные, мы сохраняем их в объекте из бизнес-логики 
                 if (dt.Rows.Count > 0)
                 {
                     dealerCustomer.Type = dt.Rows[0]["type"].ToString();

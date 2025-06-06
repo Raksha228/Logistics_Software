@@ -21,7 +21,7 @@ namespace Backend.DataAccess
         /// <summary>
         /// Строка подключения к базе данных, полученная из конфигурационного файла приложения.
         /// </summary>
-        private static readonly string myconnstrng = ConfigurationManager.ConnectionStrings["connstrng"].ConnectionString;
+        static string myconnstrng = ConfigurationManager.ConnectionStrings["connstrng"].ConnectionString;
 
         /// <summary>
         /// Получает все архивные записи логистических операций из базы данных.
@@ -36,26 +36,30 @@ namespace Backend.DataAccess
         public DataTable DisplayAllLogistics()
         {
             SqlConnection conn = new SqlConnection(myconnstrng);
+
             DataTable dt = new DataTable();
 
             try
             {
-                string sql = "SELECT * FROM table_logistic_archive";
+                String sql = "SELECT * FROM table_logistic_archive";
+
                 SqlCommand cmd = new SqlCommand(sql, conn);
+
                 SqlDataAdapter adapter = new SqlDataAdapter(cmd);
 
                 conn.Open();
+
                 adapter.Fill(dt);
             }
             catch (Exception ex)
             {
-                // В случае ошибки выводится сообщение пользователю
                 MessageBox.Show(ex.Message);
             }
             finally
             {
                 conn.Close();
             }
+
             return dt;
         }
 
@@ -75,15 +79,13 @@ namespace Backend.DataAccess
         /// </remarks>
         public bool Insert(Logistic logistic)
         {
-            if (logistic == null)
-                throw new ArgumentNullException(nameof(logistic));
-
             bool isSuccess = false;
+
             SqlConnection conn = new SqlConnection(myconnstrng);
 
             try
             {
-                string sql = "INSERT INTO table_logistic_archive (employee, first_name_employee, last_name_employee, address, contact, date, description, price, added_date, added_by, added_by_name) VALUES (@employee, @first_name_employee, @last_name_employee, @address, @contact, @date, @description, @price, @added_date, @added_by, @added_by_name)";
+                String sql = "INSERT INTO table_logistic_archive (employee, first_name_employee, last_name_employee, address, contact, date, description, price, added_date, added_by, added_by_name) VALUES (@employee, @first_name_employee, @last_name_employee, @address, @contact, @date, @description, @price, @added_date, @added_by, @added_by_name)";
 
                 SqlCommand cmd = new SqlCommand(sql, conn);
 
@@ -103,11 +105,17 @@ namespace Backend.DataAccess
 
                 int rows = cmd.ExecuteNonQuery();
 
-                isSuccess = rows > 0;
+                if (rows > 0)
+                {
+                    isSuccess = true;
+                }
+                else
+                {
+                    isSuccess = false;
+                }
             }
             catch (Exception ex)
             {
-                // В случае ошибки выводится сообщение пользователю
                 MessageBox.Show(ex.Message);
             }
             finally
@@ -134,22 +142,23 @@ namespace Backend.DataAccess
         public DataTable DisplayLogisticnByDate(string date)
         {
             SqlConnection conn = new SqlConnection(myconnstrng);
+
             DataTable dt = new DataTable();
 
             try
             {
-                string sql = "SELECT * FROM table_logistic_archive WHERE date=@date";
+                string sql = "SELECT * FROM table_logistic_archive WHERE date='" + date + "'";
+
                 SqlCommand cmd = new SqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@date", date);
 
                 SqlDataAdapter adapter = new SqlDataAdapter(cmd);
 
                 conn.Open();
+
                 adapter.Fill(dt);
             }
             catch (Exception ex)
             {
-                // В случае ошибки выводится сообщение пользователю
                 MessageBox.Show(ex.Message);
             }
             finally

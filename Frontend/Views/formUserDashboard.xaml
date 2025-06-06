@@ -73,11 +73,11 @@
         <Border Grid.Row="0" Background="{StaticResource LightBgBrush}" CornerRadius="0,0,18,18" Height="56">
             <DockPanel LastChildFill="False" VerticalAlignment="Center">
                 <Menu DockPanel.Dock="Left" Background="{x:Null}" Height="42" VerticalAlignment="Center" HorizontalAlignment="Left">
-                    <MenuItem Header="Покупки и продажи" Style="{StaticResource MenuButtonStyle}" Click="PurchaseMenuItem_Click"/>
-                    <MenuItem Header="Инвентаризация" Style="{StaticResource MenuButtonStyle}" Click="InventoryMenuItem_Click"/>
-                    <MenuItem Header="Поставщики и клиенты" Style="{StaticResource MenuButtonStyle}" Click="DealerAndCustomerMenuItem_Click"/>
-                    <MenuItem Header="Доставка" Style="{StaticResource MenuButtonStyle}" Click="DeliveryMenuItem_Click"/>
-                    <MenuItem Header="Архив доставок" Style="{StaticResource MenuButtonStyle}" Click="ArchiveDeliveriesMenuItem_Click"/>
+                    <MenuItem Header="Покупки и продажи" Style="{StaticResource MenuButtonStyle}" Click="PurchaseMenuItem_Click" Width="165"/>
+                    <MenuItem Header="Инвентаризация" Style="{StaticResource MenuButtonStyle}" Click="InventoryMenuItem_Click" Width="140"/>
+                    <MenuItem Header="Поставщики и клиенты" Style="{StaticResource MenuButtonStyle}" Click="DealerAndCustomerMenuItem_Click" Width="190"/>
+                    <MenuItem Header="Доставка" Style="{StaticResource MenuButtonStyle}" Click="DeliveryMenuItem_Click" Width="80"/>
+                    <MenuItem Header="Архив доставок" Style="{StaticResource MenuButtonStyle}" Click="ArchiveDeliveriesMenuItem_Click" Width="130"/>
                     <MenuItem Header="Выйти" Style="{StaticResource MenuButtonStyle}" Click="LogOutMenuItem_Click" HorizontalAlignment="Right"/>
                 </Menu>
             </DockPanel>
@@ -110,7 +110,7 @@
                             <Ellipse.OpacityMask>
                                 <VisualBrush Stretch="Uniform">
                                     <VisualBrush.Visual>
-                                        <TextBlock Text="卐☭"
+                                        <TextBlock Text="☭"
                                                    VerticalAlignment="Center" HorizontalAlignment="Center"
                                                    FontSize="32" FontWeight="Bold" Foreground="#23272F"/>
                                     </VisualBrush.Visual>

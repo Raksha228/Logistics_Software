@@ -14,8 +14,8 @@ namespace Frontend.Views
     /// </summary>
     public partial class formDelivery : Window
     {
-        private readonly LogisticData _logisticData;
-        private readonly PersonalLogisticData _personalLogisticData;
+        private readonly LogisticData logisticData;
+        private readonly PersonalLogisticData personalLogisticData;
 
         /// <summary>
         /// Инициализирует новый экземпляр окна управления доставками.
@@ -23,8 +23,8 @@ namespace Frontend.Views
         public formDelivery()
         {
             InitializeComponent();
-            _logisticData = new LogisticData();
-            _personalLogisticData = new PersonalLogisticData();
+            logisticData = new LogisticData();
+            personalLogisticData = new PersonalLogisticData();
         }
 
         /// <summary>
@@ -43,13 +43,12 @@ namespace Frontend.Views
         {
             try
             {
-                DataTable dt = _logisticData.Select();
+                DataTable dt = logisticData.Select();
                 dgvLogistic.ItemsSource = dt.DefaultView;
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Ошибка",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -61,16 +60,13 @@ namespace Frontend.Views
         {
             try
             {
-                string type = ((ComboBoxItem)cmbDate.SelectedItem).Content.ToString() == "Закупка"
-                    ? "Purchase"
-                    : "Sales";
-                DataTable dt = _personalLogisticData.DisplayLogisticnByDate(type, "");
+                string type = ((ComboBoxItem)cmbDate.SelectedItem).Content.ToString() == "Закупка" ? "Purchase" : "Sales";
+                DataTable dt = personalLogisticData.DisplayLogisticnByDate(type, "");
                 dgvLogistic.ItemsSource = dt.DefaultView;
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Ошибка",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -91,9 +87,10 @@ namespace Frontend.Views
         {
             try
             {
-                if (dgvLogistic.SelectedItem is DataRowView row)
+                if (dgvLogistic.SelectedItem != null)
                 {
-                    var logistic = new Logistic
+                    DataRowView row = (DataRowView)dgvLogistic.SelectedItem;
+                    Logistic logistic = new Logistic
                     {
                         Id = Convert.ToInt32(row["id"]),
                         Empleyee = row["employee"].ToString(),
@@ -106,7 +103,7 @@ namespace Frontend.Views
                         Price = Convert.ToDecimal(row["price"])
                     };
 
-                    if (_logisticData.Delete(logistic))
+                    if (logisticData.Delete(logistic))
                     {
                         MessageBox.Show("Доставка отмечена как выполненная", "Успех",
                             MessageBoxButton.OK, MessageBoxImage.Information);
@@ -116,8 +113,7 @@ namespace Frontend.Views
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Ошибка",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -125,10 +121,12 @@ namespace Frontend.Views
         /// Обработчик двойного клика по списку доставок.
         /// Показывает информацию о выбранной доставке.
         /// </summary>
-        private void dgvLogistic_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        private void dgvLogistic_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            if (dgvLogistic.SelectedItem is DataRowView row)
+            if (dgvLogistic.SelectedItem != null)
             {
+                DataRowView row = (DataRowView)dgvLogistic.SelectedItem;
+                // Логика обработки двойного клика (например, открытие деталей)
                 MessageBox.Show($"Выбрана доставка ID: {row["id"]}", "Информация",
                     MessageBoxButton.OK, MessageBoxImage.Information);
             }

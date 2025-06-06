@@ -33,6 +33,7 @@ namespace Frontend.Views
             _archiveLogisticData = new ArchiveLogisticData();
         }
 
+
         /// <summary>
         /// Обработчик загрузки окна. Загружает все архивные записи о доставках.
         /// </summary>

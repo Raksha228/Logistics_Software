@@ -32,19 +32,26 @@ namespace Backend.DataAccess
         /// </remarks>
         public DataTable Select()
         {
+            //Установите связь
             SqlConnection conn = new SqlConnection(myconnstrng);
+
             DataTable dt = new DataTable();
+
             try
             {
+                //Создайте запрос, чтобы получить все данные из базы данных
                 string sql = "SELECT * FROM table_categories";
+
                 SqlCommand cmd = new SqlCommand(sql, conn);
+
                 SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+
                 conn.Open();
+
                 adapter.Fill(dt);
             }
             catch (Exception ex)
             {
-                // Выводит сообщение об ошибке
                 MessageBox.Show(ex.Message);
             }
             finally
@@ -70,16 +77,18 @@ namespace Backend.DataAccess
         /// </remarks>
         public bool Insert(Category category)
         {
-            if (category == null)
-                throw new ArgumentNullException(nameof(category));
-
             bool isSucces = false;
+
             SqlConnection conn = new SqlConnection(myconnstrng);
 
             try
             {
+                //Создайте запрос
                 string sql = "INSERT INTO table_categories (title, description, added_date, added_by, added_by_name) VALUES (@title, @description, @added_date, @added_by, @added_by_name)";
+
+                //Создание SQL-команды для передачи значений в наш запрос
                 SqlCommand cmd = new SqlCommand(sql, conn);
+                //Передача значений через параметр
                 cmd.Parameters.AddWithValue("@title", category.Title);
                 cmd.Parameters.AddWithValue("@description", category.Description);
                 cmd.Parameters.AddWithValue("@added_date", category.AddedDate);
@@ -87,13 +96,21 @@ namespace Backend.DataAccess
                 cmd.Parameters.AddWithValue("@added_by_name", category.AddedByName);
 
                 conn.Open();
+
+                //Получение количества заполненных строк
                 int rows = cmd.ExecuteNonQuery();
 
-                isSucces = rows > 0;
+                if (rows > 0)
+                {
+                    isSucces = true;
+                }
+                else
+                {
+                    isSucces = false;
+                }
             }
             catch (Exception ex)
             {
-                // Сообщение пользователю в случае ошибки
                 MessageBox.Show(ex.Message);
             }
             finally
@@ -119,15 +136,15 @@ namespace Backend.DataAccess
         /// </remarks>
         public bool Update(Category category)
         {
-            if (category == null)
-                throw new ArgumentNullException(nameof(category));
-
             bool isSuccess = false;
+
             SqlConnection conn = new SqlConnection(myconnstrng);
 
             try
             {
                 string sql = "UPDATE table_categories SET title=@title, description=@description, added_date=@added_date, added_by=@added_by, added_by_name=@added_by_name WHERE id=@id";
+
+                //Команда SQL для выполнения запроса
                 SqlCommand cmd = new SqlCommand(sql, conn);
 
                 cmd.Parameters.AddWithValue("@title", category.Title);
@@ -138,13 +155,20 @@ namespace Backend.DataAccess
                 cmd.Parameters.AddWithValue("@id", category.Id);
 
                 conn.Open();
+
                 int rows = cmd.ExecuteNonQuery();
 
-                isSuccess = rows > 0;
+                if (rows > 0)
+                {
+                    isSuccess = true;
+                }
+                else
+                {
+                    isSuccess = false;
+                }
             }
             catch (Exception ex)
             {
-                // Сообщение пользователю в случае ошибки
                 MessageBox.Show(ex.Message);
             }
             finally
@@ -170,27 +194,34 @@ namespace Backend.DataAccess
         /// </remarks>
         public bool Delete(Category category)
         {
-            if (category == null)
-                throw new ArgumentNullException(nameof(category));
-
             bool isSuccess = false;
+
             SqlConnection conn = new SqlConnection(myconnstrng);
 
             try
             {
                 string sql = "DELETE FROM table_categories WHERE id=@id";
+
                 SqlCommand cmd = new SqlCommand(sql, conn);
 
                 cmd.Parameters.AddWithValue("@id", category.Id);
 
                 conn.Open();
+
                 int rows = cmd.ExecuteNonQuery();
 
-                isSuccess = rows > 0;
+                if (rows > 0)
+                {
+                    isSuccess = true;
+                }
+                else
+                {
+                    isSuccess = false;
+                }
+
             }
             catch (Exception ex)
             {
-                // Сообщение пользователю в случае ошибки
                 MessageBox.Show(ex.Message);
             }
             finally
@@ -217,20 +248,23 @@ namespace Backend.DataAccess
         public DataTable Search(string keywords)
         {
             SqlConnection conn = new SqlConnection(myconnstrng);
+
             DataTable dt = new DataTable();
 
             try
             {
-                string sql = "SELECT * FROM table_categories WHERE id LIKE '%" + keywords + "%' OR title LIKE '%" + keywords + "%' OR description LIKE '%" + keywords + "%'";
+                String sql = "SELECT * FROM table_categories WHERE id LIKE '%" + keywords + "%' OR title LIKE '%" + keywords + "%' OR description LIKE '%" + keywords + "%'";
+
                 SqlCommand cmd = new SqlCommand(sql, conn);
+
                 SqlDataAdapter adapter = new SqlDataAdapter(cmd);
 
                 conn.Open();
+
                 adapter.Fill(dt);
             }
             catch (Exception ex)
             {
-                // Сообщение пользователю в случае ошибки
                 MessageBox.Show(ex.Message);
             }
             finally

@@ -35,10 +35,10 @@ namespace Backend.BusinessLogic
             get => this.name;
             set
             {
-                // Проверка имени
+                //Проверка имени
                 if (value.Length <= 2)
                 {
-                    throw new ArgumentException("Некорректное имя!");
+                    throw new ArgumentException(@"Invalid name!");
                 }
 
                 this.name = value;
@@ -54,7 +54,7 @@ namespace Backend.BusinessLogic
             get => this.email;
             set
             {
-                // Проверка электронной почты
+                //Проверка электронной почты
                 Regex regex = new Regex(@"^([\w-.]+)@(([[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.)|(([\w-]+.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(]?)$");
                 Match match = regex.Match(value);
                 if (match.Success)
@@ -63,7 +63,7 @@ namespace Backend.BusinessLogic
                 }
                 else
                 {
-                    throw new ArgumentException("Некорректный адрес электронной почты!");
+                    throw new ArgumentException(@"Invalid email!");
                 }
             }
         }
@@ -74,13 +74,13 @@ namespace Backend.BusinessLogic
         /// <exception cref="ArgumentException">Выбрасывается, если контакт меньше 10 символов.</exception>
         public string Contact
         {
+            //Проверка контакта
             get => this.contact;
             set
             {
-                // Проверка контакта
                 if (value.Length <= 9)
                 {
-                    throw new ArgumentException("Некорректный контактный номер!");
+                    throw new ArgumentException(@"Invalid contact!");
                 }
 
                 this.contact = value;

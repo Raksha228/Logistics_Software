@@ -13,8 +13,8 @@ namespace Frontend.Views
     /// </summary>
     public partial class formInventory : Window
     {
-        private readonly ProductData _productData;
-        private readonly CategoryData _categoryData;
+        private readonly ProductData productData;
+        private readonly CategoryData categoryData;
 
         /// <summary>
         /// Инициализирует новый экземпляр окна инвентаризации.
@@ -22,8 +22,8 @@ namespace Frontend.Views
         public formInventory()
         {
             InitializeComponent();
-            _productData = new ProductData();
-            _categoryData = new CategoryData();
+            productData = new ProductData();
+            categoryData = new CategoryData();
         }
 
         /// <summary>
@@ -33,27 +33,22 @@ namespace Frontend.Views
         {
             try
             {
-                // Инициализация комбобокса категорий
-                InitializeCategoryComboBox();
-                // Загрузка всех товаров
+                // Загрузка категорий в комбобокс
+                DataTable categories = categoryData.Select();
+                cmbCategories.ItemsSource = categories.DefaultView;
+                cmbCategories.DisplayMemberPath = "title";
+                cmbCategories.SelectedValuePath = "id";
+
+                // Первоначальная загрузка всех продуктов
                 LoadAllProducts();
             }
             catch (Exception ex)
             {
-                ShowErrorMessage(ex.Message);
+                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
-        /// <summary>
-        /// Загружает и инициализирует комбобокс категорий товаров.
-        /// </summary>
-        private void InitializeCategoryComboBox()
-        {
-            DataTable categories = _categoryData.Select();
-            cmbCategories.ItemsSource = categories.DefaultView;
-            cmbCategories.DisplayMemberPath = "title";
-            cmbCategories.SelectedValuePath = "id";
-        }
+
 
         /// <summary>
         /// Загружает все товары из базы данных.
@@ -62,12 +57,12 @@ namespace Frontend.Views
         {
             try
             {
-                DataTable products = _productData.Select();
+                DataTable products = productData.Select();
                 dgvProducts.ItemsSource = products.DefaultView;
             }
             catch (Exception ex)
             {
-                ShowErrorMessage(ex.Message);
+                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -79,16 +74,15 @@ namespace Frontend.Views
         {
             try
             {
-                if (cmbCategories.SelectedValue != null &&
-                    int.TryParse(cmbCategories.SelectedValue.ToString(), out int categoryId))
+                if (cmbCategories.SelectedValue != null && int.TryParse(cmbCategories.SelectedValue.ToString(), out int categoryId))
                 {
-                    DataTable filteredProducts = _productData.DisplayProductsByCategory(cmbCategories.Text);
+                    DataTable filteredProducts = productData.DisplayProductsByCategory(cmbCategories.Text);
                     dgvProducts.ItemsSource = filteredProducts.DefaultView;
                 }
             }
             catch (Exception ex)
             {
-                ShowErrorMessage(ex.Message);
+                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -105,18 +99,9 @@ namespace Frontend.Views
             }
             catch (Exception ex)
             {
-                ShowErrorMessage(ex.Message);
+                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
-        /// <summary>
-        /// Показывает сообщение об ошибке.
-        /// </summary>
-        /// <param name="message">Текст сообщения об ошибке</param>
-        private void ShowErrorMessage(string message)
-        {
-            MessageBox.Show(message, "Ошибка",
-                MessageBoxButton.OK, MessageBoxImage.Error);
-        }
     }
 }
