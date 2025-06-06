@@ -1,0 +1,871 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Frontend</name>
+    </assembly>
+    <members>
+        <member name="T:Frontend.App">
+            <summary>
+            Interaction logic for App.xaml
+            </summary>
+            <summary>
+            App
+            </summary>
+        </member>
+        <member name="M:Frontend.App.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="M:Frontend.App.Main">
+            <summary>
+            Application Entry Point.
+            </summary>
+        </member>
+        <member name="T:Frontend.Views.formAdminDashboard">
+            <summary>
+            Окно административной панели управления системой.
+            Предоставляет доступ ко всем основным функциям управления через меню.
+            </summary>
+            <summary>
+            formAdminDashboard
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formAdminDashboard.#ctor(Backend.BusinessLogic.Login)">
+            <summary>
+            Инициализирует новый экземпляр административной панели.
+            </summary>
+            <param name="loggedInUser">Объект с данными авторизованного пользователя.</param>
+        </member>
+        <member name="M:Frontend.Views.formAdminDashboard.FormAdminDashboard_Loaded(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Обработчик загрузки окна. Инициализирует основные элементы интерфейса.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formAdminDashboard.UsersMenuItem_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Открывает окно управления пользователями.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formAdminDashboard.CategoryMenuItem_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Открывает окно управления категориями товаров.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formAdminDashboard.ProductsMenuItem_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Открывает окно управления товарами.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formAdminDashboard.DealerAndCustomerMenuItem_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Открывает окно управления дилерами и клиентами.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formAdminDashboard.InventoryMenuItem_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Открывает окно управления инвентаризацией.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formAdminDashboard.TransactionsMenuItem_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Открывает окно управления транзакциями.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formAdminDashboard.LogisticMenuItem_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Открывает окно управления логистикой.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formAdminDashboard.DeliveriesMenuItem_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Открывает окно управления доставками.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formAdminDashboard.ArchiveDeliveriesMenuItem_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Открывает окно архива доставок.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formAdminDashboard.LogOutMenuItem_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Выполняет выход из системы с возвратом на окно авторизации.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formAdminDashboard.Window_Closing(System.Object,System.ComponentModel.CancelEventArgs)">
+            <summary>
+            Обработчик закрытия окна. Запрашивает подтверждение выхода.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formAdminDashboard.OnMouseLeftButtonDown(System.Windows.Input.MouseButtonEventArgs)">
+            <summary>
+            Обеспечивает возможность перетаскивания окна за любую область.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formAdminDashboard.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:Frontend.Views.formArchiveDeliveries">
+            <summary>
+            Окно для просмотра архива доставок.
+            Позволяет просматривать и фильтровать архивные записи о доставках.
+            </summary>
+            <summary>
+            formArchiveDeliveries
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formArchiveDeliveries.#ctor">
+            <summary>
+            Инициализирует новый экземпляр окна архива доставок.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formArchiveDeliveries.Window_Loaded(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Обработчик загрузки окна. Загружает все архивные записи о доставках.
+            </summary>
+            <param name="sender">Источник события</param>
+            <param name="e">Аргументы события</param>
+        </member>
+        <member name="M:Frontend.Views.formArchiveDeliveries.cmbDate_SelectionChanged(System.Object,System.Windows.Controls.SelectionChangedEventArgs)">
+            <summary>
+            Обработчик изменения выбора в комбобоксе даты.
+            Фильтрует записи по выбранному временному периоду.
+            </summary>
+            <param name="sender">Источник события</param>
+            <param name="e">Аргументы события</param>
+        </member>
+        <member name="M:Frontend.Views.formArchiveDeliveries.btnAll_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Обработчик нажатия кнопки "Все".
+            Сбрасывает фильтры и показывает все архивные записи.
+            </summary>
+            <param name="sender">Источник события</param>
+            <param name="e">Аргументы события</param>
+        </member>
+        <member name="M:Frontend.Views.formArchiveDeliveries.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:Frontend.Views.formCategories">
+            <summary>
+            Окно управления категориями товаров.
+            Позволяет добавлять, редактировать, удалять и просматривать категории.
+            </summary>
+            <summary>
+            formCategories
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formCategories.#ctor(System.String)">
+            <summary>
+            Инициализирует новый экземпляр окна управления категориями.
+            </summary>
+            <param name="loggedInUser">Логин авторизованного пользователя</param>
+        </member>
+        <member name="M:Frontend.Views.formCategories.LoadCategories">
+            <summary>
+            Загружает список категорий из базы данных.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formCategories.GetCategoryFromForm">
+            <summary>
+            Создает объект Category на основе данных формы.
+            </summary>
+            <returns>Объект Category с данными из формы</returns>
+        </member>
+        <member name="M:Frontend.Views.formCategories.ClearForm">
+            <summary>
+            Очищает поля ввода на форме.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formCategories.btnAdd_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Обработчик нажатия кнопки "Добавить".
+            Добавляет новую категорию в базу данных.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formCategories.btnUpdate_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Обработчик нажатия кнопки "Обновить".
+            Обновляет выбранную категорию в базе данных.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formCategories.btnDelete_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Обработчик нажатия кнопки "Удалить".
+            Удаляет выбранную категорию из базы данных.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formCategories.btnClear_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Обработчик нажатия кнопки "Очистить".
+            Сбрасывает форму ввода.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formCategories.dgvCategories_MouseDoubleClick(System.Object,System.Windows.Input.MouseButtonEventArgs)">
+            <summary>
+            Обработчик двойного клика по списку категорий.
+            Заполняет форму данными выбранной категории.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formCategories.txtSearch_TextChanged(System.Object,System.Windows.Controls.TextChangedEventArgs)">
+            <summary>
+            Обработчик изменения текста в поле поиска.
+            Выполняет поиск категорий по введенному ключевому слову.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formCategories.Window_Loaded(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Обработчик загрузки окна.
+            Загружает список категорий при открытии окна.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formCategories.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:Frontend.Views.formDealerCustomer">
+            <summary>
+            Окно для управления дилерами и клиентами системы.
+            Позволяет добавлять, редактировать, удалять и просматривать записи.
+            </summary>
+            <summary>
+            formDealerCustomer
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formDealerCustomer.#ctor(System.String)">
+            <summary>
+            Инициализирует новый экземпляр окна управления дилерами/клиентами.
+            </summary>
+            <param name="loggedInUser">Логин авторизованного пользователя</param>
+        </member>
+        <member name="M:Frontend.Views.formDealerCustomer.LoadDealerCustomers">
+            <summary>
+            Загружает список дилеров/клиентов из базы данных.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formDealerCustomer.GetDealerCustomerFromForm">
+            <summary>
+            Создает объект DealerCustomer на основе данных формы.
+            </summary>
+            <returns>Заполненный объект DealerCustomer</returns>
+        </member>
+        <member name="M:Frontend.Views.formDealerCustomer.ClearForm">
+            <summary>
+            Очищает поля ввода на форме.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formDealerCustomer.btnAdd_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Обработчик нажатия кнопки "Добавить".
+            Добавляет нового дилера/клиента в базу данных.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formDealerCustomer.btnUpdate_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Обработчик нажатия кнопки "Обновить".
+            Обновляет данные выбранного дилера/клиента.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formDealerCustomer.btnDelete_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Обработчик нажатия кнопки "Удалить".
+            Удаляет выбранного дилера/клиента из базы данных.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formDealerCustomer.dgvDeaCust_MouseDoubleClick(System.Object,System.Windows.Input.MouseButtonEventArgs)">
+            <summary>
+            Обработчик двойного клика по списку записей.
+            Заполняет форму данными выбранной записи.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formDealerCustomer.txtSearch_TextChanged(System.Object,System.Windows.Controls.TextChangedEventArgs)">
+            <summary>
+            Обработчик изменения текста поиска.
+            Фильтрует список по введенному ключевому слову.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formDealerCustomer.Window_Loaded(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Обработчик загрузки окна.
+            Инициализирует данные при открытии окна.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formDealerCustomer.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:Frontend.Views.formDelivery">
+            <summary>
+            Окно управления доставками товаров.
+            Позволяет просматривать, фильтровать и отмечать доставки как выполненные.
+            </summary>
+            <summary>
+            formDelivery
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formDelivery.#ctor">
+            <summary>
+            Инициализирует новый экземпляр окна управления доставками.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formDelivery.Window_Loaded(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Обработчик загрузки окна. Загружает список доставок и инициализирует элементы управления.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formDelivery.LoadLogistics">
+            <summary>
+            Загружает список всех доставок из базы данных.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formDelivery.cmbDate_SelectionChanged(System.Object,System.Windows.Controls.SelectionChangedEventArgs)">
+            <summary>
+            Обработчик изменения выбора в комбобоксе даты.
+            Фильтрует доставки по выбранному типу (Закупка/Продажа).
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formDelivery.btnAll_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Обработчик нажатия кнопки "Все".
+            Сбрасывает фильтры и показывает все доставки.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formDelivery.btnDelivered_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Обработчик нажатия кнопки "Доставлено".
+            Помечает выбранную доставку как выполненную.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formDelivery.dgvLogistic_MouseDoubleClick(System.Object,System.Windows.Input.MouseButtonEventArgs)">
+            <summary>
+            Обработчик двойного клика по списку доставок.
+            Показывает информацию о выбранной доставке.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formDelivery.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:Frontend.Views.formInventory">
+            <summary>
+            Окно управления инвентаризацией товаров.
+            Позволяет просматривать товары по категориям и выполнять инвентаризацию.
+            </summary>
+            <summary>
+            formInventory
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formInventory.#ctor">
+            <summary>
+            Инициализирует новый экземпляр окна инвентаризации.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formInventory.Window_Loaded(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Обработчик загрузки окна. Загружает список категорий и товаров.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formInventory.LoadAllProducts">
+            <summary>
+            Загружает все товары из базы данных.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formInventory.cmbCategories_SelectionChanged(System.Object,System.Windows.Controls.SelectionChangedEventArgs)">
+            <summary>
+            Обработчик изменения выбранной категории.
+            Фильтрует товары по выбранной категории.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formInventory.btnAll_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Обработчик нажатия кнопки "Все".
+            Сбрасывает фильтр категорий и показывает все товары.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formInventory.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:Frontend.Views.formLogin">
+            <summary>
+            Окно авторизации пользователей в системе.
+            Проверяет учетные данные и предоставляет доступ в зависимости от типа пользователя.
+            </summary>
+            <summary>
+            formLogin
+            </summary>
+        </member>
+        <member name="F:Frontend.Views.formLogin.loggedIn">
+            <summary>
+            Статическое поле для хранения логина авторизованного пользователя
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formLogin.#ctor">
+            <summary>
+            Инициализирует новый экземпляр окна авторизации.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formLogin.BtnClose_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Обработчик нажатия кнопки закрытия окна.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formLogin.Window_MouseLeftButtonDown(System.Object,System.Windows.Input.MouseButtonEventArgs)">
+            <summary>
+            Обработчик перемещения окна при зажатии левой кнопки мыши.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formLogin.BtnLogin_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Обработчик нажатия кнопки входа в систему.
+            Проверяет учетные данные и авторизует пользователя.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formLogin.cmbUserType_SelectionChanged(System.Object,System.Windows.Controls.SelectionChangedEventArgs)">
+            <summary>
+            Проверяет корректность введенных данных.
+            </summary>
+            <returns>True если данные валидны, иначе False</returns>
+            <summary>
+            Открывает соответствующее окно в зависимости от типа пользователя.
+            </summary>
+            <summary>
+            Показывает сообщение об ошибке авторизации.
+            </summary>
+            <summary>
+            Показывает стандартное сообщение об ошибке.
+            </summary>
+            <param name="message">Текст сообщения</param>
+            <summary>
+            Обработчик изменения выбранного типа пользователя.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formLogin.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:Frontend.Views.formLogistic">
+            <summary>
+            Окно управления логистикой и доставками товаров.
+            Позволяет создавать, редактировать и отслеживать доставки,
+            а также управлять товарами в доставках.
+            </summary>
+            <summary>
+            formLogistic
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formLogistic.#ctor(System.String)">
+            <summary>
+            Инициализирует новый экземпляр окна управления логистикой.
+            </summary>
+            <param name="loggedInUser">Логин авторизованного пользователя</param>
+        </member>
+        <member name="M:Frontend.Views.formLogistic.InitializeDataTable">
+            <summary>
+            Инициализирует таблицу для хранения товаров в доставке.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formLogistic.LoadInitialData">
+            <summary>
+            Загружает начальные данные при запуске окна.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formLogistic.RefreshLogisticsData">
+            <summary>
+            Обновляет данные о доставках в таблице.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formLogistic.btnAdd_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Обработчик кнопки добавления новой доставки.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formLogistic.ClearForm">
+            <summary>
+            Очищает основные поля формы.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formLogistic.dgvLogistic_MouseDoubleClick(System.Object,System.Windows.Input.MouseButtonEventArgs)">
+            <summary>
+            Обработчик двойного клика по списку доставок.
+            Заполняет форму данными выбранной доставки.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formLogistic.btnUpdate_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Обработчик кнопки обновления данных доставки.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formLogistic.btnDelete_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Обработчик кнопки удаления доставки.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formLogistic.txtSearch_TextChanged(System.Object,System.Windows.Controls.TextChangedEventArgs)">
+            <summary>
+            Обработчик поиска доставок.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formLogistic.cmbEmployee_SelectionChanged(System.Object,System.Windows.Controls.SelectionChangedEventArgs)">
+            <summary>
+            Обработчик выбора сотрудника.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formLogistic.txtSearchProduct_TextChanged(System.Object,System.Windows.Controls.TextChangedEventArgs)">
+            <summary>
+            Обработчик поиска товара.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formLogistic.ClearProductFields">
+            <summary>
+            Очищает поля информации о товаре.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formLogistic.btnAddProduct_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Обработчик добавления товара в доставку.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formLogistic.btnClear_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Обработчик кнопки очистки формы.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formLogistic.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:Frontend.Views.formProducts">
+            <summary>
+            Окно управления товарами в системе.
+            Позволяет добавлять, редактировать, удалять и просматривать товары.
+            </summary>
+            <summary>
+            formProducts
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formProducts.#ctor(System.String)">
+            <summary>
+            Инициализирует новый экземпляр окна управления товарами.
+            </summary>
+            <param name="loggedInUser">Логин авторизованного пользователя</param>
+        </member>
+        <member name="M:Frontend.Views.formProducts.LoadCategories">
+            <summary>
+            Инициализирует окно при загрузке.
+            </summary>
+            <summary>
+            Загружает список категорий в комбобокс.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formProducts.LoadProducts">
+            <summary>
+            Загружает список товаров в таблицу.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formProducts.ClearFields">
+            <summary>
+            Очищает поля ввода.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formProducts.ValidateInputs">
+            <summary>
+            Проверяет корректность введенных данных.
+            </summary>
+            <returns>True если данные валидны, иначе False</returns>
+        </member>
+        <member name="M:Frontend.Views.formProducts.btnAdd_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Обработчик кнопки добавления товара.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formProducts.btnUpdate_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Создает объект Product на основе данных формы.
+            </summary>
+            <summary>
+            Обработчик кнопки обновления товара.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formProducts.btnDelete_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Обработчик кнопки удаления товара.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formProducts.btnClear_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Запрашивает подтверждение удаления товара.
+            </summary>
+            <summary>
+            Обработчик кнопки очистки формы.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formProducts.dgvProducts_MouseDoubleClick(System.Object,System.Windows.Input.MouseButtonEventArgs)">
+            <summary>
+            Обработчик двойного клика по списку товаров.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formProducts.txtSearch_TextChanged(System.Object,System.Windows.Controls.TextChangedEventArgs)">
+            <summary>
+            Обработчик поиска товаров.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formProducts.Window_Loaded(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Обработчик загрузки окна.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formProducts.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:Frontend.Views.formPurchaseSales">
+            <summary>
+            Окно для обработки операций покупки и продажи товаров.
+            Позволяет создавать транзакции, управлять списком товаров и рассчитывать итоговые суммы.
+            </summary>
+            <summary>
+            formPurchaseSales
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formPurchaseSales.#ctor">
+            <summary>
+            Инициализирует новый экземпляр окна покупки/продажи.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formPurchaseSales.InitializeDataTables">
+            <summary>
+            Инициализирует таблицы данных для хранения информации о товарах.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formPurchaseSales.LoadDefaultValues">
+            <summary>
+            Загружает начальные значения в элементы управления.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formPurchaseSales.txtSearch_TextChanged(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Обработчик поиска дилеров/клиентов.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formPurchaseSales.txtSearchProduct_TextChanged(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Обработчик поиска товаров.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formPurchaseSales.btnAdd_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Обработчик добавления товара в список.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formPurchaseSales.CalculateSubTotal">
+            <summary>
+            Проверяет возможность добавления товара в транзакцию.
+            </summary>
+            <summary>
+            Добавляет товар в текущую транзакцию.
+            </summary>
+            <summary>
+            Рассчитывает промежуточную сумму транзакции.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formPurchaseSales.CalculateGrandTotal">
+            <summary>
+            Рассчитывает итоговую сумму с учетом скидки и налогов.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formPurchaseSales.txtDiscount_TextChanged(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Преобразует текст в decimal значение.
+            </summary>
+            <summary>
+            Обработчик изменения скидки.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formPurchaseSales.txtVat_TextChanged(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Обработчик изменения налога.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formPurchaseSales.txtPaidAmount_TextChanged(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Обработчик изменения суммы оплаты.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formPurchaseSales.IsNumericInput(System.String)">
+            <summary>
+            Проверяет, является ли ввод числовым значением.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formPurchaseSales.btnSave_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Обработчик сохранения транзакции.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formPurchaseSales.ResetForm">
+            <summary>
+            Проверяет валидность данных транзакции.
+            </summary>
+            <summary>
+            Создает объект транзакции на основе введенных данных.
+            </summary>
+            <summary>
+            Сохраняет детали транзакции и обновляет количество товаров.
+            </summary>
+            <summary>
+            Сбрасывает форму к начальному состоянию.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formPurchaseSales.ClearProductFields">
+            <summary>
+            Очищает поля ввода информации о товаре.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formPurchaseSales.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:Frontend.Views.formTransactions">
+            <summary>
+            Окно для просмотра и управления транзакциями системы.
+            Позволяет просматривать, фильтровать и очищать историю транзакций.
+            </summary>
+            <summary>
+            formTransactions
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formTransactions.#ctor">
+            <summary>
+            Инициализирует новый экземпляр окна управления транзакциями.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formTransactions.FormTransactions_Loaded(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Обработчик загрузки окна. Загружает список всех транзакций.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formTransactions.LoadAllTransactions">
+            <summary>
+            Загружает все транзакции из базы данных.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formTransactions.cmbTransactionType_SelectedIndexChanged(System.Object,System.Windows.Controls.SelectionChangedEventArgs)">
+            <summary>
+            Обработчик изменения типа транзакции в комбобоксе.
+            Фильтрует транзакции по выбранному типу.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formTransactions.btnAll_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Обработчик кнопки "Все". Сбрасывает фильтры и показывает все транзакции.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formTransactions.btnClear_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Обработчик кнопки "Очистить". Удаляет все транзакции из системы.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formTransactions.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:Frontend.Views.formUserDashboard">
+            <summary>
+            Главное окно пользовательской панели управления.
+            Предоставляет доступ к основным функциям системы для обычных пользователей.
+            </summary>
+            <summary>
+            formUserDashboard
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formUserDashboard.#ctor(Backend.BusinessLogic.Login)">
+            <summary>
+            Инициализирует новый экземпляр пользовательской панели управления.
+            </summary>
+            <param name="loggedInUser">Данные авторизованного пользователя</param>
+        </member>
+        <member name="F:Frontend.Views.formUserDashboard.transactionType">
+            <summary>
+            Статическое поле для хранения типа текущей транзакции (Purchase/Sales)
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formUserDashboard.Window_Loaded(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Инициализирует элементы пользовательского интерфейса.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formUserDashboard.Window_Closed(System.Object,System.EventArgs)">
+            <summary>
+            Обработчик закрытия окна. Возвращает на окно авторизации.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formUserDashboard.DealerAndCustomerMenuItem_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Возвращает на окно авторизации и закрывает приложение.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formUserDashboard.PurchaseMenuItem_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Обработчик пункта меню "Дилеры/Клиенты".
+            Открывает окно управления дилерами и клиентами.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formUserDashboard.SalesMenuItem_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Обработчик пункта меню "Закупки".
+            Устанавливает тип транзакции и открывает окно покупок/продаж.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formUserDashboard.InventoryMenuItem_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Обработчик пункта меню "Продажи".
+            Устанавливает тип транзакции и открывает окно покупок/продаж.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formUserDashboard.DeliveryMenuItem_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Обработчик пункта меню "Инвентаризация".
+            Открывает окно управления инвентаризацией.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formUserDashboard.ArchiveDeliveriesMenuItem_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Обработчик пункта меню "Доставки".
+            Открывает окно управления доставками.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formUserDashboard.LogOutMenuItem_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Обработчик пункта меню "Архив доставок".
+            Открывает окно просмотра архивных доставок.
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formUserDashboard.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:Frontend.Views.formUsers">
+            <summary>
+            formUsers
+            </summary>
+        </member>
+        <member name="M:Frontend.Views.formUsers.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+    </members>
+</doc>

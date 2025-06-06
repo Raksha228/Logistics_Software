@@ -1,0 +1,1113 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Backend</name>
+    </assembly>
+    <members>
+        <member name="T:Backend.BusinessLogic.Category">
+            <summary>
+            Представляет категорию товара.
+            </summary>
+        </member>
+        <member name="P:Backend.BusinessLogic.Category.Id">
+            <summary>
+            Получает или задаёт идентификатор категории.
+            </summary>
+        </member>
+        <member name="P:Backend.BusinessLogic.Category.Title">
+            <summary>
+            Получает или задаёт название категории.
+            </summary>
+        </member>
+        <member name="P:Backend.BusinessLogic.Category.Description">
+            <summary>
+            Получает или задаёт описание категории.
+            </summary>
+        </member>
+        <member name="P:Backend.BusinessLogic.Category.AddedDate">
+            <summary>
+            Получает или задаёт дату добавления категории.
+            </summary>
+        </member>
+        <member name="P:Backend.BusinessLogic.Category.AddedBy">
+            <summary>
+            Получает или задаёт идентификатор пользователя, добавившего категорию.
+            </summary>
+        </member>
+        <member name="P:Backend.BusinessLogic.Category.AddedByName">
+            <summary>
+            Получает или задаёт имя пользователя, добавившего категорию.
+            </summary>
+        </member>
+        <member name="T:Backend.BusinessLogic.DealerCustomer">
+            <summary>
+            Представляет информацию о клиенте-дилере.
+            </summary>
+        </member>
+        <member name="P:Backend.BusinessLogic.DealerCustomer.Id">
+            <summary>
+            Получает или задаёт идентификатор клиента-дилера.
+            </summary>
+        </member>
+        <member name="P:Backend.BusinessLogic.DealerCustomer.Type">
+            <summary>
+            Получает или задаёт тип клиента-дилера.
+            </summary>
+        </member>
+        <member name="P:Backend.BusinessLogic.DealerCustomer.Name">
+            <summary>
+            Получает или задаёт имя клиента-дилера.
+            </summary>
+            <exception cref="T:System.ArgumentException">Выбрасывается, если имя менее 3 символов.</exception>
+        </member>
+        <member name="P:Backend.BusinessLogic.DealerCustomer.Email">
+            <summary>
+            Получает или задаёт электронную почту клиента-дилера.
+            </summary>
+            <exception cref="T:System.ArgumentException">Выбрасывается, если электронная почта некорректна.</exception>
+        </member>
+        <member name="P:Backend.BusinessLogic.DealerCustomer.Contact">
+            <summary>
+            Получает или задаёт контактный номер клиента-дилера.
+            </summary>
+            <exception cref="T:System.ArgumentException">Выбрасывается, если контакт меньше 10 символов.</exception>
+        </member>
+        <member name="P:Backend.BusinessLogic.DealerCustomer.Address">
+            <summary>
+            Получает или задаёт адрес клиента-дилера.
+            </summary>
+        </member>
+        <member name="P:Backend.BusinessLogic.DealerCustomer.AddedDate">
+            <summary>
+            Получает или задаёт дату добавления клиента-дилера.
+            </summary>
+        </member>
+        <member name="P:Backend.BusinessLogic.DealerCustomer.AddedBy">
+            <summary>
+            Получает или задаёт идентификатор пользователя, добавившего информацию о клиенте-дилере.
+            </summary>
+        </member>
+        <member name="P:Backend.BusinessLogic.DealerCustomer.AddedByName">
+            <summary>
+            Получает или задаёт имя пользователя, добавившего информацию о клиенте-дилере.
+            </summary>
+        </member>
+        <member name="T:Backend.BusinessLogic.Login">
+            <summary>
+            Класс, представляющий данные для входа пользователя.
+            Используется для передачи логина, пароля и типа пользователя.
+            </summary>
+        </member>
+        <member name="P:Backend.BusinessLogic.Login.Username">
+            <summary>
+            Логин пользователя.
+            </summary>
+        </member>
+        <member name="P:Backend.BusinessLogic.Login.Password">
+            <summary>
+            Пароль пользователя (в открытом виде, без хеширования).
+            </summary>
+        </member>
+        <member name="P:Backend.BusinessLogic.Login.UserType">
+            <summary>
+            Тип пользователя (например: "Admin", "User", "Guest").
+            Определяет уровень доступа в системе.
+            </summary>
+        </member>
+        <member name="T:Backend.BusinessLogic.Logistic">
+            <summary>
+            Класс, представляющий логистическую запись (перевозку, доставку или связанную операцию).
+            Содержит информацию о сотруднике, контактах, адресе, стоимости и датах.
+            </summary>
+        </member>
+        <member name="P:Backend.BusinessLogic.Logistic.Id">
+            <summary>
+            Уникальный идентификатор записи.
+            </summary>
+        </member>
+        <member name="P:Backend.BusinessLogic.Logistic.Empleyee">
+            <summary>
+            ФИО или идентификатор сотрудника, связанного с логистикой.
+            </summary>
+        </member>
+        <member name="P:Backend.BusinessLogic.Logistic.FirstNameEmployee">
+            <summary>
+            Имя сотрудника.
+            </summary>
+        </member>
+        <member name="P:Backend.BusinessLogic.Logistic.LastNameEmployee">
+            <summary>
+            Фамилия сотрудника.
+            </summary>
+        </member>
+        <member name="P:Backend.BusinessLogic.Logistic.Contact">
+            <summary>
+            Контактный номер телефона или email.
+            При установке значения выполняется проверка на минимальную длину (не менее 10 символов).
+            </summary>
+            <exception cref="T:System.ArgumentException">Выбрасывается, если контакт слишком короткий (меньше 10 символов).</exception>
+        </member>
+        <member name="P:Backend.BusinessLogic.Logistic.Address">
+            <summary>
+            Адрес доставки или место назначения.
+            </summary>
+        </member>
+        <member name="P:Backend.BusinessLogic.Logistic.Date">
+            <summary>
+            Дата выполнения логистической операции (в строковом формате).
+            </summary>
+        </member>
+        <member name="P:Backend.BusinessLogic.Logistic.Description">
+            <summary>
+            Описание операции (например, тип груза или особые условия).
+            </summary>
+        </member>
+        <member name="P:Backend.BusinessLogic.Logistic.Price">
+            <summary>
+            Стоимость услуги (в денежном выражении).
+            </summary>
+        </member>
+        <member name="P:Backend.BusinessLogic.Logistic.AddedDate">
+            <summary>
+            Дата добавления записи в систему.
+            </summary>
+        </member>
+        <member name="P:Backend.BusinessLogic.Logistic.AddedBy">
+            <summary>
+            ID пользователя, добавившего запись.
+            </summary>
+        </member>
+        <member name="P:Backend.BusinessLogic.Logistic.AddedByName">
+            <summary>
+            Имя пользователя, добавившего запись.
+            </summary>
+        </member>
+        <member name="T:Backend.BusinessLogic.Product">
+            <summary>
+            Класс, представляющий товар в системе.
+            Содержит информацию о названии, категории, цене и количестве.
+            </summary>
+        </member>
+        <member name="P:Backend.BusinessLogic.Product.Id">
+            <summary>
+            Уникальный идентификатор товара.
+            </summary>
+        </member>
+        <member name="P:Backend.BusinessLogic.Product.Name">
+            <summary>
+            Название товара.
+            </summary>
+        </member>
+        <member name="P:Backend.BusinessLogic.Product.Category">
+            <summary>
+            Категория товара (например: "Электроника", "Одежда").
+            </summary>
+        </member>
+        <member name="P:Backend.BusinessLogic.Product.SpecialNumber">
+            <summary>
+            Артикул или специальный номер товара.
+            </summary>
+        </member>
+        <member name="P:Backend.BusinessLogic.Product.Description">
+            <summary>
+            Описание товара.
+            </summary>
+        </member>
+        <member name="P:Backend.BusinessLogic.Product.Rate">
+            <summary>
+            Цена товара.
+            При установке значения выполняется проверка на отрицательное значение.
+            </summary>
+            <exception cref="T:System.ArgumentException">Выбрасывается, если цена отрицательная.</exception>
+        </member>
+        <member name="P:Backend.BusinessLogic.Product.Quantity">
+            <summary>
+            Количество товара на складе.
+            При установке значения выполняется проверка на отрицательное значение.
+            </summary>
+            <exception cref="T:System.ArgumentException">Выбрасывается, если количество отрицательное.</exception>
+        </member>
+        <member name="P:Backend.BusinessLogic.Product.AddedDate">
+            <summary>
+            Дата добавления товара в систему.
+            </summary>
+        </member>
+        <member name="P:Backend.BusinessLogic.Product.AddedBy">
+            <summary>
+            ID пользователя, добавившего товар.
+            </summary>
+        </member>
+        <member name="P:Backend.BusinessLogic.Product.AddedByName">
+            <summary>
+            Имя пользователя, добавившего товар.
+            </summary>
+        </member>
+        <member name="T:Backend.BusinessLogic.Transaction">
+            <summary>
+            Класс, представляющий финансовую транзакцию в системе.
+            Содержит информацию о платежах, налогах, скидках и деталях операции.
+            </summary>
+        </member>
+        <member name="P:Backend.BusinessLogic.Transaction.Id">
+            <summary>
+            Уникальный идентификатор транзакции.
+            </summary>
+        </member>
+        <member name="P:Backend.BusinessLogic.Transaction.Type">
+            <summary>
+            Тип транзакции (например: "Продажа", "Возврат", "Пополнение").
+            </summary>
+        </member>
+        <member name="P:Backend.BusinessLogic.Transaction.DealerCustomerId">
+            <summary>
+            ID дилера или клиента, связанного с транзакцией.
+            </summary>
+        </member>
+        <member name="P:Backend.BusinessLogic.Transaction.Description">
+            <summary>
+            Описание транзакции (дополнительные сведения о операции).
+            </summary>
+        </member>
+        <member name="P:Backend.BusinessLogic.Transaction.GrandTotal">
+            <summary>
+            Общая сумма транзакции (включая налоги и скидки).
+            </summary>
+        </member>
+        <member name="P:Backend.BusinessLogic.Transaction.TransactionDate">
+            <summary>
+            Дата и время совершения транзакции.
+            </summary>
+        </member>
+        <member name="P:Backend.BusinessLogic.Transaction.Tax">
+            <summary>
+            Сумма налога для транзакции.
+            Значение должно быть положительным числом.
+            </summary>
+            <exception cref="T:System.ArgumentException">Выбрасывается при попытке установить отрицательное или нулевое значение.</exception>
+        </member>
+        <member name="P:Backend.BusinessLogic.Transaction.Discount">
+            <summary>
+            Сумма скидки по транзакции.
+            Значение должно быть положительным числом.
+            </summary>
+            <exception cref="T:System.ArgumentException">Выбрасывается при попытке установить отрицательное или нулевое значение.</exception>
+        </member>
+        <member name="P:Backend.BusinessLogic.Transaction.PaidAmount">
+            <summary>
+            Сумма, фактически оплаченная по транзакции.
+            Значение должно быть положительным числом.
+            </summary>
+            <exception cref="T:System.ArgumentException">Выбрасывается при попытке установить отрицательное или нулевое значение.</exception>
+        </member>
+        <member name="P:Backend.BusinessLogic.Transaction.ReturnAmount">
+            <summary>
+            Сумма к возврату (если оплата превышает общую сумму).
+            </summary>
+        </member>
+        <member name="P:Backend.BusinessLogic.Transaction.AddedBy">
+            <summary>
+            ID пользователя, создавшего транзакцию.
+            </summary>
+        </member>
+        <member name="P:Backend.BusinessLogic.Transaction.AddedByName">
+            <summary>
+            Имя пользователя, создавшего транзакцию.
+            </summary>
+        </member>
+        <member name="P:Backend.BusinessLogic.Transaction.TransactionDetails">
+            <summary>
+            Детализированные данные о транзакции (список товаров/услуг).
+            </summary>
+        </member>
+        <member name="T:Backend.BusinessLogic.TransactionDetails">
+            <summary>
+            Класс, представляющий детали транзакции.
+            Содержит информацию о товарах, их количестве, ценах и участниках сделки.
+            </summary>
+        </member>
+        <member name="P:Backend.BusinessLogic.TransactionDetails.Id">
+            <summary>
+            Уникальный идентификатор детали транзакции.
+            </summary>
+        </member>
+        <member name="P:Backend.BusinessLogic.TransactionDetails.ProductId">
+            <summary>
+            Идентификатор товара, связанного с транзакцией.
+            </summary>
+        </member>
+        <member name="P:Backend.BusinessLogic.TransactionDetails.Rate">
+            <summary>
+            Цена единицы товара на момент совершения транзакции.
+            </summary>
+        </member>
+        <member name="P:Backend.BusinessLogic.TransactionDetails.Quantity">
+            <summary>
+            Количество товара в транзакции.
+            </summary>
+        </member>
+        <member name="P:Backend.BusinessLogic.TransactionDetails.Total">
+            <summary>
+            Общая стоимость по позиции (Rate * Quantity).
+            </summary>
+        </member>
+        <member name="P:Backend.BusinessLogic.TransactionDetails.DealerCustomerId">
+            <summary>
+            Идентификатор дилера или клиента, связанного с данной позицией транзакции.
+            </summary>
+        </member>
+        <member name="P:Backend.BusinessLogic.TransactionDetails.AddedDate">
+            <summary>
+            Дата и время добавления позиции в транзакцию.
+            </summary>
+        </member>
+        <member name="P:Backend.BusinessLogic.TransactionDetails.AddedBy">
+            <summary>
+            Идентификатор пользователя, добавившего позицию в транзакцию.
+            </summary>
+        </member>
+        <member name="P:Backend.BusinessLogic.TransactionDetails.AddedByName">
+            <summary>
+            Имя пользователя, добавившего позицию в транзакцию.
+            </summary>
+        </member>
+        <member name="T:Backend.BusinesLogic.User">
+            <summary>
+            Класс, представляющий пользователя системы.
+            Содержит информацию о пользователе и методы валидации данных.
+            </summary>
+        </member>
+        <member name="P:Backend.BusinesLogic.User.Id">
+            <summary>
+            Уникальный идентификатор пользователя.
+            </summary>
+        </member>
+        <member name="P:Backend.BusinesLogic.User.FirstName">
+            <summary>
+            Имя пользователя.
+            Должно содержать более 3 символов.
+            </summary>
+            <exception cref="T:System.ArgumentException">Выбрасывается, если имя короче 4 символов.</exception>
+        </member>
+        <member name="P:Backend.BusinesLogic.User.LastName">
+            <summary>
+            Фамилия пользователя.
+            Должна содержать более 3 символов.
+            </summary>
+            <exception cref="T:System.ArgumentException">Выбрасывается, если фамилия короче 4 символов.</exception>
+        </member>
+        <member name="P:Backend.BusinesLogic.User.Email">
+            <summary>
+            Электронная почта пользователя.
+            Проверяется на соответствие формату email.
+            </summary>
+            <exception cref="T:System.ArgumentException">Выбрасывается при неверном формате email.</exception>
+        </member>
+        <member name="P:Backend.BusinesLogic.User.Username">
+            <summary>
+            Логин пользователя.
+            Должен содержать не менее 3 символов.
+            </summary>
+            <exception cref="T:System.ArgumentException">Выбрасывается, если логин короче 3 символов.</exception>
+        </member>
+        <member name="P:Backend.BusinesLogic.User.Password">
+            <summary>
+            Пароль пользователя.
+            Должен содержать не менее 5 символов.
+            </summary>
+            <exception cref="T:System.ArgumentException">Выбрасывается, если пароль короче 5 символов.</exception>
+        </member>
+        <member name="P:Backend.BusinesLogic.User.Address">
+            <summary>
+            Адрес пользователя.
+            </summary>
+        </member>
+        <member name="P:Backend.BusinesLogic.User.Contact">
+            <summary>
+            Контактный телефон пользователя.
+            </summary>
+        </member>
+        <member name="P:Backend.BusinesLogic.User.Gender">
+            <summary>
+            Пол пользователя.
+            </summary>
+        </member>
+        <member name="P:Backend.BusinesLogic.User.UserType">
+            <summary>
+            Тип пользователя (например: "Admin", "User").
+            </summary>
+        </member>
+        <member name="P:Backend.BusinesLogic.User.AddedDate">
+            <summary>
+            Дата добавления пользователя.
+            </summary>
+        </member>
+        <member name="P:Backend.BusinesLogic.User.AddedBy">
+            <summary>
+            ID пользователя, добавившего запись.
+            </summary>
+        </member>
+        <member name="P:Backend.BusinesLogic.User.AddedByName">
+            <summary>
+            Имя пользователя, добавившего запись.
+            </summary>
+        </member>
+        <member name="T:Backend.DataAccess.ArchiveLogisticData">
+            <summary>
+            Предоставляет методы для взаимодействия с архивом логистических операций:
+            добавление новых записей и получение архивных данных.
+            </summary>
+        </member>
+        <member name="F:Backend.DataAccess.ArchiveLogisticData.myconnstrng">
+            <summary>
+            Строка подключения к базе данных, полученная из конфигурационного файла приложения.
+            </summary>
+        </member>
+        <member name="M:Backend.DataAccess.ArchiveLogisticData.DisplayAllLogistics">
+            <summary>
+            Получает все архивные записи логистических операций из базы данных.
+            </summary>
+            <returns>
+            Объект <see cref="T:System.Data.DataTable"/>, содержащий все записи архива логистики.
+            </returns>
+            <remarks>
+            Каждая строка полученного <see cref="T:System.Data.DataTable"/> соответствует строке из таблицы table_logistic_archive.
+            В случае возникновения ошибки пользователю будет показано окно с сообщением об ошибке.
+            </remarks>
+        </member>
+        <member name="M:Backend.DataAccess.ArchiveLogisticData.Insert(Backend.BusinessLogic.Logistic)">
+            <summary>
+            Добавляет новую запись логистической операции в архив.
+            </summary>
+            <param name="logistic">Экземпляр <see cref="T:Backend.BusinessLogic.Logistic"/>, содержащий данные операции.</param>
+            <returns>
+            true, если добавление прошло успешно; иначе false.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+            Выбрасывается, если параметр <paramref name="logistic"/> равен null.
+            </exception>
+            <remarks>
+            Свойства объекта <paramref name="logistic"/> сопоставляются с соответствующими столбцами таблицы архива.
+            В случае ошибки пользователю будет показано окно с сообщением.
+            </remarks>
+        </member>
+        <member name="M:Backend.DataAccess.ArchiveLogisticData.DisplayLogisticnByDate(System.String)">
+            <summary>
+            Получает логистические операции по заданной дате.
+            </summary>
+            <param name="date">
+            Дата в формате строки (например, "2024-06-01"), соответствующая хранимому в базе формату.
+            </param>
+            <returns>
+            Объект <see cref="T:System.Data.DataTable"/>, содержащий найденные записи логистики по указанной дате.
+            </returns>
+            <remarks>
+            Фильтрация производится по совпадению значения поля "date" в таблице архива.
+            В случае ошибки пользователю будет показано сообщение.
+            </remarks>
+        </member>
+        <member name="T:Backend.DataAccess.CategoryData">
+            <summary>
+            Класс для взаимодействия с данными категорий в базе данных.
+            Реализует базовые операции CRUD (создание, чтение, обновление, удаление)
+            в таблице <c>table_categories</c>.
+            </summary>
+        </member>
+        <member name="F:Backend.DataAccess.CategoryData.myconnstrng">
+            <summary>
+            Строка подключения к базе данных из конфигурационного файла приложения.
+            </summary>
+        </member>
+        <member name="M:Backend.DataAccess.CategoryData.Select">
+            <summary>
+            Получает все категории из базы данных.
+            </summary>
+            <returns>
+            <see cref="T:System.Data.DataTable"/>, содержащая все записи из таблицы категорий.
+            </returns>
+            <remarks>
+            Каждая строка в возвращённой таблице соответствует одной категории из базы данных.
+            В случае ошибки пользователю будет показано окно с сообщением.
+            </remarks>
+        </member>
+        <member name="M:Backend.DataAccess.CategoryData.Insert(Backend.BusinessLogic.Category)">
+            <summary>
+            Вставляет новую категорию в базу данных.
+            </summary>
+            <param name="category">Экземпляр <see cref="T:Backend.BusinessLogic.Category"/>, содержащий данные новой категории.</param>
+            <returns>
+            <c>true</c>, если категория успешно добавлена; иначе — <c>false</c>.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+            Выбрасывается, если переданный параметр <paramref name="category"/> равен <c>null</c>.
+            </exception>
+            <remarks>
+            Все значения, содержащиеся в объекте <paramref name="category"/>, маппятся на соответствующие поля таблицы.
+            </remarks>
+        </member>
+        <member name="M:Backend.DataAccess.CategoryData.Update(Backend.BusinessLogic.Category)">
+            <summary>
+            Обновляет данные существующей категории.
+            </summary>
+            <param name="category">Экземпляр <see cref="T:Backend.BusinessLogic.Category"/>, содержащий новые данные категории. Поле <c>Id</c> обязательно для указания, какую строку обновлять.</param>
+            <returns>
+            <c>true</c>, если данные были успешно обновлены; иначе — <c>false</c>.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+            Выбрасывается, если <paramref name="category"/> равен <c>null</c>.
+            </exception>
+            <remarks>
+            Осуществляет обновление записи по полю <c>id</c> категории.
+            </remarks>
+        </member>
+        <member name="M:Backend.DataAccess.CategoryData.Delete(Backend.BusinessLogic.Category)">
+            <summary>
+            Удаляет категорию из базы данных по указанному идентификатору.
+            </summary>
+            <param name="category">Экземпляр <see cref="T:Backend.BusinessLogic.Category"/> с установленным полем <c>Id</c> для удаления.</param>
+            <returns>
+            <c>true</c>, если категория успешно удалена; иначе — <c>false</c>.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+            Выбрасывается, если <paramref name="category"/> равен <c>null</c>.
+            </exception>
+            <remarks>
+            Удаление происходит по первичному ключу категории — <c>Id</c>.
+            </remarks>
+        </member>
+        <member name="M:Backend.DataAccess.CategoryData.Search(System.String)">
+            <summary>
+            Ищет категории по ключевому слову или части слова в полях <c>id</c>, <c>title</c> или <c>description</c>.
+            </summary>
+            <param name="keywords">Строка для поиска (например, часть названия или описания категории).</param>
+            <returns>
+            <see cref="T:System.Data.DataTable"/>, содержащая найденные записи, удовлетворяющие условию поиска.
+            </returns>
+            <remarks>
+            Поиск осуществляется по частичному совпадению с <c>id</c>, <c>title</c> и <c>description</c>.
+            В случае ошибки пользователю выводится сообщение.
+            В текущей реализации используется конкатенация строки запроса:
+            для предотвращения SQL-инъекций рекомендуется использовать параметризованные запросы!
+            </remarks>
+        </member>
+        <member name="T:Backend.DataAccess.DealerCustomerData">
+            <summary>
+            Класс для доступа к данным дилеров и клиентов.
+            Предоставляет методы для выполнения основных операций с таблицей "table_dealer_customer" в базе данных,
+            включая выборку, добавление, изменение, удаление и поиск данных.
+            Наследуется от <see cref="T:Backend.BusinessLogic.DealerCustomer"/> и реализует интерфейс <see cref="T:Backend.Interfaces.ICrudDealerCustomer"/>.
+            </summary>
+        </member>
+        <member name="F:Backend.DataAccess.DealerCustomerData.myconnstrng">
+            <summary>
+            Строка подключения к базе данных, получаемая из файла конфигурации приложения.
+            </summary>
+        </member>
+        <member name="M:Backend.DataAccess.DealerCustomerData.Select">
+            <summary>
+            Получает все записи дилеров и клиентов из базы данных.
+            </summary>
+            <returns>
+            Объект <see cref="T:System.Data.DataTable"/>, содержащий все строки из таблицы дилеров и клиентов.
+            </returns>
+        </member>
+        <member name="M:Backend.DataAccess.DealerCustomerData.Insert(Backend.BusinessLogic.DealerCustomer)">
+            <summary>
+            Добавляет новую запись дилера или клиента в таблицу базы данных.
+            </summary>
+            <param name="dealerAndCustomer">
+            Объект <see cref="T:Backend.BusinessLogic.DealerCustomer"/>, содержащий информацию о новом дилере или клиенте.
+            </param>
+            <returns>
+            <c>true</c> если запись успешно добавлена, иначе <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:Backend.DataAccess.DealerCustomerData.Update(Backend.BusinessLogic.DealerCustomer)">
+            <summary>
+            Обновляет существующую запись дилера или клиента в таблице базы данных.
+            </summary>
+            <param name="dealerAndCustomer">
+            Объект <see cref="T:Backend.BusinessLogic.DealerCustomer"/>, содержащий обновлённую информацию.
+            </param>
+            <returns>
+            <c>true</c> если запись успешно обновлена, иначе <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:Backend.DataAccess.DealerCustomerData.Delete(Backend.BusinessLogic.DealerCustomer)">
+            <summary>
+            Удаляет запись дилера или клиента из таблицы базы данных по его идентификатору.
+            </summary>
+            <param name="dealerAndCustomer">
+            Объект <see cref="T:Backend.BusinessLogic.DealerCustomer"/>, содержащий идентификатор записи для удаления.
+            </param>
+            <returns>
+            <c>true</c> если запись успешно удалена, иначе <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:Backend.DataAccess.DealerCustomerData.Search(System.String)">
+            <summary>
+            Выполняет поиск записей дилеров и клиентов по ключевому слову.
+            Ключевое слово ищется в полях "id", "type" и "name".
+            </summary>
+            <param name="keyword">Строка поиска, по которой происходит фильтрация записей.</param>
+            <returns>
+            Объект <see cref="T:System.Data.DataTable"/>, содержащий найденные записи.
+            </returns>
+        </member>
+        <member name="M:Backend.DataAccess.DealerCustomerData.SearchDealerCustomerForTransaction(System.String)">
+            <summary>
+            Выполняет расширенный поиск дилера или клиента по ключевому слову для проведения транзакции.
+            Ключевое слово ищется в полях "id" и "name".
+            Возвращает объект <see cref="T:Backend.BusinessLogic.DealerCustomer"/> с найденными данными.
+            </summary>
+            <param name="keyword">Строка поиска по id или имени.</param>
+            <returns>
+            Объект <see cref="T:Backend.BusinessLogic.DealerCustomer"/>, содержащий сведения о найденном дилере или клиенте.
+            Если ничего не найдено, возвращается объект с пустыми значениями полей.
+            </returns>
+        </member>
+        <member name="M:Backend.DataAccess.DealerCustomerData.GetDeaCustIDFromName(System.String)">
+            <summary>
+            Получает идентификатор дилера или клиента по его имени.
+            </summary>
+            <param name="Name">Имя дилера или клиента, по которому выполняется поиск идентификатора.</param>
+            <returns>
+            Объект <see cref="T:Backend.BusinessLogic.DealerCustomer"/>, содержащий найденный идентификатор в свойстве <c>Id</c>.
+            Если запись не найдена, Id будет равен 0.
+            </returns>
+        </member>
+        <member name="T:Backend.DataAccess.LoginData">
+            <summary>
+            Класс для работы с аутентификацией пользователей.
+            Предоставляет методы для проверки учётных данных пользователя в базе данных.
+            </summary>
+        </member>
+        <member name="F:Backend.DataAccess.LoginData.myconnstrng">
+            <summary>
+            Строка подключения к базе данных, получаемая из файла конфигурации приложения.
+            </summary>
+        </member>
+        <member name="M:Backend.DataAccess.LoginData.loginCheck(Backend.BusinessLogic.Login)">
+            <summary>
+            Проверяет корректность учётных данных пользователя для входа в систему.
+            Запрос обращается к таблице пользователей и сверяет данные по имени пользователя, паролю и типу пользователя.
+            </summary>
+            <param name="login">
+            Объект <see cref="T:Backend.BusinessLogic.Login"/>, содержащий имя пользователя (<c>Username</c>), пароль (<c>Password</c>) и тип пользователя (<c>UserType</c>) для проверки.
+            </param>
+            <returns>
+            <c>true</c> если в таблице найден пользователь с указанными данными, иначе <c>false</c>.
+            </returns>
+            <remarks>
+            Если учётная запись не найдена либо возникает ошибка при обработке запроса, метод возвращает <c>false</c>.
+            </remarks>
+        </member>
+        <member name="T:Backend.DataAccess.LogisticData">
+            <summary>
+            Класс доступа к данным для работы с логистикой.
+            Предоставляет функционал для обработки CRUD-операций (создание, чтение, обновление, удаление) над записями логистики,
+            а также поиск по таблице логистики и выбор продукции для логистики.
+            Наследуется от <see cref="T:Backend.BusinessLogic.Logistic"/> и реализует интерфейс <see cref="T:Backend.Interfaces.ICrudLogistic"/>.
+            </summary>
+        </member>
+        <member name="F:Backend.DataAccess.LogisticData.myconnstrng">
+            <summary>
+            Строка подключения к базе данных, полученная из файла конфигурации приложения.
+            </summary>
+        </member>
+        <member name="M:Backend.DataAccess.LogisticData.Select">
+            <summary>
+            Получает все записи по логистике из базы данных.
+            </summary>
+            <returns>
+            <see cref="T:System.Data.DataTable"/>, содержащий все строки из таблицы логистики.
+            </returns>
+        </member>
+        <member name="M:Backend.DataAccess.LogisticData.Insert(Backend.BusinessLogic.Logistic)">
+            <summary>
+            Добавляет новую запись по логистике в БД.
+            </summary>
+            <param name="logistic">
+            Объект <see cref="T:Backend.BusinessLogic.Logistic"/>, содержащий информацию для записи.
+            </param>
+            <returns>
+            <c>true</c> — если запись успешно добавлена, иначе <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:Backend.DataAccess.LogisticData.Update(Backend.BusinessLogic.Logistic)">
+            <summary>
+            Обновляет существующую запись по логистике в базе данных.
+            </summary>
+            <param name="logistic">
+            Объект <see cref="T:Backend.BusinessLogic.Logistic"/>, содержащий обновлённые данные записи.
+            </param>
+            <returns>
+            <c>true</c>, если обновление прошло успешно; <c>false</c> — в случае сбоя или отсутствия изменений.
+            </returns>
+        </member>
+        <member name="M:Backend.DataAccess.LogisticData.Delete(Backend.BusinessLogic.Logistic)">
+            <summary>
+            Удаляет запись логистики по идентификатору.
+            </summary>
+            <param name="logistic">
+            Объект <see cref="T:Backend.BusinessLogic.Logistic"/>, у которого заполнено свойство <c>Id</c> для удаления.
+            </param>
+            <returns>
+            <c>true</c>, если удаление прошло успешно; иначе <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:Backend.DataAccess.LogisticData.Search(System.String)">
+            <summary>
+            Выполняет поиск записей логистики по заданному ключевому слову.
+            Осуществляет поиск в полях <c>id</c>, <c>employee</c> и <c>date</c>.
+            </summary>
+            <param name="keywords">
+            Ключевое слово для поиска среди записей.
+            </param>
+            <returns>
+            <see cref="T:System.Data.DataTable"/> с найденными по критерию строками.
+            </returns>
+        </member>
+        <member name="M:Backend.DataAccess.LogisticData.GetProductsForLogistic(System.String)">
+            <summary>
+            Находит продукцию для логистических операций по ключевому слову.
+            Используется для получения сведений о продукте для последующей работы в рамках логистики.
+            </summary>
+            <param name="keyword">
+            Ключевое слово для поиска в названиях или специальных номерах продукции.
+            </param>
+            <returns>
+            Объект <see cref="T:Backend.BusinessLogic.Product"/> с найденной продукцией или с пустыми полями, если ничего не найдено.
+            </returns>
+        </member>
+        <member name="T:Backend.DataAccess.PersonalLogisticData">
+            <summary>
+            Класс <c>PersonalLogisticData</c> предоставляет методы для доступа к данным логистики
+            конкретного сотрудника, реализует бизнес-логику по отображению информации по пользователям и датам.
+            </summary>
+            <remarks>
+            Класс наследуется от <see cref="T:Backend.BusinessLogic.Logistic"/> и реализует интерфейс <see cref="T:Backend.Interfaces.IPersonalLogistic"/>.
+            Использует строку подключения из файла конфигурации приложения.
+            </remarks>
+        </member>
+        <member name="F:Backend.DataAccess.PersonalLogisticData.myconnstrng">
+            <summary>
+            Строка подключения к базе данных, полученная из конфигурации приложения.
+            </summary>
+        </member>
+        <member name="M:Backend.DataAccess.PersonalLogisticData.DisplayLogisticByUsername(System.String)">
+            <summary>
+            Выполняет выборку и отображает записи логистики,
+            относящиеся к пользователю, вошедшему в систему.
+            </summary>
+            <param name="username">Имя пользователя, по которому производится фильтрация данных.</param>
+            <returns>
+            Объект <see cref="T:System.Data.DataTable"/> с данными логистики, соответствующими заданному пользователю.
+            </returns>
+            <example>
+            <code>
+            PersonalLogisticData personalData = new PersonalLogisticData();
+            DataTable table = personalData.DisplayLogisticByUsername("ivanov");
+            </code>
+            </example>
+        </member>
+        <member name="M:Backend.DataAccess.PersonalLogisticData.DisplayLogisticnByDate(System.String,System.String)">
+            <summary>
+            Выполняет выборку и отображает записи логистики по определённой дате и пользователю.
+            </summary>
+            <param name="date">Дата, по которой производится фильтрация данных (в формате строки).</param>
+            <param name="username">Имя пользователя, по которому производится дополнительная фильтрация данных.</param>
+            <returns>
+            Объект <see cref="T:System.Data.DataTable"/> с данными логистики, соответствующими заданной дате и пользователю.
+            </returns>
+            <example>
+            <code>
+            PersonalLogisticData personalData = new PersonalLogisticData();
+            DataTable table = personalData.DisplayLogisticnByDate("2024-06-19", "ivanov");
+            </code>
+            </example>
+        </member>
+        <member name="T:Backend.DataAccess.ProductData">
+            <summary>
+            Класс <c>ProductData</c> реализует доступ к данным о продуктах, а также
+            позволяет выполнять операции CRUD и работать с количеством продукции.
+            </summary>
+            <remarks>
+            Этот класс наследуется от <see cref="T:Backend.BusinessLogic.Product"/> и реализует интерфейсы <see cref="T:Backend.Interfaces.ICrudProduct"/> и <see cref="T:Backend.Interfaces.IQuantityProduct"/>.
+            В качестве источника строки подключения используется конфигурационный файл приложения.
+            </remarks>
+        </member>
+        <member name="F:Backend.DataAccess.ProductData.myconnstrng">
+            <summary>
+            Строка подключения к базе данных, полученная из конфигурационного файла приложения.
+            </summary>
+        </member>
+        <member name="M:Backend.DataAccess.ProductData.Select">
+            <summary>
+            Выбирает и возвращает все записи по продуктам из таблицы <c>table_products</c>.
+            </summary>
+            <returns>
+            Объект <see cref="T:System.Data.DataTable"/>, содержащий всю информацию о продуктах.
+            </returns>
+        </member>
+        <member name="M:Backend.DataAccess.ProductData.Insert(Backend.BusinessLogic.Product)">
+            <summary>
+            Вставляет новый продукт в таблицу <c>table_products</c>.
+            </summary>
+            <param name="product">Объект <see cref="T:Backend.BusinessLogic.Product"/>, содержащий информацию о добавляемом продукте.</param>
+            <returns>
+            <c>true</c>, если вставка выполнена успешно; в противном случае <c>false</c>.
+            </returns>
+            <example>
+            <code>
+            ProductData p = new ProductData();
+            bool success = p.Insert(new Product { Name="Шуруп", Category="Крепеж", ... });
+            </code>
+            </example>
+        </member>
+        <member name="M:Backend.DataAccess.ProductData.Update(Backend.BusinessLogic.Product)">
+            <summary>
+            Редактирует данные существующего продукта на основании его идентификатора.
+            </summary>
+            <param name="product">Объект <see cref="T:Backend.BusinessLogic.Product"/>, содержащий обновлённые данные продукта.</param>
+            <returns>
+            <c>true</c>, если обновление выполнено успешно; иначе <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:Backend.DataAccess.ProductData.Delete(Backend.BusinessLogic.Product)">
+            <summary>
+            Удаляет продукт из базы данных по идентификатору.
+            </summary>
+            <param name="product">Объект <see cref="T:Backend.BusinessLogic.Product"/>, для которого требуется удалить запись (используется свойство <c>Id</c>).</param>
+            <returns>
+            <c>true</c>, если удаление успешно; иначе <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:Backend.DataAccess.ProductData.Search(System.String)">
+            <summary>
+            Выполняет поиск продуктов по ключевым словам в полях "special_number", "name" или "category".
+            </summary>
+            <param name="keywords">Ключевые слова для поиска.</param>
+            <returns>
+            Объект <see cref="T:System.Data.DataTable"/>, содержащий подходящие записи.
+            </returns>
+            <example>
+            <code>
+            DataTable result = productData.Search("саморез");
+            </code>
+            </example>
+        </member>
+        <member name="M:Backend.DataAccess.ProductData.GetProductsForTransaction(System.String)">
+            <summary>
+            Получает информацию о продукте для сделки по его ключу (имя или спец. номер).
+            </summary>
+            <param name="keyword">Ключ для поиска (имя или специальный номер продукта).</param>
+            <returns>
+            Объект <see cref="T:Backend.BusinessLogic.Product"/>, заполненный найденными данными (или пустой, если не найдено).
+            </returns>
+        </member>
+        <member name="M:Backend.DataAccess.ProductData.GetProductIDFromName(System.String)">
+            <summary>
+            Получает идентификатор продукта на основе его имени.
+            </summary>
+            <param name="productName">Имя продукта.</param>
+            <returns>
+            Объект <see cref="T:Backend.BusinessLogic.Product"/> c заполненным свойством <c>Id</c>. Если продукт не найден, Id будет равен 0.
+            </returns>
+        </member>
+        <member name="M:Backend.DataAccess.ProductData.GetProductQty(System.Int32)">
+            <summary>
+            Получает текущее количество конкретного продукта по его идентификатору.
+            </summary>
+            <param name="productID">Идентификатор продукта.</param>
+            <returns>
+            Числовое значение количества продукта (тип <see cref="T:System.Decimal"/>).
+            </returns>
+        </member>
+        <member name="M:Backend.DataAccess.ProductData.UpdateQuantity(System.Int32,System.Decimal)">
+            <summary>
+            Обновляет значение количества конкретного продукта.
+            </summary>
+            <param name="productID">Идентификатор продукта.</param>
+            <param name="quantity">Новое значение количества.</param>
+            <returns>
+            <c>true</c>, если количество обновлено успешно; иначе <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:Backend.DataAccess.ProductData.IncreaseProduct(System.Int32,System.Decimal)">
+            <summary>
+            Увеличивает количество продукта на заданное значение.
+            </summary>
+            <param name="productID">Идентификатор продукта.</param>
+            <param name="increaseQuantity">Величина, на которую нужно увеличить количество.</param>
+            <returns>
+            <c>true</c>, если количество успешно увеличено; иначе <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:Backend.DataAccess.ProductData.DecreaseProduct(System.Int32,System.Decimal)">
+            <summary>
+            Уменьшает количество продукта на заданную величину.
+            </summary>
+            <param name="productID">Идентификатор продукта.</param>
+            <param name="decreaseQuantity">Величина, на которую нужно уменьшить количество.</param>
+            <returns>
+            <c>true</c>, если количество успешно уменьшено; иначе <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:Backend.DataAccess.ProductData.DisplayProductsByCategory(System.String)">
+            <summary>
+            Получает и отображает все продукты, относящиеся к указанной категории.
+            </summary>
+            <param name="category">Название категории продуктов.</param>
+            <returns>
+            Объект <see cref="T:System.Data.DataTable"/>, содержащий продукты выбранной категории.
+            </returns>
+        </member>
+        <member name="T:Backend.DataAccess.TransactionData">
+            <summary>
+            Класс <c>TransactionData</c> реализует доступ к данным о транзакциях, а также методы
+            для добавления, удаления и отображения информации о транзакциях в системе.
+            </summary>
+            <remarks>
+            Класс наследуется от <see cref="T:Backend.BusinessLogic.Transaction"/> и реализует интерфейс <see cref="T:Backend.Interfaces.ITransaction"/>.
+            Обеспечивает работу с таблицей <c>table_transactions</c> базы данных.
+            </remarks>
+        </member>
+        <member name="F:Backend.DataAccess.TransactionData.myconnstrng">
+            <summary>
+            Строка подключения к базе данных,
+            полученная из файла конфигурации приложения.
+            </summary>
+        </member>
+        <member name="M:Backend.DataAccess.TransactionData.InsertTransaction(Backend.BusinessLogic.Transaction,System.Int32@)">
+            <summary>
+            Добавляет новую транзакцию в базу данных.
+            </summary>
+            <param name="transaction">Объект <see cref="T:Backend.BusinessLogic.Transaction"/>, содержащий все необходимые параметры транзакции.</param>
+            <param name="transactionID">Выходной параметр, в который помещается идентификатор вставленной транзакции.</param>
+            <returns>
+            <c>true</c>, если транзакция успешно добавлена и получен идентификатор; <c>false</c> в противном случае.
+            </returns>
+            <example>
+            <code>
+            TransactionData td = new TransactionData();
+            Transaction tr = new Transaction { /* инициализация */ };
+            int trId;
+            bool result = td.InsertTransaction(tr, out trId);
+            </code>
+            </example>
+        </member>
+        <member name="M:Backend.DataAccess.TransactionData.DisplayAllTransactions">
+            <summary>
+            Возвращает таблицу, содержащую все совершённые транзакции.
+            </summary>
+            <returns>
+            Объект <see cref="T:System.Data.DataTable"/> со всеми записями из таблицы транзакций.
+            </returns>
+            <example>
+            <code>
+            DataTable dt = new TransactionData().DisplayAllTransactions();
+            </code>
+            </example>
+        </member>
+        <member name="M:Backend.DataAccess.TransactionData.DisplayTransactionByType(System.String)">
+            <summary>
+            Возвращает таблицу транзакций, фильтрованных по определённому типу (например, "Покупка" или "Продажа").
+            </summary>
+            <param name="type">Тип транзакции, по которому выполнять фильтрацию.</param>
+            <returns>
+            Объект <see cref="T:System.Data.DataTable"/>, содержащий транзакции только указанного типа.
+            </returns>
+            <example>
+            <code>
+            DataTable onlySales = new TransactionData().DisplayTransactionByType("Продажа");
+            </code>
+            </example>
+        </member>
+        <member name="M:Backend.DataAccess.TransactionData.DeleteAllTransactions">
+            <summary>
+            Удаляет все транзакции из таблицы <c>table_transactions</c>.
+            </summary>
+            <remarks>
+            Используйте с осторожностью: действие необратимо и приведёт к потере всех данных о транзакциях.
+            </remarks>
+            <returns>
+            Объект <see cref="T:System.Data.DataTable"/> (обычно пустой после удаления).
+            </returns>
+        </member>
+        <member name="T:Backend.DataAccess.TransactionDetailsData">
+            <summary>
+            Класс для работы с деталями транзакций.
+            </summary>
+        </member>
+        <member name="F:Backend.DataAccess.TransactionDetailsData.myconnstrng">
+            <summary>
+            Строка подключения к базе данных.
+            </summary>
+        </member>
+        <member name="M:Backend.DataAccess.TransactionDetailsData.InsertTransactionDetail(Backend.BusinessLogic.TransactionDetails)">
+            <summary>
+            Добавляет детали транзакции в базу данных.
+            </summary>
+            <param name="transactionDetail">Объект типа TransactionDetails, содержащий детали транзакции.</param>
+            <returns>Возвращает true, если детали транзакции были успешно добавлены; в противном случае — false.</returns>
+        </member>
+        <member name="T:Backend.DataAccess.UserData">
+            <summary>
+            Класс для работы с данными пользователей.
+            </summary>
+        </member>
+        <member name="F:Backend.DataAccess.UserData.myconnstrng">
+            <summary>
+            Строка подключения к базе данных.
+            </summary>
+        </member>
+        <member name="M:Backend.DataAccess.UserData.Select">
+            <summary>
+            Получает данные всех пользователей из базы данных.
+            </summary>
+            <returns>Возвращает <see cref="T:System.Data.DataTable"/> с данными о пользователях.</returns>
+        </member>
+        <member name="M:Backend.DataAccess.UserData.Insert(Backend.BusinesLogic.User)">
+            <summary>
+            Добавляет нового пользователя в базу данных.
+            </summary>
+            <param name="user">Объект типа User, содержащий информацию о пользователе.</param>
+            <returns>Возвращает true, если пользователь был успешно добавлен; в противном случае — false.</returns>
+        </member>
+        <member name="M:Backend.DataAccess.UserData.Update(Backend.BusinesLogic.User)">
+            <summary>
+            Обновляет данные существующего пользователя в базе данных.
+            </summary>
+            <param name="user">Объект типа User, содержащий обновленную информацию о пользователе.</param>
+            <returns>Возвращает true, если данные пользователя были успешно обновлены; в противном случае — false.</returns>
+        </member>
+        <member name="M:Backend.DataAccess.UserData.Delete(Backend.BusinesLogic.User)">
+            <summary>
+            Удаляет пользователя из базы данных.
+            </summary>
+            <param name="user">Объект типа User, представляющий пользователя, который нужно удалить.</param>
+            <returns>Возвращает true, если пользователь был успешно удален; в противном случае — false.</returns>
+        </member>
+        <member name="M:Backend.DataAccess.UserData.Search(System.String)">
+            <summary>
+            Ищет пользователей в базе данных по заданным ключевым словам.
+            </summary>
+            <param name="keywords">Строка с ключевыми словами для поиска.</param>
+            <returns>Возвращает <see cref="T:System.Data.DataTable"/> с данными пользователей, соответствующих критериям поиска.</returns>
+        </member>
+        <member name="M:Backend.DataAccess.UserData.GetIDFromUsername(System.String)">
+            <summary>
+            Получает идентификатор пользователя по его имени пользователя.
+            </summary>
+            <param name="username">Имя пользователя, для которого требуется получить идентификатор.</param>
+            <returns>Возвращает объект <see cref="T:Backend.BusinesLogic.User"/> с идентификатором пользователя.</returns>
+        </member>
+        <member name="M:Backend.DataAccess.UserData.SearchUserForLogistic(System.String)">
+            <summary>
+            Ищет пользователей по логистике по заданному ключевому слову.
+            </summary>
+            <param name="keyword">Ключевое слово для поиска.</param>
+            <returns>Возвращает объект <see cref="T:Backend.BusinesLogic.User"/> с данными найденного пользователя.</returns>
+        </member>
+    </members>
+</doc>
