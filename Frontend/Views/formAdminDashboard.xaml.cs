@@ -44,9 +44,9 @@ namespace Frontend.Views
         {
             // Инициализация данных при загрузке окна
             LoggedUserLabel.Text = $"{_loggedUser.Username}";
-            AppFNameLabel.Text = "Магазин";
+            AppFNameLabel.Text = "Автоматизация";
             AppLNameLabel.Text = "Система";
-            DescriptionLabel.Text = "Управление продажами и инвентаризацией";
+            DescriptionLabel.Text = "Управление транзакциями, продажами и инвентаризацией";
         }
 
         #region Обработчики меню
