@@ -135,7 +135,7 @@
                             <TextBlock Text="Система"
                                        Foreground="{StaticResource AccentBrush}" FontWeight="Bold" FontSize="30" Margin="10,0,0,0" VerticalAlignment="Center"/>
                         </StackPanel>
-                        <TextBlock Text="Система управления продажами и инвентаризацией"
+                        <TextBlock Text="Управление транзакциями, продажами и инвентаризацией"
                                    Style="{StaticResource SecondaryText}"
                                    HorizontalAlignment="Right" Margin="0,8,0,0"/>
                     </StackPanel>

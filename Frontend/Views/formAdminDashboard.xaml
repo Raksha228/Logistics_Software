@@ -126,7 +126,7 @@
 
                     <!-- Description -->
                     <TextBlock x:Name="DescriptionLabel"
-                               Text="Управление продажами и инвентаризацией"
+                               Text="Управление транзакциями, продажами и инвентаризацией"
                                Style="{StaticResource SecondaryText}"
                                HorizontalAlignment="Center" Margin="0,0,0,0"/>
                 </StackPanel>
